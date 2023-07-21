@@ -7,22 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D5A44427-42F0-4262-A562-C47DBD572E5D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "newtabnews/Network/Models/Response/RestResponse.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
-            landmarkName = "result(errorType:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "DE27AAD6-7BAE-4A1A-B17F-BE6D7C42BE7C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -39,62 +23,47 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8EEB5DE0-3EB2-4BDA-96A9-644C708F6E92"
+            uuid = "CC051B48-E571-4B9F-BCA6-62236A7A3EC4"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "newtabnews/Network/Requests/Basic Content/ContentService.swift"
+            filePath = "newtabnews/App/ContentViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "getContent(page:perPage:strategy:)"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "fetchPost(user:slug:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "8EEB5DE0-3EB2-4BDA-96A9-644C708F6E92 - badd9b20bd087cfe"
+                  uuid = "CC051B48-E571-4B9F-BCA6-62236A7A3EC4 - 78544287c9f0c33f"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for newtabnews.ContentService.getContent(page: Swift.String, perPage: Swift.String, strategy: Swift.String) async -&gt; newtabnews.RequestResponse&lt;Swift.Array&lt;newtabnews.ContentRequest&gt;, newtabnews.RequestError&gt;"
+                  symbolName = "(3) suspend resume partial function for newtabnews.ContentViewModel.fetchPost(user: Swift.String, slug: Swift.String) async -&gt; ()"
                   moduleName = "newtabnews"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/luizmello/Desktop/code/new%20tabnews/newtabnews/newtabnews/Network/Requests/Basic%20Content/ContentService.swift"
+                  urlString = "file:///Users/luizmello/Desktop/code/new%20tabnews/newtabnews/newtabnews/App/ContentViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "29"
-                  endingLineNumber = "29"
-                  offsetFromSymbolStart = "92">
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "256">
                </Location>
                <Location
-                  uuid = "8EEB5DE0-3EB2-4BDA-96A9-644C708F6E92 - 5a1ac6fb1bde4384"
+                  uuid = "CC051B48-E571-4B9F-BCA6-62236A7A3EC4 - 78544287c9f0c33f"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for newtabnews.ContentService.getContent(page: Swift.String, perPage: Swift.String, strategy: Swift.String) async -&gt; newtabnews.RequestResponse&lt;Swift.Array&lt;newtabnews.ContentRequest&gt;, newtabnews.RequestError&gt;"
+                  symbolName = "(3) suspend resume partial function for newtabnews.ContentViewModel.fetchPost(user: Swift.String, slug: Swift.String) async -&gt; ()"
                   moduleName = "newtabnews"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/luizmello/Desktop/code/new%20tabnews/newtabnews/newtabnews/Network/Requests/Basic%20Content/ContentService.swift"
+                  urlString = "file:///Users/luizmello/Desktop/code/new%20tabnews/newtabnews/newtabnews/App/ContentViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "29"
-                  endingLineNumber = "29"
-                  offsetFromSymbolStart = "40">
-               </Location>
-               <Location
-                  uuid = "8EEB5DE0-3EB2-4BDA-96A9-644C708F6E92 - af5c38af9ac138fc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for newtabnews.ContentService.getContent(page: Swift.String, perPage: Swift.String, strategy: Swift.String) async -&gt; newtabnews.RequestResponse&lt;Swift.Array&lt;newtabnews.ContentRequest&gt;, newtabnews.RequestError&gt;"
-                  moduleName = "newtabnews"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/luizmello/Desktop/code/new%20tabnews/newtabnews/newtabnews/Network/Requests/Basic%20Content/ContentService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "29"
-                  endingLineNumber = "29"
-                  offsetFromSymbolStart = "52">
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "268">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -102,33 +71,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "57D579B3-17EC-4A57-8ED7-BC38CCFD5B8E"
+            uuid = "40146BC5-E2D2-4E5D-8B92-30BDB2B2CB0E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "newtabnews/Network/Models/Response/RestResponse.swift"
+            filePath = "newtabnews/App/ContentViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "successResult(modelType:)"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "fetchPost(user:slug:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "52EF46AF-3320-47FD-9405-5AC1DE866402"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "newtabnews/Network/Models/Response/RestResponse.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "successResult(modelType:)"
-            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "40146BC5-E2D2-4E5D-8B92-30BDB2B2CB0E - 78544287c9f0c0f9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for newtabnews.ContentViewModel.fetchPost(user: Swift.String, slug: Swift.String) async -&gt; ()"
+                  moduleName = "newtabnews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/luizmello/Desktop/code/new%20tabnews/newtabnews/newtabnews/App/ContentViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "35"
+                  endingLineNumber = "35"
+                  offsetFromSymbolStart = "568">
+               </Location>
+               <Location
+                  uuid = "40146BC5-E2D2-4E5D-8B92-30BDB2B2CB0E - 78544287c9f0c0f9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for newtabnews.ContentViewModel.fetchPost(user: Swift.String, slug: Swift.String) async -&gt; ()"
+                  moduleName = "newtabnews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/luizmello/Desktop/code/new%20tabnews/newtabnews/newtabnews/App/ContentViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "35"
+                  endingLineNumber = "35"
+                  offsetFromSymbolStart = "756">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -74,10 +74,8 @@ extension RestResponse {
     private func successResult<T: Codable>(modelType: T.Type) -> Result<Codable, Error> {
 
         do {
-            let jsonData = try decoder.decode(modelType.self, from: dataTask.data)
-            return Result.success(jsonData)
-//            let model = try decoder.decode(modelType, from: dataTask.data)
-//            return Result.success(model)
+            let model = try decoder.decode(modelType, from: dataTask.data)
+            return Result.success(model)
         } catch let error {
 #if DEBUG
             NetworkLogger.log(error: error as? DecodingError)

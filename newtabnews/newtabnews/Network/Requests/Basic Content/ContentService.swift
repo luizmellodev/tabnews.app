@@ -25,6 +25,15 @@ extension ContentService {
 }
 
 extension ContentService: ContentServiceProtocol {
+    public func getPost(user: String, slug: String) async -> RequestResponse<ContentRequest, RequestError> {
+        return await network.request(endpoint: ContentEndpoint.post(user: user, slug: slug),
+                                     method: .get,
+                                     parameters: "",
+                                     interceptors: [ContentInterceptor()],
+                                     responseType: ContentRequest.self,
+                                     errorType: RequestError.self)
+    }
+    
     public func getContent(page: String, perPage: String, strategy: String) async -> RequestResponse<[ContentRequest], RequestError> {
         return await network.request(endpoint: ContentEndpoint.basic,
                                      method: .get,

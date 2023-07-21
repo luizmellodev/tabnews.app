@@ -7,56 +7,31 @@
 
 import Foundation
 
-// MARK: - ContentRequestElement
-public struct ContentRequest: Codable, Equatable, Identifiable {
-    public let id, ownerID: String?
-    let parentID: JSONNull?
-    let slug, title, status: String
-    let sourceURL: JSONNull?
+public struct ContentRequest: Codable, Hashable, Identifiable {
+    public let id, ownerID, mainContent: String?
+    let parentID: String?
+    let slug, title, status: String?
+    let sourceURL: String?
     let createdAt, updatedAt, publishedAt: String?
-    let deletedAt: JSONNull?
+    let deletedAt: String?
     let ownerUsername: String?
     let tabcoins, childrenDeepCount: Int?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case ownerID
-        case parentID
-        case slug, title, status
-        case sourceURL
-        case createdAt
-        case updatedAt
-        case publishedAt
-        case deletedAt
-        case ownerUsername
-        case tabcoins
-        case childrenDeepCount
-    }
 }
 
-// MARK: - Encode/decode helpers
-
-class JSONNull: Codable, Hashable {
-
-    public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
-        return true
-    }
-
-    public var hashValue: Int {
-        return 0
-    }
-
-    public init() {}
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if !container.decodeNil() {
-            throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
-        }
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encodeNil()
+extension ContentRequest {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case mainContent
+        case ownerID = "owner_id"
+        case parentID = "parent_id"
+        case slug, title, status
+        case sourceURL = "source_url"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case publishedAt = "published_at"
+        case deletedAt = "deleted_at"
+        case ownerUsername = "owner_username"
+        case tabcoins
+        case childrenDeepCount = "children_deep_count"
     }
 }
