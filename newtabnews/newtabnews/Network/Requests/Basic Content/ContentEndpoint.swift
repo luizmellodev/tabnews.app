@@ -17,7 +17,7 @@ enum ContentEndpoint: Endpoint {
         switch self {
         case .basic:
             return "/api/v1/contents"
-        case .post(var user, var slug):
+        case .post(let user, let slug):
             return "/api/v1/contents/\(user)/\(slug)"
         }
     }

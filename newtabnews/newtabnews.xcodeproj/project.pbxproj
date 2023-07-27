@@ -47,6 +47,8 @@
 		799049F82A72F4BC0050240C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F72A72F4BC0050240C /* Extensions.swift */; };
 		799049FA2A72F5880050240C /* MDText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F92A72F5880050240C /* MDText.swift */; };
 		799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049FC2A72F7BE0050240C /* ListDetailsView.swift */; };
+		799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049FE2A73068E0050240C /* DefaultViewState.swift */; };
+		79904A042A73075A0050240C /* FailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A032A73075A0050240C /* FailureView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +94,8 @@
 		799049F72A72F4BC0050240C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		799049F92A72F5880050240C /* MDText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDText.swift; sourceTree = "<group>"; };
 		799049FC2A72F7BE0050240C /* ListDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsView.swift; sourceTree = "<group>"; };
+		799049FE2A73068E0050240C /* DefaultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultViewState.swift; sourceTree = "<group>"; };
+		79904A032A73075A0050240C /* FailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailureView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +301,7 @@
 		799049DD2A6B24310050240C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				79904A002A7307270050240C /* FailureView */,
 				799049FB2A72F6D10050240C /* ListDetails */,
 				799049F22A6C96130050240C /* ListView */,
 				799049E42A6C93C60050240C /* MainView */,
@@ -307,6 +312,7 @@
 		799049DE2A6B243B0050240C /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				799049FE2A73068E0050240C /* DefaultViewState.swift */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -343,6 +349,14 @@
 				799049FC2A72F7BE0050240C /* ListDetailsView.swift */,
 			);
 			path = ListDetails;
+			sourceTree = "<group>";
+		};
+		79904A002A7307270050240C /* FailureView */ = {
+			isa = PBXGroup;
+			children = (
+				79904A032A73075A0050240C /* FailureView.swift */,
+			);
+			path = FailureView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -446,6 +460,7 @@
 				791E881F2A4FDFA700C2F0B4 /* ContentInterceptor.swift in Sources */,
 				791E88032A4FDD1600C2F0B4 /* HTTPMethod.swift in Sources */,
 				799049F62A6C990E0050240C /* CardList.swift in Sources */,
+				79904A042A73075A0050240C /* FailureView.swift in Sources */,
 				791E87F02A4FDB4A00C2F0B4 /* AppModuleDependencies.swift in Sources */,
 				791E88192A4FDDFD00C2F0B4 /* NetworkLogger.swift in Sources */,
 				791E87ED2A4FDA6700C2F0B4 /* EnvironmentProtocol.swift in Sources */,
@@ -453,6 +468,7 @@
 				791E88282A4FE46400C2F0B4 /* ContentViewModel.swift in Sources */,
 				791E88062A4FDD3600C2F0B4 /* JSONInterceptor.swift in Sources */,
 				799049E82A6C93D90050240C /* MainViewModel.swift in Sources */,
+				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

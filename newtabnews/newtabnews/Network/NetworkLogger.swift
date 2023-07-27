@@ -12,10 +12,10 @@ struct NetworkLogger {
     static func log(response: RestResponse) {
         print("==============================================")
         log(request: response.request)
-//        log(headers: response.request?.allHTTPHeaderFields)
+        log(headers: response.request?.allHTTPHeaderFields)
         log(body: response.request?.httpBody)
         log(httpResponse: response)
-//        log(headers: response.headers)
+        log(headers: response.headers)
         log(body: response.dataTask.data)
         print("------------------------------")
     }

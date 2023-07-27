@@ -30,17 +30,30 @@ struct MainView: View {
                     .blendMode(.overlay)
                     .ignoresSafeArea()
                 VStack {
-                    Text("Tab News")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .padding(.top, 30)
-                    
-                    SearchBar(searchText: $searchText, isSearching: $isSearching, searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
-                        .padding(.bottom, 10)
-                    
-                    ListView(viewModel: viewModel, posts: viewModel.content)
-                    Spacer()
+                    // MARK: - View State
+                    switch viewModel.state {
+                    case .loading:
+                        ProgressView()
+                    case .requestSucceeded:
+                        Text("Tab News")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .padding(.top, 30)
+                        SearchBar(searchText: $searchText, isSearching: $isSearching, searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
+                            .padding(.bottom, 10)
+                        ListView(viewModel: viewModel, posts: viewModel.content)
+                        Spacer()
+
+                    case .requestFailed:
+                        FailureView()
+                    default:
+                        ProgressView()
+                    }
                 }
+            }
+            .task {
+                await viewModel.fetchContent()
+                await viewModel.fetchPost()
             }
         }
         .edgesIgnoringSafeArea(.all)

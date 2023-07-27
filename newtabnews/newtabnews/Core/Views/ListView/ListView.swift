@@ -21,10 +21,6 @@ struct ListView: View {
                 }
             }
         }
-        .task {
-            await viewModel.fetchContent()
-            await viewModel.fetchPost()
-        }
     }
 }
 
