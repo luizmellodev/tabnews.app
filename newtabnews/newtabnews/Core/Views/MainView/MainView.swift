@@ -18,7 +18,8 @@ struct MainView: View {
     @State var showSnack: Bool = false
     @State var isSearching = false
     @State var isViewInApp: Bool = true
-    
+    @AppStorage("current_theme") var currentTheme: Theme = .light
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -38,14 +39,14 @@ struct MainView: View {
                         Text("Tab News")
                             .font(.title)
                             .fontWeight(.bold)
-                            .padding(.top, 30)
+                            .padding(.top, 70)
                         SearchBar(searchText: $searchText, isSearching: $isSearching, searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
                             .padding(.bottom, 10)
                         ListView(searchText: $searchText, isViewInApp: $isViewInApp, viewModel: viewModel, posts: viewModel.content)
                         Spacer()
 
                     case .requestFailed:
-                        FailureView()
+                        FailureView(currentTheme: $currentTheme)
                     default:
                         ProgressView()
                     }

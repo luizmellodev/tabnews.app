@@ -12,9 +12,29 @@ struct ContentView: View {
     @State var showSnack: Bool = false
     @State var isSearching = false
     @State var isViewInApp: Bool = true
-    
+    @AppStorage("current_theme") var currentTheme: Theme = .light
+
     var body: some View {
-        MainView(viewModel: viewModel, searchText: searchText, showSnack: showSnack, isSearching: isSearching, isViewInApp: isViewInApp)
+        TabView {
+            MainView(viewModel: viewModel, searchText: searchText, showSnack: showSnack, isSearching: isSearching, isViewInApp: isViewInApp)
+                .tabItem {
+                    Label("Menu", systemImage: "list.dash")
+                }
+            
+            LikedList(viewModel: viewModel, isViewInApp: $isViewInApp, showSnack: $showSnack)
+                .tabItem {
+                    Label("Curtidas", systemImage: "heart.fill")
+                }
+            
+            SettingsView(isViewInApp: $isViewInApp, viewModel: viewModel, currentTheme: $currentTheme)
+                .tabItem {
+                    Label("Configurações", systemImage: "gearshape.fill")
+                }
+        }
+        .onAppear {
+            viewModel.saveInAppSettings(viewInApp: isViewInApp)
+        }
+        .preferredColorScheme(currentTheme.colorScheme)        
     }
 }
 

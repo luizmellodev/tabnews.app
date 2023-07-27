@@ -37,20 +37,16 @@ struct CardList: View {
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.primary)
                 .padding(.bottom, 20)
-            NavigationLink {
-                EmptyView()
-            } label: {
-                HStack {
-                    RoundedRectangle(cornerRadius: 5)
-                        .frame(height: 40)
-                        .foregroundColor(.black)
-                        .overlay {
-                            Text("Ler mais")
-                                .foregroundColor(.white)
-                        }
-                }
-                .padding(.bottom, 10)
+            HStack {
+                RoundedRectangle(cornerRadius: 5)
+                    .frame(height: 40)
+                    .foregroundColor(.black)
+                    .overlay {
+                        Text("Ler mais")
+                            .foregroundColor(.white)
+                    }
             }
+            .padding(.bottom, 10)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .padding(.horizontal)

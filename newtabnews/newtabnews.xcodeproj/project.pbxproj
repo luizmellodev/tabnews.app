@@ -51,6 +51,9 @@
 		79904A042A73075A0050240C /* FailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A032A73075A0050240C /* FailureView.swift */; };
 		79904A062A731F6F0050240C /* WebContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A052A731F6F0050240C /* WebContentView.swift */; };
 		79904A082A731F910050240C /* HTMLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A072A731F910050240C /* HTMLView.swift */; };
+		79904A0B2A732E3F0050240C /* LikedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0A2A732E3F0050240C /* LikedList.swift */; };
+		79904A0E2A732FC90050240C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0D2A732FC90050240C /* SettingsView.swift */; };
+		79904A102A732FE30050240C /* DuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0F2A732FE30050240C /* DuckView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +103,9 @@
 		79904A032A73075A0050240C /* FailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailureView.swift; sourceTree = "<group>"; };
 		79904A052A731F6F0050240C /* WebContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebContentView.swift; sourceTree = "<group>"; };
 		79904A072A731F910050240C /* HTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLView.swift; sourceTree = "<group>"; };
+		79904A0A2A732E3F0050240C /* LikedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedList.swift; sourceTree = "<group>"; };
+		79904A0D2A732FC90050240C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		79904A0F2A732FE30050240C /* DuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,6 +311,8 @@
 		799049DD2A6B24310050240C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				79904A0C2A732FAE0050240C /* SettingsView */,
+				79904A092A7322ED0050240C /* LikedList */,
 				79904A002A7307270050240C /* FailureView */,
 				799049FB2A72F6D10050240C /* ListDetails */,
 				799049F22A6C96130050240C /* ListView */,
@@ -327,6 +335,7 @@
 				799049F92A72F5880050240C /* MDText.swift */,
 				799049F72A72F4BC0050240C /* Extensions.swift */,
 				79904A072A731F910050240C /* HTMLView.swift */,
+				79904A0F2A732FE30050240C /* DuckView.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -363,6 +372,22 @@
 				79904A032A73075A0050240C /* FailureView.swift */,
 			);
 			path = FailureView;
+			sourceTree = "<group>";
+		};
+		79904A092A7322ED0050240C /* LikedList */ = {
+			isa = PBXGroup;
+			children = (
+				79904A0A2A732E3F0050240C /* LikedList.swift */,
+			);
+			path = LikedList;
+			sourceTree = "<group>";
+		};
+		79904A0C2A732FAE0050240C /* SettingsView */ = {
+			isa = PBXGroup;
+			children = (
+				79904A0D2A732FC90050240C /* SettingsView.swift */,
+			);
+			path = SettingsView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -455,7 +480,10 @@
 				791E880F2A4FDD9700C2F0B4 /* RestResponse.swift in Sources */,
 				791E87FC2A4FDCDE00C2F0B4 /* InterceptorBuilder.swift in Sources */,
 				791E87EB2A4FDA5500C2F0B4 /* Environment.swift in Sources */,
+				79904A0B2A732E3F0050240C /* LikedList.swift in Sources */,
+				79904A0E2A732FC90050240C /* SettingsView.swift in Sources */,
 				791E88082A4FDD4900C2F0B4 /* RequestInterceptor.swift in Sources */,
+				79904A102A732FE30050240C /* DuckView.swift in Sources */,
 				791E87D82A4FD99B00C2F0B4 /* newtabnewsApp.swift in Sources */,
 				791E880D2A4FDD7E00C2F0B4 /* RequestResponse.swift in Sources */,
 				799049F82A72F4BC0050240C /* Extensions.swift in Sources */,

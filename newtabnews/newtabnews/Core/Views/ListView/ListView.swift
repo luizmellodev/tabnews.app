@@ -26,6 +26,16 @@ struct ListView: View {
                 } label: {
                     CardList(title: post.title ?? "titulo", user: post.ownerUsername ?? "username", date: getFormattedDate(value: post.createdAt ?? "asdada"), bodyContent: post.entirePost ?? "erro porra")
                 }
+                .contextMenu {
+                    Button {
+                        let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                        impactHeavy.impactOccurred()
+                        viewModel.likeContentList(content: post)
+                    } label: {
+                        Text("Curtir")
+                    }
+                }
+                .padding(.top, 20)
             }
         }
     }
