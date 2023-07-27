@@ -12,5 +12,5 @@ public protocol ContentServiceProtocol: AnyObject {
     
     func getContent(page: String, perPage: String, strategy: String) async -> RequestResponse<[ContentRequest], RequestError>
     
-    func getPost(user: String, slug: String) async -> RequestResponse<ContentRequest, RequestError>
+    func getPost(user: String, slug: String) async -> RequestResponse<PostRequest, RequestError>
 }
