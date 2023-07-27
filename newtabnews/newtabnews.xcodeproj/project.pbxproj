@@ -49,6 +49,8 @@
 		799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049FC2A72F7BE0050240C /* ListDetailsView.swift */; };
 		799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049FE2A73068E0050240C /* DefaultViewState.swift */; };
 		79904A042A73075A0050240C /* FailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A032A73075A0050240C /* FailureView.swift */; };
+		79904A062A731F6F0050240C /* WebContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A052A731F6F0050240C /* WebContentView.swift */; };
+		79904A082A731F910050240C /* HTMLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A072A731F910050240C /* HTMLView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +98,8 @@
 		799049FC2A72F7BE0050240C /* ListDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsView.swift; sourceTree = "<group>"; };
 		799049FE2A73068E0050240C /* DefaultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultViewState.swift; sourceTree = "<group>"; };
 		79904A032A73075A0050240C /* FailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailureView.swift; sourceTree = "<group>"; };
+		79904A052A731F6F0050240C /* WebContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebContentView.swift; sourceTree = "<group>"; };
+		79904A072A731F910050240C /* HTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -322,6 +326,7 @@
 			children = (
 				799049F92A72F5880050240C /* MDText.swift */,
 				799049F72A72F4BC0050240C /* Extensions.swift */,
+				79904A072A731F910050240C /* HTMLView.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -347,6 +352,7 @@
 			isa = PBXGroup;
 			children = (
 				799049FC2A72F7BE0050240C /* ListDetailsView.swift */,
+				79904A052A731F6F0050240C /* WebContentView.swift */,
 			);
 			path = ListDetails;
 			sourceTree = "<group>";
@@ -432,6 +438,7 @@
 				791E880B2A4FDD6C00C2F0B4 /* RequestError.swift in Sources */,
 				791E87DA2A4FD99B00C2F0B4 /* ContentView.swift in Sources */,
 				791E87F32A4FDC0900C2F0B4 /* DependencyAPI.swift in Sources */,
+				79904A082A731F910050240C /* HTMLView.swift in Sources */,
 				799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */,
 				791E88112A4FDDAC00C2F0B4 /* SimpleRequestResponse.swift in Sources */,
 				791E881C2A4FDED000C2F0B4 /* ContentEndpoint.swift in Sources */,
@@ -442,6 +449,7 @@
 				791E88002A4FDCF800C2F0B4 /* RequestBuilder.swift in Sources */,
 				799049FA2A72F5880050240C /* MDText.swift in Sources */,
 				791E87FA2A4FDCD100C2F0B4 /* BodyBuilder.swift in Sources */,
+				79904A062A731F6F0050240C /* WebContentView.swift in Sources */,
 				791E88212A4FE03C00C2F0B4 /* ContentService.swift in Sources */,
 				791E88172A4FDDE500C2F0B4 /* NetworkProtocol.swift in Sources */,
 				791E880F2A4FDD9700C2F0B4 /* RestResponse.swift in Sources */,

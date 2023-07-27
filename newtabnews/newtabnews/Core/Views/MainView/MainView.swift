@@ -14,7 +14,7 @@ struct MainView: View {
     
     @ObservedObject var viewModel: MainViewModel
     @GestureState var press = false
-    @State var searchText: String
+    @State var searchText: String = ""
     @State var showSnack: Bool = false
     @State var isSearching = false
     @State var isViewInApp: Bool = true
@@ -41,7 +41,7 @@ struct MainView: View {
                             .padding(.top, 30)
                         SearchBar(searchText: $searchText, isSearching: $isSearching, searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
                             .padding(.bottom, 10)
-                        ListView(viewModel: viewModel, posts: viewModel.content)
+                        ListView(searchText: $searchText, isViewInApp: $isViewInApp, viewModel: viewModel, posts: viewModel.content)
                         Spacer()
 
                     case .requestFailed:

@@ -46,6 +46,11 @@ struct ListDetailView: View {
                 }
                 .padding(.horizontal, 30)
             }
+            .sheet(isPresented: $showingTabNews) {
+                WebContentView(content: post)
+                    .presentationDetents([.large, .large])
+                    .presentationDragIndicator(.hidden)
+            }
             VStack {
                 Spacer()
                 HStack {
