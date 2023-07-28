@@ -25,11 +25,6 @@ struct SearchBar: View {
                     .foregroundColor(Color.primary)
             }
             .padding(5)
-            .onTapGesture(perform: {
-                withAnimation {
-                    isSearching = true
-                }
-            })
             .background(RoundedRectangle(cornerRadius: 10).fill(Color("CardColor")).frame( height: 50))
             .padding(.horizontal)
             .overlay(
@@ -55,6 +50,11 @@ struct SearchBar: View {
                 }
 
             ).transition(.move(edge: .trailing))
+                .onTapGesture(perform: {
+                    withAnimation {
+                        isSearching = true
+                    }
+                })
 
             if isSearching {
                 Button(action: {
@@ -76,6 +76,7 @@ struct SearchBar: View {
             }
 
         }
+        .padding(.top, isSearching ? 80 : 0)
     }
     struct SearchBar_Preview: PreviewProvider {
         static var previews: some View {

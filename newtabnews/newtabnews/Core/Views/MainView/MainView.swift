@@ -13,13 +13,14 @@ import SwiftUI
 struct MainView: View {
     
     @ObservedObject var viewModel: MainViewModel
+    @AppStorage("current_theme") var currentTheme: Theme = .light
     @GestureState var press = false
+    
     @State var searchText: String = ""
     @State var showSnack: Bool = false
     @State var isSearching = false
-    @State var isViewInApp: Bool = true
-    @AppStorage("current_theme") var currentTheme: Theme = .light
-
+    @Binding var isViewInApp: Bool
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -44,17 +45,12 @@ struct MainView: View {
                             .padding(.bottom, 10)
                         ListView(searchText: $searchText, isViewInApp: $isViewInApp, viewModel: viewModel, posts: viewModel.content)
                         Spacer()
-
                     case .requestFailed:
                         FailureView(currentTheme: $currentTheme)
                     default:
                         ProgressView()
                     }
                 }
-            }
-            .task {
-                await viewModel.fetchContent()
-                await viewModel.fetchPost()
             }
         }
         .edgesIgnoringSafeArea(.all)

@@ -12,6 +12,7 @@ struct CardList: View {
     var user: String
     var date: String
     var bodyContent: String
+    var tabcoins: Int
     
     var body: some View {
         VStack (alignment: .leading) {
@@ -52,7 +53,7 @@ struct CardList: View {
         .padding(.horizontal)
         .background {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(Color("CardColor"))
+                .fill(Color("CardColor").shadow(.drop(color: .purple, radius: tabcoins >= 10 ? 5 : 0)))
         }
         .frame(height: 300)
         .padding(.horizontal)

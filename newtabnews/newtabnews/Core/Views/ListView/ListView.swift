@@ -22,9 +22,10 @@ struct ListView: View {
                 return title.localizedCaseInsensitiveContains(searchText)
             })) { post in
                 NavigationLink { isViewInApp ?
-                    AnyView(ListDetailView(post: post)) : AnyView(WebContentView(content: post))
+                    AnyView(ListDetailView(post: post, viewModel: viewModel)) : AnyView(WebContentView(content: post))
                 } label: {
-                    CardList(title: post.title ?? "titulo", user: post.ownerUsername ?? "username", date: getFormattedDate(value: post.createdAt ?? "asdada"), bodyContent: post.entirePost ?? "erro porra")
+                    CardList(title: post.title ?? "titulo", user: post.ownerUsername ?? "username", date: getFormattedDate(value: post.createdAt ?? "asdada"), bodyContent: post.entirePost ?? "erro porra", tabcoins: post.tabcoins ?? 0)
+                        .redacted(reason: viewModel.state == .dataChanged ? .placeholder : [])
                 }
                 .contextMenu {
                     Button {
@@ -38,6 +39,7 @@ struct ListView: View {
                 .padding(.top, 20)
             }
         }
+        .padding(.bottom, 70)
     }
 }
 

@@ -8,18 +8,16 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Binding var isViewInApp: Bool
-    @State var isDarkMode: Bool = false
     @ObservedObject var viewModel: MainViewModel
+    @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
+    @State var isDarkMode: Bool = false
+    
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Configurações")) {
                     Toggle("Visualizar conteúdo no App:", isOn: $isViewInApp)
-                        .onChange(of: isViewInApp) { newvalue in
-                            viewModel.defaults.set(newvalue, forKey: "viewInApp")
-                        }
                     Toggle("Dark Mode:", isOn: $isDarkMode)
                         .onChange(of: isDarkMode) { _ in
                             currentTheme = isDarkMode ? .dark : .light
@@ -167,6 +165,6 @@ struct SettingsView_Previews: PreviewProvider {
     static var viewModel = MainViewModel()
     static var currentTheme: Theme = .light
     static var previews: some View {
-        SettingsView(isViewInApp: .constant(true), viewModel: viewModel, currentTheme: .constant(currentTheme))
+        SettingsView(viewModel: viewModel, isViewInApp: .constant(true), currentTheme: .constant(currentTheme))
     }
 }

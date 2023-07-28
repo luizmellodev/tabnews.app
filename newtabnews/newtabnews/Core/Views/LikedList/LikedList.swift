@@ -11,6 +11,7 @@ struct LikedList: View {
     @ObservedObject var viewModel: MainViewModel
     @Binding var isViewInApp: Bool
     @Binding var showSnack: Bool
+    @State private var selectedItems: Set<Int> = []
     
     var body: some View {
         NavigationView {
@@ -46,7 +47,7 @@ struct LikedList: View {
                         }
                         ForEach(Array(zip(viewModel.likedList.indices, viewModel.likedList)), id: \.0) {index, post in
                             NavigationLink { isViewInApp ?
-                                AnyView(ListDetailView(post: post)) : AnyView(WebContentView(content: post))
+                                AnyView(ListDetailView(post: post, viewModel: viewModel)) : AnyView(WebContentView(content: post))
                             } label: {
                                 HStack {
                                     Text(post.title ?? "fodase")
@@ -54,6 +55,11 @@ struct LikedList: View {
                             }
                         }
                         .onDelete(perform: removeRows)
+                    }
+                    .toolbar {
+                        ToolbarItem {
+                            EditButton()
+                        }
                     }
                     .padding(.top, 60)
                     .refreshable {
@@ -72,7 +78,6 @@ struct LikedList: View {
         if let encoded = try? encoder.encode(viewModel.likedList) {
             viewModel.defaults.set(encoded, forKey: "LikedContent")
         }
-        
     }
 }
 

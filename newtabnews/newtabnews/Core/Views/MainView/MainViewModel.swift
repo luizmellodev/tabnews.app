@@ -20,7 +20,7 @@ class MainViewModel: ObservableObject {
     @MainActor
     func fetchContent() async {
         self.state = .loading
-        let contentResponse = await service.getContent(page: "1", perPage: "10", strategy: "new")
+        let contentResponse = await service.getContent(page: "1", perPage: "30", strategy: "relevant")
         switch contentResponse {
         case .success(let response):
             self.state = .requestSucceeded

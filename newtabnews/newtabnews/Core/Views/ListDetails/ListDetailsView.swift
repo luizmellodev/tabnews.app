@@ -11,7 +11,8 @@ import SwiftUI
 struct ListDetailView: View {
     @State var post: ContentRequest
     @State private var showingTabNews = false
-    
+    @ObservedObject var viewModel: MainViewModel
+
     var body: some View {
         ZStack {
             ScrollView {
@@ -26,10 +27,22 @@ struct ListDetailView: View {
                         Button {
                             let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                             impactHeavy.impactOccurred()
+                            if viewModel.likedList.contains(where: { $0.title == post.title }) {
+                                viewModel.removeContentList(content: post)
+                            }
+                            else {
+                                viewModel.likeContentList(content: post)
+                            }
                         } label: {
-                            Image(systemName: "heart.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.red)
+                            if viewModel.likedList.contains(where: { $0.title == post.title }) {
+                                Image(systemName: "heart.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.red)
+                            } else {
+                                Image(systemName: "heart")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.gray)
+                            }
                         }
                     }
                     HStack {
@@ -43,6 +56,7 @@ struct ListDetailView: View {
                     .foregroundColor(.gray)
                     Divider()
                     MDText(markdown: post.entirePost ?? "erro")
+                        .padding(.bottom, 80)
                 }
                 .padding(.horizontal, 30)
             }
@@ -77,7 +91,8 @@ struct ListDetailView: View {
 }
 
 struct ListDetailView_Previews: PreviewProvider {
+    static var viewModel = MainViewModel()
     static var previews: some View {
-        ListDetailView(post: ContentRequest(id: nil, ownerID: nil, parentID: nil, slug: nil, title: nil, status: nil, sourceURL: nil, createdAt: nil, updatedAt: nil, publishedAt: nil, deletedAt: nil, ownerUsername: nil, tabcoins: nil, childrenDeepCount: nil))
+        ListDetailView(post: ContentRequest(id: nil, ownerID: nil, parentID: nil, slug: nil, title: nil, status: nil, sourceURL: nil, createdAt: nil, updatedAt: nil, publishedAt: nil, deletedAt: nil, ownerUsername: nil, tabcoins: nil, childrenDeepCount: nil), viewModel: viewModel)
     }
 }

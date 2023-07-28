@@ -18,7 +18,8 @@ struct newtabnewsApp: App {
         WindowGroup {
             NavigationView {
                 let viewModel = MainViewModel()
-                ContentView(viewModel: viewModel, searchText: "")
+                ContentView(searchText: "")
+                    .environmentObject(viewModel)
                     .navigationBarHidden(true)
                 
             }
