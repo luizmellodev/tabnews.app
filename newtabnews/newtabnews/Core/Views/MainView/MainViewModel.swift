@@ -14,9 +14,30 @@ class MainViewModel: ObservableObject {
     @Published var likedList: [ContentRequest] = []
     @Published var content: [ContentRequest] = []
     @Published var state: DefaultViewState = .started
+    @Published var newsletter: [ContentRequest] = []
     
     let defaults = UserDefaults.standard
+}
 
+// MARK: - Fetch Functions
+extension MainViewModel {
+    
+    @MainActor
+    func fetchNewsletter() async {
+        self.state = .loading
+        let contentResponse = await service.getNewsletter(page: "1", perPage: "5", strategy: "new")
+        switch contentResponse {
+        case .success(let response):
+            self.state = .requestSucceeded
+            self.newsletter = response
+            print("\n\n\n\(self.newsletter[0])")
+        case .failure(let error), .customError(let error):
+            self.state = .requestFailed
+            print(error)
+        }
+    }
+    
+    
     @MainActor
     func fetchContent() async {
         self.state = .loading

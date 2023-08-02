@@ -26,6 +26,11 @@ struct ContentView: View {
                     Label("Curtidas", systemImage: "heart.fill")
                 }
             
+            NewsletterView(isViewInApp: $isViewInApp, viewModel: viewModel, newsletters: viewModel.newsletter)
+                .tabItem {
+                    Label("Newsletter", systemImage: "newspaper.fill")
+                }
+            
             SettingsView(viewModel: viewModel, isViewInApp: $isViewInApp, currentTheme: $currentTheme)
                 .tabItem {
                     Label("Configurações", systemImage: "gearshape.fill")
@@ -39,6 +44,7 @@ struct ContentView: View {
                 Task {
                     await viewModel.fetchContent()
                     await viewModel.fetchPost()
+                    await viewModel.fetchNewsletter()
                 }
             }
             viewModel.saveInAppSettings(viewInApp: isViewInApp)
