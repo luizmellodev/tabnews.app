@@ -44,7 +44,7 @@ extension ContentService: ContentServiceProtocol {
     }
     
     public func getNewsletter(page: String, perPage: String, strategy: String) async -> RequestResponse<[ContentRequest], RequestError> {
-        return await network.request(endpoint: ContentEndpoint.basic,
+        return await network.request(endpoint: ContentEndpoint.newsletter,
                                      method: .get,
                                      parameters: contentParameters(page: page, perPage: perPage, strategy: strategy),
                                      interceptors: [ContentInterceptor()],

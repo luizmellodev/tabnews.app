@@ -37,14 +37,18 @@ struct MainView: View {
                     case .loading:
                         ProgressView()
                     case .requestSucceeded:
-                        Text("Tab News")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .padding(.top, 70)
-                        SearchBar(searchText: $searchText, isSearching: $isSearching, searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
-                            .padding(.bottom, 10)
-                        ListView(searchText: $searchText, isViewInApp: $isViewInApp, viewModel: viewModel, posts: viewModel.content)
-                        Spacer()
+                        VStack {
+                            Group {
+                                Text("Tab News")
+                                    .font(.title)
+                                    .bold()
+                                    .padding(.top, 100)
+                                SearchBar(searchText: $searchText, isSearching: $isSearching, searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
+                                    .padding(.top, 20)
+                            }
+                            ListView(searchText: $searchText, isViewInApp: $isViewInApp, viewModel: viewModel, posts: viewModel.content)
+                            Spacer()
+                        }
                     case .requestFailed:
                         FailureView(currentTheme: $currentTheme)
                     default:
@@ -53,7 +57,5 @@ struct MainView: View {
                 }
             }
         }
-        .edgesIgnoringSafeArea(.all)
-        .statusBarHidden()
     }
 }

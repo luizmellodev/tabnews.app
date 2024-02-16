@@ -37,11 +37,10 @@ extension MainViewModel {
         }
     }
     
-    
     @MainActor
     func fetchContent() async {
         self.state = .loading
-        let contentResponse = await service.getContent(page: "1", perPage: "30", strategy: "relevant")
+        let contentResponse = await service.getContent(page: "1", perPage: "5", strategy: "relevant")
         switch contentResponse {
         case .success(let response):
             self.state = .requestSucceeded

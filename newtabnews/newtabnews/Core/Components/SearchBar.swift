@@ -77,6 +77,7 @@ struct SearchBar: View {
 
         }
         .padding(.top, isSearching ? 80 : 0)
+        .padding(.bottom, 20)
     }
     struct SearchBar_Preview: PreviewProvider {
         static var previews: some View {

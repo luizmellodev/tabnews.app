@@ -10,12 +10,9 @@ struct DuckView: View {
     @State var twoColor = false
     var body: some View {
         ZStack {
-            Color(UIColor(twoColor ? Color.blue : Color.yellow))
+            Color(UIColor(twoColor ? Color.blue : Color.red))
                 .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: true))
-                .onAppear()
-            {
-                self.twoColor.toggle()
-            }
+                .onAppear() { self.twoColor.toggle() }
             .edgesIgnoringSafeArea(.all)
             
             animationSequence()

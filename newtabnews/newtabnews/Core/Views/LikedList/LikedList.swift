@@ -12,7 +12,8 @@ struct LikedList: View {
     @Binding var isViewInApp: Bool
     @Binding var showSnack: Bool
     @State private var selectedItems: Set<Int> = []
-    
+    @StateObject private var gameController = GameController()
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -35,6 +36,16 @@ struct LikedList: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60)
                             .foregroundColor(.gray)
+                        
+                        
+                        NavigationLink {
+                            Game(controller: self.gameController)
+                                .onAppear {
+                                    self.gameController.activate()
+                                }            } label: {
+                            Text("O jogo")
+                                .foregroundColor(.blue)
+                        }
                     }
                 } else {
                     List {

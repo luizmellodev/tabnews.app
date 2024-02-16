@@ -13,7 +13,7 @@ struct ContentView: View {
     @State var isSearching = false
     @State var isViewInApp: Bool = true
     @AppStorage("current_theme") var currentTheme: Theme = .light
-
+    
     var body: some View {
         TabView {
             MainView(viewModel: viewModel, searchText: searchText, showSnack: showSnack, isSearching: isSearching, isViewInApp: $isViewInApp)
@@ -36,7 +36,7 @@ struct ContentView: View {
                     Label("Configurações", systemImage: "gearshape.fill")
                 }
                 .onChange(of: isViewInApp) { newvalue in
-                        viewModel.defaults.set(newvalue, forKey: "viewInApp")
+                    viewModel.defaults.set(newvalue, forKey: "viewInApp")
                 }
         }
         .onAppear {
