@@ -50,7 +50,7 @@ struct CardList: View {
                 }
                 .padding(.bottom, 10)
             }
-            if tabcoins >= 10 {
+            if tabcoins >= 15 {
                 VStack {
                     HStack {
                         Spacer()
