@@ -1,3 +1,11 @@
+//
+//  Logger.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 27/03/25.
+//
+
+import Foundation
 
 class Logger {
     static func info(_ message: String) {

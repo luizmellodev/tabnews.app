@@ -9,28 +9,35 @@ import Foundation
 import SwiftUI
 
 struct ListDetailView: View {
-    @State var post: ContentRequest
+    
+    @EnvironmentObject var viewModel: MainViewModel
+    
+    @Binding var isViewInApp: Bool
+    @Binding var currentTheme: Theme
+    
+    @State var post: PostRequest
     @State private var showingTabNews = false
-    @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text(post.title ?? "merda")
+                        Text(post.title ?? "Título indisponível :/")
                             .padding(.top, 30)
                             .font(.title3)
                             .fontWeight(.semibold)
                             .padding(.bottom, 10)
+                        
                         Spacer()
+                        
                         Button {
                             let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                             impactHeavy.impactOccurred()
+                            
                             if viewModel.likedList.contains(where: { $0.title == post.title }) {
                                 viewModel.removeContentList(content: post)
-                            }
-                            else {
+                            } else {
                                 viewModel.likeContentList(content: post)
                             }
                         } label: {
@@ -46,16 +53,16 @@ struct ListDetailView: View {
                         }
                     }
                     HStack {
-                        Text(post.ownerUsername ?? "fodase")
+                        Text(post.ownerUsername ?? "luizmellodev")
                             .font(.footnote)
                         Spacer()
-                        Text(getFormattedDate(value: post.createdAt ?? "caralho"))
+                        Text(getFormattedDate(value: post.createdAt ?? "sábado-feira, 31 fevereiro"))
                             .font(.footnote)
                             .italic()
                     }
                     .foregroundColor(.gray)
                     Divider()
-                    MDText(markdown: post.entirePost ?? "erro")
+                    MDText(markdown: post.body ?? "Ops, parece que deu problema aqui.")
                         .padding(.bottom, 80)
                 }
                 .padding(.horizontal, 30)
@@ -87,12 +94,5 @@ struct ListDetailView: View {
                 }
             }
         }
-    }
-}
-
-struct ListDetailView_Previews: PreviewProvider {
-    static var viewModel = MainViewModel()
-    static var previews: some View {
-        ListDetailView(post: ContentRequest(id: nil, ownerID: nil, parentID: nil, slug: nil, title: nil, status: nil, sourceURL: nil, createdAt: nil, updatedAt: nil, publishedAt: nil, deletedAt: nil, ownerUsername: nil, tabcoins: nil, childrenDeepCount: nil), viewModel: viewModel)
     }
 }

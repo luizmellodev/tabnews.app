@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import WebKit
 
 struct WebContentView: View {
     @State var bodyContent = ""
-    var content: ContentRequest
+    var content: PostRequest
     
     var body: some View {
         VStack {
@@ -21,6 +22,6 @@ struct WebContentView: View {
 
 struct WebContentView_Previews: PreviewProvider {
     static var previews: some View {
-        WebContentView(content: ContentRequest(id: nil, ownerID: nil, parentID: nil, slug: nil, title: nil, status: nil, sourceURL: nil, createdAt: nil, updatedAt: nil, publishedAt: nil, deletedAt: nil, ownerUsername: nil, tabcoins: nil, childrenDeepCount: nil))
+        WebContentView(bodyContent: "", content: PostRequest(id: nil, ownerId: nil, parentId: nil, slug: nil, title: nil, body: nil, status: nil, type: nil, sourceUrl: nil, createdAt: nil, updatedAt: nil, publishedAt: nil, deletedAt: nil, ownerUsername: nil, tabcoins: nil, tabcoinsCredit: nil, tabcoinsDebit: nil, childrenDeepCount: nil))
     }
 }

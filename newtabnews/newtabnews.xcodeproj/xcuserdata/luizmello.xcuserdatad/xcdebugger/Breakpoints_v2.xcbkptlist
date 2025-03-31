@@ -1,56 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
-   uuid = "32E6D464-FD5B-4354-8FBF-B36093E75E65"
    type = "1"
    version = "2.0">
    <Breakpoints>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DE27AAD6-7BAE-4A1A-B17F-BE6D7C42BE7C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "newtabnews/Network/Models/Response/RestResponse.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "result(errorType:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "DE27AAD6-7BAE-4A1A-B17F-BE6D7C42BE7C - 59fb79c7d3d9cffc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "newtabnews.RestResponse.result&lt;&#x3c4;_0_0 where &#x3c4;_0_0: Swift.Decodable, &#x3c4;_0_0: Swift.Encodable, &#x3c4;_0_0: Swift.Error&gt;(errorType: &#x3c4;_0_0.Type) -&gt; Swift.Result&lt;Swift.String, Swift.Error&gt;"
-                  moduleName = "newtabnews"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/luizmello/Desktop/code/tabnews/new%20tabnews/newtabnews/newtabnews/Network/Models/Response/RestResponse.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "60"
-                  endingLineNumber = "60"
-                  offsetFromSymbolStart = "240">
-               </Location>
-               <Location
-                  uuid = "DE27AAD6-7BAE-4A1A-B17F-BE6D7C42BE7C - 59fb79c7d3d9cffc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "newtabnews.RestResponse.result&lt;&#x3c4;_0_0 where &#x3c4;_0_0: Swift.Decodable, &#x3c4;_0_0: Swift.Encodable, &#x3c4;_0_0: Swift.Error&gt;(errorType: &#x3c4;_0_0.Type) -&gt; Swift.Result&lt;Swift.String, Swift.Error&gt;"
-                  moduleName = "newtabnews"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/luizmello/Desktop/code/tabnews/new%20tabnews/newtabnews/newtabnews/Network/Models/Response/RestResponse.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "60"
-                  endingLineNumber = "60"
-                  offsetFromSymbolStart = "260">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

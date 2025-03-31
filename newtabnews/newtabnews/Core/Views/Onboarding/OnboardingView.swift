@@ -1,54 +1,85 @@
+//
+//  OnboardingView.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 31/03/25.
+//
+
 import SwiftUI
 
 struct OnboardingView: View {
     @Binding var showOnboarding: Bool
     @State private var currentPage = 0
     
-    let pages: [OnboardingPage] = [
+    private let pages: [OnboardingPage] = [
         OnboardingPage(
-            title: "Bem-vindo ao TabNews",
-            subtitle: "O app não oficial da sua plataforma favorita de conteúdo",
+            title: "TabNews",
+            subtitle: "O app não oficial da sua plataforma favorita de conteúdo de tecnologia",
+            imageName: "square.text.square.fill",
+            secondaryImageName: "square.text.square"
+        ),
+        OnboardingPage(
+            title: "Notificações",
+            subtitle: "Receba notificações locais sobre novas newsletters. Simples e direto.",
+            imageName: "bell.fill",
+            secondaryImageName: "bell.badge"
+        ),
+        OnboardingPage(
+            title: "Leitura",
+            subtitle: "Escolha como quer ler: no app ou no site oficial. Recomendamos o site para uma experiência markdown completa",
             imageName: "doc.text.fill",
-            color: .blue
+            secondaryImageName: "arrow.up.forward.app"
         ),
         OnboardingPage(
-            title: "Notificações Locais",
-            subtitle: "Receba notificações da newsletter diretamente no seu dispositivo",
-            imageName: "bell.badge.fill",
-            color: .purple
-        ),
-        OnboardingPage(
-            title: "Como Ler",
-            subtitle: "Escolha entre ler direto no app ou no site do TabNews. Recomendamos o site para uma experiência completa do markdown",
-            imageName: "text.book.closed.fill",
-            color: .orange
-        ),
-        OnboardingPage(
-            title: "Em Evolução",
-            subtitle: "Novas atualizações chegando em breve com mais funcionalidades!",
-            imageName: "sparkles.rectangle.stack.fill",
-            color: .green
+            title: "Em Breve",
+            subtitle: "Mais funcionalidades chegando em breve. Fique ligado!",
+            imageName: "sparkles.square.fill.on.square",
+            secondaryImageName: "square.stack"
         )
     ]
     
     var body: some View {
-        ZStack {
-            Color("Background")
-                .ignoresSafeArea()
-            
-            TabView(selection: $currentPage) {
-                ForEach(0..<pages.count, id: \.self) { index in
-                    OnboardingPageView(page: pages[index], isLast: index == pages.count - 1) {
-                        withAnimation {
-                            showOnboarding = false
-                            UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
-                        }
+        GeometryReader { geometry in
+            ZStack {
+                Color("Background")
+                    .ignoresSafeArea()
+                Image("ruido")
+                    .resizable()
+                    .scaledToFill()
+                    .blendMode(.overlay)
+                    .ignoresSafeArea()
+                
+                TabView(selection: $currentPage) {
+                    ForEach(0..<pages.count, id: \.self) { index in
+                        OnboardingPageView(
+                            page: pages[index],
+                            isLast: index == pages.count - 1,
+                            screenSize: geometry.size,
+                            completion: {
+                                withAnimation {
+                                    showOnboarding = false
+                                    UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
+                                }
+                            }
+                        )
+                        .tag(index)
                     }
-                    .tag(index)
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                
+                // Custom page indicator
+                HStack(spacing: 8) {
+                    ForEach(0..<pages.count, id: \.self) { index in
+                        Circle()
+                            .fill(currentPage == index ? Color.primary : Color.primary.opacity(0.3))
+                            .frame(width: 6, height: 6)
+                            .scaleEffect(currentPage == index ? 1.2 : 1)
+                            .animation(.spring(), value: currentPage)
+                    }
+                }
+                .padding()
+                .offset(y: geometry.size.height * 0.4)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
         }
     }
 }
@@ -57,31 +88,46 @@ private struct OnboardingPage {
     let title: String
     let subtitle: String
     let imageName: String
-    let color: Color
+    let secondaryImageName: String
 }
 
 private struct OnboardingPageView: View {
     let page: OnboardingPage
     let isLast: Bool
+    let screenSize: CGSize
     let completion: () -> Void
     
     @State private var showContent = false
+    @State private var showSecondaryImage = false
+    @State private var rotationAngle = 0.0
     
     var body: some View {
         VStack(spacing: 32) {
             Spacer()
             
-            Image(systemName: page.imageName)
-                .font(.system(size: 80))
-                .foregroundColor(page.color)
-                .symbolRenderingMode(.hierarchical)
-                .opacity(showContent ? 1 : 0)
-                .scaleEffect(showContent ? 1 : 0.5)
+            // Animated icons
+            ZStack {
+                Image(systemName: page.imageName)
+                    .font(.system(size: 65, weight: .light))
+                    .foregroundStyle(.primary)
+                    .rotationEffect(.degrees(showContent ? 360 : 0))
+                    .opacity(showContent ? 1 : 0)
+                    .scaleEffect(showContent ? 1 : 0.5)
+                
+                Image(systemName: page.secondaryImageName)
+                    .font(.system(size: 35, weight: .light))
+                    .foregroundStyle(.primary.opacity(0.7))
+                    .offset(x: showSecondaryImage ? 30 : 0, y: showSecondaryImage ? -30 : 0)
+                    .rotationEffect(.degrees(showSecondaryImage ? 15 : 0))
+                    .opacity(showSecondaryImage ? 1 : 0)
+                    .scaleEffect(showSecondaryImage ? 1 : 0.5)
+            }
+            .frame(height: screenSize.height * 0.2)
             
-            VStack(spacing: 16) {
+            VStack(spacing: 24) {
                 Text(page.title)
                     .font(.title)
-                    .bold()
+                    .fontWeight(.bold)
                     .opacity(showContent ? 1 : 0)
                     .offset(y: showContent ? 0 : 20)
                 
@@ -104,10 +150,10 @@ private struct OnboardingPageView: View {
                         .font(.headline)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .padding()
+                        .frame(height: 50)
                         .background {
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(page.color.gradient)
+                                .fill(Color.primary)
                         }
                         .padding(.horizontal, 32)
                 }
@@ -116,16 +162,26 @@ private struct OnboardingPageView: View {
             }
             
             Spacer()
-                .frame(height: 60)
+                .frame(height: 100)
         }
         .padding()
         .onAppear {
             withAnimation(.spring(duration: 0.7)) {
                 showContent = true
             }
+            
+            withAnimation(.spring(duration: 0.7).delay(0.3)) {
+                showSecondaryImage = true
+            }
+            
+            // Continuous rotation animation for icons
+            withAnimation(.linear(duration: 20).repeatForever(autoreverses: false)) {
+                rotationAngle = 360
+            }
         }
         .onDisappear {
             showContent = false
+            showSecondaryImage = false
         }
     }
 }

@@ -11,17 +11,19 @@ import SwiftUI
 struct newtabnewsApp: App {
     
     init() {
-        AppModuleDependencies().setupDependencies()
+        NotificationManager.shared.requestPermission()
+        
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithDefaultBackground()
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        UITabBar.appearance().standardAppearance = tabBarAppearance
     }
     
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                let viewModel = MainViewModel()
                 ContentView(searchText: "")
-                    .environmentObject(viewModel)
                     .navigationBarHidden(true)
-                
             }
         }
     }

@@ -1,3 +1,11 @@
+//
+//  SocialView.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 31/03/25.
+//
+
+
 import SwiftUI
 
 struct SocialView: View {

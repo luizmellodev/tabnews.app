@@ -1,3 +1,10 @@
+//
+//  NotificationManager.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 31/03/25.
+//
+
 import Foundation
 import UserNotifications
 
@@ -36,8 +43,8 @@ class NotificationManager: ObservableObject {
         }
         
         let content = UNMutableNotificationContent()
-        content.title = "Nova Newsletter Disponível!"
-        content.body = newsletter.title ?? "Confira o novo conteúdo do TabNews"
+        content.title = "Nova newsletter disponível!"
+        content.body = newsletter.title ?? "Nova edição da newsletter TabNews"
         content.sound = .default
         
         // Componentes para agendar no próximo dia às 10:00
@@ -58,6 +65,29 @@ class NotificationManager: ObservableObject {
             } else {
                 // Marcar como notificado
                 UserDefaults.standard.set(true, forKey: "notified_\(newsletter.id ?? "")")
+            }
+        }
+    }
+    
+    func scheduleTestNotification(for newsletter: PostRequest) {
+        let content = UNMutableNotificationContent()
+        content.title = "Nova newsletter disponível!"
+        content.body = newsletter.title ?? "Nova edição da newsletter TabNews"
+        content.sound = .default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        
+        let request = UNNotificationRequest(
+            identifier: "test_\(newsletter.id ?? UUID().uuidString)",
+            content: content,
+            trigger: trigger
+        )
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Erro ao agendar notificação de teste: \(error.localizedDescription)")
+            } else {
+                print("Notificação de teste agendada com sucesso!")
             }
         }
     }

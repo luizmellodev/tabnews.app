@@ -8,93 +8,94 @@
 import SwiftUI
 
 struct LikedList: View {
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: MainViewModel
+    
     @Binding var isViewInApp: Bool
+    @Binding var currentTheme: Theme
     @Binding var showSnack: Bool
-    @State private var selectedItems: Set<Int> = []
-    @StateObject private var gameController = GameController()
-
+    
     var body: some View {
         NavigationView {
-            ZStack {
-                Color("Background")
-                    .ignoresSafeArea()
-                Image("ruido")
-                    .resizable()
-                    .scaledToFill()
-                    .blendMode(.overlay)
-                    .ignoresSafeArea()
-                if viewModel.likedList.isEmpty {
-                    VStack {
-                        Text("Ops! Você ainda não curtiu nenhum conteúdo")
-                            .font(.title)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.gray)
-                        
-                        Image(systemName: "trash")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 60)
-                            .foregroundColor(.gray)
-                        
-                        
-                        NavigationLink {
-                            Game(controller: self.gameController)
-                                .onAppear {
-                                    self.gameController.activate()
-                                }            } label: {
-                            Text("O jogo")
-                                .foregroundColor(.blue)
-                        }
-                    }
-                } else {
-                    List {
-                        HStack {
-                            Text("Seus favoritos")
-                                .font(.title)
-                                .fontWeight(.semibold)
-                                .padding(.vertical, 10)
-                            Spacer()
-                        }
-                        ForEach(Array(zip(viewModel.likedList.indices, viewModel.likedList)), id: \.0) {index, post in
-                            NavigationLink { isViewInApp ?
-                                AnyView(ListDetailView(post: post, viewModel: viewModel)) : AnyView(WebContentView(content: post))
-                            } label: {
-                                HStack {
-                                    Text(post.title ?? "fodase")
-                                }
-                            }
-                        }
-                        .onDelete(perform: removeRows)
-                    }
-                    .toolbar {
-                        ToolbarItem {
-                            EditButton()
-                        }
-                    }
-                    .padding(.top, 60)
-                    .refreshable {
-                        await viewModel.fetchContent()
-                    }
-                }
-            }
+            LikedListContent(
+                viewModel: viewModel,
+                isViewInApp: $isViewInApp,
+                currentTheme: $currentTheme,
+                showSnack: $showSnack
+            )
         }
         .onAppear {
             viewModel.getLikedContent()
         }
     }
-    func removeRows(at offsets: IndexSet) {
+}
+
+private struct LikedListContent: View {
+    @ObservedObject var viewModel: MainViewModel
+    
+    @Binding var isViewInApp: Bool
+    @Binding var currentTheme: Theme
+    @Binding var showSnack: Bool
+    
+    var body: some View {
+        Group {
+            if viewModel.likedList.isEmpty {
+                EmptyLikedListView()
+            } else {
+                LikedListItems(
+                    viewModel: viewModel,
+                    isViewInApp: $isViewInApp,
+                    currentTheme: $currentTheme
+                )
+            }
+        }
+    }
+}
+
+private struct LikedListItems: View {
+    @ObservedObject var viewModel: MainViewModel
+    @Binding var isViewInApp: Bool
+    @Binding var currentTheme: Theme
+    
+    var body: some View {
+        List {
+            Section {
+                ForEach(viewModel.likedList) { post in
+                    NavigationLink { isViewInApp ?
+                        AnyView(ListDetailView(
+                            isViewInApp: $isViewInApp,
+                            currentTheme: $currentTheme,
+                            post: post
+                        )) : AnyView(WebContentView(content: post))
+                    } label: {
+                        HStack {
+                            Text(post.title ?? "Erro pra pegar o título :/")
+                        }
+                    }
+                }
+                .onDelete(perform: removeRows)
+            } header: {
+                listHeader
+            }
+        }
+        .toolbar {
+            EditButton()
+        }
+    }
+    
+    private var listHeader: some View {
+        Text("Seus favoritos")
+            .font(.title)
+            .fontWeight(.semibold)
+            .textCase(nil)
+            .foregroundColor(.primary)
+            .padding(.bottom, 10)
+    }
+    
+    private func removeRows(at offsets: IndexSet) {
         viewModel.likedList.remove(atOffsets: offsets)
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(viewModel.likedList) {
             viewModel.defaults.set(encoded, forKey: "LikedContent")
         }
-    }
-}
-
-struct LikedListView_Previews: PreviewProvider {
-    static var viewModel = MainViewModel()
-    static var previews: some View {
-        LikedList(viewModel: viewModel, isViewInApp: .constant(false), showSnack: .constant(false))
     }
 }

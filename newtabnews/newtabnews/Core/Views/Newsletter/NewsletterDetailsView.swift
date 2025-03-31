@@ -1,5 +1,5 @@
 //
-//  PostDetailView.swift
+//  NewsletterDetailsView.swift
 //  newtabnews
 //
 //  Created by Luiz Mello on 11/03/25.
@@ -8,22 +8,22 @@
 
 import SwiftUI
 
-struct PostDetailView: View {
-    let post: Post
+struct NewsletterDetailsView: View {
+    let nw: PostRequest?
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(post.title)
+                Text(nw?.title ?? "Sem título (agora leia aqui)")
                     .font(.title)
                     .bold()
                 
-                if let content = post.content {
-                    Text(content)
+                if let content = nw {
+                    Text(content.body ?? "Ops, problema pra pegar esse conteúdo")
                         .font(.body)
                         .lineSpacing(5)
                 } else {
-                    ProgressView() // Carregando conteúdo
+                    ProgressView()
                 }
             }
             .padding()

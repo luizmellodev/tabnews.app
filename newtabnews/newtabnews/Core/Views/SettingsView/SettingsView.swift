@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @ObservedObject var viewModel: MainViewModel
+    
+    @EnvironmentObject var viewModel: MainViewModel
+    @State var isDarkMode: Bool = false
+    
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
-    @State var isDarkMode: Bool = false
     
     var body: some View {
         NavigationView {
@@ -56,115 +58,13 @@ struct SettingsView: View {
                 }
             }
         }
-    }
-}
-struct SocialView: View {
-    var github, linkedin, youtube, instagram: String
-    var body: some View {
-        List {
-            HStack {
-                Button {
-                    openInstagram(username: instagram)
-                } label: {
-                    Text("Instagram")
-                }
-            }
-            
-            HStack {
-                Button {
-                    openGithub(username: github)
-                } label: {
-                    Text("GitHub")
-                }
-            }
-            HStack {
-                Button {
-                    openLinkedin(username: linkedin)
-                } label: {
-                    Text("LinkedIn")
-                }
-            }
-            if youtube != "" {
-                HStack {
-                    Button {
-                        openYouTube(username: youtube)
-                    } label: {
-                        Text("Youtube")
-                    }
-                }
-            } else {
-                NavigationLink {
-                    DuckView()
-                } label: {
-                    Text("Duck")
-                        .foregroundColor(.blue)
-                }
-
-            }
-        }
-        .navigationTitle(Text("Redes Sociais"))
-    }
-    func openWebURL(weburl: URL) {
-        //redirect to safari because the user doesn't have Instagram
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(weburl, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(weburl)
-        }
-    }
-    func openInstagram(username: String) {
-        let appURL = URL(string:  "instagram://user?username=\(username)")!
-        let webURL = URL(string:  "https://instagram.com/\(username)")!
-        if UIApplication.shared.canOpenURL(appURL) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-            } else {
-                UIApplication.shared.openURL(appURL)
-            }
-        } else { openWebURL(weburl: webURL) }
-    }
-    
-    func openGithub(username: String) {
-        let appURL = URL(string:  "github://\(username)")!
-        let webURL = URL(string:  "https://github.com/\(username)")!
-        if UIApplication.shared.canOpenURL(appURL) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-            } else {
-                UIApplication.shared.openURL(appURL)
-            }
-        } else { openWebURL(weburl: webURL) }
-    }
-    
-    func openYouTube(username: String) {
-        let appURL = URL(string:  "youtube://@\(username)")!
-        let webURL = URL(string:  "https://youtube.com/@\(username)")!
-        if UIApplication.shared.canOpenURL(appURL) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-            } else {
-                UIApplication.shared.openURL(appURL)
-            }
-        } else { openWebURL(weburl: webURL) }
-    }
-    
-    func openLinkedin(username: String) {
-        let appURL = URL(string:  "linedin://\(username)")!
-        let webURL = URL(string:  "https://www.linkedin.com/in/\(username)")!
-        if UIApplication.shared.canOpenURL(appURL) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-            } else {
-                UIApplication.shared.openURL(appURL)
-            }
-        } else { openWebURL(weburl: webURL) }
+        
     }
 }
 
 struct SettingsView_Previews: PreviewProvider {
-    static var viewModel = MainViewModel()
     static var currentTheme: Theme = .light
     static var previews: some View {
-        SettingsView(viewModel: viewModel, isViewInApp: .constant(true), currentTheme: .constant(currentTheme))
+        SettingsView(isViewInApp: .constant(true), currentTheme: .constant(currentTheme))
     }
 }

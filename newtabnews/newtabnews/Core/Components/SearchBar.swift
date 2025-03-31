@@ -17,71 +17,80 @@ struct SearchBar: View {
     var searchPlaceHolder: String
     var searchCancel: String
 
+    @FocusState private var isFocused: Bool
+    
     var body: some View {
-        HStack(spacing: 0) {
-            HStack {
-                TextField(searchPlaceHolder, text: $searchText)
-                    .padding(.leading, 30)
-                    .foregroundColor(Color.primary)
-            }
-            .padding(5)
-            .background(RoundedRectangle(cornerRadius: 10).fill(Color("CardColor")).frame( height: 50))
-            .padding(.horizontal)
-            .overlay(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color("CardColor"), lineWidth: 1)
-                        .frame( height: 35)
-                        .padding(.horizontal)
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                        Spacer()
-
-                        if isSearching {
-                            Button(action: { searchText = "" }, label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .padding(.vertical)
-                            })
-
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.gray)
+                        .animation(.easeInOut, value: isSearching)
+                    
+                    TextField(searchPlaceHolder, text: $searchText)
+                        .focused($isFocused)
+                        .foregroundColor(Color.primary)
+                        .submitLabel(.search)
+                    
+                    if !searchText.isEmpty {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                searchText = ""
+                            }
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.gray)
+                                .transition(.scale.combined(with: .opacity))
                         }
-
-                    }.padding(.horizontal, 25)
-                    .foregroundColor(Color(.gray))
+                    }
                 }
-
-            ).transition(.move(edge: .trailing))
-                .onTapGesture(perform: {
-                    withAnimation {
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color("CardColor"))
+                        .contentShape(Rectangle())
+                )
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
                         isSearching = true
+                        isFocused = true
                     }
-                })
-
-            if isSearching {
-                Button(action: {
-
-                    withAnimation {
-                        isSearching = false
-                        searchText = ""
-
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+                
+                if isSearching {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isSearching = false
+                            isFocused = false
+                            searchText = ""
+                        }
+                    } label: {
+                        Text(searchCancel)
+                            .foregroundColor(.primary)
                     }
-
-                }, label: {
-                    Text(searchCancel)
-                        .font(.body)
-                        .padding(.trailing)
-                        .padding(.leading, 0)
-                })
-                .transition(.move(edge: .trailing))
+                    .padding(.leading, 8)
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                }
             }
-
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            
+            if isSearching {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isSearching = false
+                            isFocused = false
+                            searchText = ""
+                        }
+                    }
+            }
         }
-        .padding(.top, isSearching ? 80 : 0)
-        .padding(.bottom, 20)
-    }
-    struct SearchBar_Preview: PreviewProvider {
-        static var previews: some View {
-            SearchBar(searchText: .constant(""), isSearching: .constant(true), searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
+        .onChange(of: isFocused) { newValue in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isSearching = newValue
+            }
         }
     }
 }

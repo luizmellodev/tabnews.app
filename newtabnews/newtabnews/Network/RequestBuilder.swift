@@ -1,8 +1,8 @@
 //
 //  RequestBuilder.swift
-//  todo-list
+//  newtabnews
 //
-//  Created by Luiz Mello on 28/11/24.
+//  Created by Luiz Mello on 27/03/25.
 //
 
 import Foundation
@@ -22,18 +22,7 @@ struct RequestBuilder {
         var request = URLRequest(url: apiUrl)
         request.httpMethod = httpMethod
         
-        if httpMethod == "POST" && url?.path == "/token" {
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            if let authentication  {
-                request.httpBody = authentication.data(using: .utf8)
-            }
-        } else {
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        }
-        
-        if let token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         if let body {
             request.httpBody = body

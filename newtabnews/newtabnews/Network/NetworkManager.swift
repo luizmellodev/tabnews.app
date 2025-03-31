@@ -1,77 +1,78 @@
 import Foundation
 
-enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case delete = "DELETE"
-}
-
-enum NetworkError: Error {
-    case invalidURL
-    case noData
-    case decodingError
-    case serverError(Int)
-    case networkError(Error)
-}
-
-class NetworkManager {
-    private let baseURL = "https://www.tabnews.com.br/api/v1"
-    private let session: URLSession
+class NetworkManager: NetworkManagerProtocol {
     
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
+    static let shared = NetworkManager()
+    let baseURL = URL(string: "https://www.tabnews.com.br/api/v1")!
     
-    func request<T: Decodable>(
-        endpoint: String,
-        method: HTTPMethod = .get,
-        parameters: [String: Any]? = nil
+    private init() {}
+    
+    func sendRequest<T: Decodable>(
+        _ endpoint: String,
+        method: String,
+        parameters: [String: Any]? = nil,
+        authentication: String?,
+        token: String?,
+        body: Data? = nil
     ) async throws -> T {
-        guard var urlComponents = URLComponents(string: baseURL + endpoint) else {
-            throw NetworkError.invalidURL
-        }
+        var urlComponents = URLComponents(url: baseURL.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)
         
-        // Add query parameters for GET requests
-        if method == .get, let parameters = parameters {
-            urlComponents.queryItems = parameters.map { 
+        if let parameters = parameters {
+            urlComponents?.queryItems = parameters.map { 
                 URLQueryItem(name: $0.key, value: "\($0.value)")
             }
         }
         
-        guard let url = urlComponents.url else {
+        guard let url = urlComponents?.url else {
+            Logger.error("Invalid URL for endpoint: \(endpoint)")
             throw NetworkError.invalidURL
         }
         
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        // Add body for non-GET requests
-        if method != .get, let parameters = parameters {
-            request.httpBody = try? JSONSerialization.data(withJSONObject: parameters)
+        guard let request = RequestBuilder.buildRequest(
+            url: url,
+            httpMethod: method,
+            token: token,
+            parameters: parameters,
+            authentication: authentication,
+            body: body
+        ) else {
+            Logger.error("Failed to build request for endpoint: \(endpoint)")
+            throw NetworkError.badServerResponse
         }
         
+        Logger.info("📤 Sending request to: \(url)")
+        
+        if let body = body, let bodyString = String(data: body, encoding: .utf8) {
+            Logger.info("📄 Request body: \(bodyString)")
+        }
+        
+        Logger.info("🔑 Request headers: \(request.allHTTPHeaderFields ?? [:])")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            Logger.error("Invalid response type")
+            throw NetworkError.badServerResponse
+        }
+        
+        if !(200...299).contains(httpResponse.statusCode) {
+            let errorBody = String(data: data, encoding: .utf8) ?? "No error body"
+            Logger.error("⚠️ Error: Bad server response (status code: \(httpResponse.statusCode))")
+            Logger.error("Error body: \(errorBody)")
+            
+            if let errorResponse = try? JSONDecoder().decode(APIError.self, from: data) {
+                throw NetworkError.apiError(errorResponse)
+            }
+            throw NetworkError.badServerResponse
+        }
+        
+        Logger.prettyPrintJSON(from: data)
+        
         do {
-            let (data, response) = try await session.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw NetworkError.networkError(NSError(domain: "", code: -1))
-            }
-            
-            guard (200...299).contains(httpResponse.statusCode) else {
-                throw NetworkError.serverError(httpResponse.statusCode)
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                return try decoder.decode(T.self, from: data)
-            } catch {
-                throw NetworkError.decodingError
-            }
+            return try JSONDecoder().decode(T.self, from: data)
         } catch {
-            throw NetworkError.networkError(error)
+            Logger.error("❌ Error decoding \(T.self): \(error)")
+            throw NetworkError.decodingError
         }
     }
 }

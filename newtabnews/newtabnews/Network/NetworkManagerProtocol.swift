@@ -1,9 +1,13 @@
+//
+//  NetworkManagerProtocol.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 27/03/25.
+//
+
 import Foundation
-import Combine
 
 protocol NetworkManagerProtocol {
-    var baseURL: URL { get }
-    
     func sendRequest<T: Decodable>(
         _ endpoint: String,
         method: String,
@@ -11,5 +15,5 @@ protocol NetworkManagerProtocol {
         authentication: String?,
         token: String?,
         body: Data?
-    ) -> AnyPublisher<T, NetworkError>
+    ) async throws -> T
 }

@@ -10,8 +10,8 @@ import Foundation
 class MainViewModel: ObservableObject {
     
     private let service: ContentServiceProtocol
-    @Published var likedList: [ContentRequest] = []
-    @Published var content: [ContentRequest] = []
+    @Published var likedList: [PostRequest] = []
+    @Published var content: [PostRequest] = []
     @Published var state: DefaultViewState = .started
     
     let defaults = UserDefaults.standard
@@ -41,10 +41,12 @@ extension MainViewModel {
     @MainActor
     func fetchPost() async {
         for index in content.indices {
-            let postResponse = await service.getPost(user: content[index].ownerUsername ?? "erro", slug: content[index].slug ?? "erro")
-            switch postResponse {
-            case .success(let response):
-                content[index].entirePost = response.body
+            do {
+                let response = try await service.getPost(
+                    user: content[index].ownerUsername ?? "erro",
+                    slug: content[index].slug ?? "erro"
+                )
+                content[index] = response
             } catch {
                 self.state = .requestFailed
                 print(error)
@@ -59,7 +61,7 @@ extension MainViewModel {
         defaults.bool(forKey: "viewInApp")
     }
     
-    func likeContentList(content: ContentRequest) {
+    func likeContentList(content: PostRequest) {
         self.likedList.append(content)
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(likedList) {
@@ -67,7 +69,7 @@ extension MainViewModel {
         }
     }
     
-    func removeContentList(content: ContentRequest) {
+    func removeContentList(content: PostRequest) {
         self.likedList.removeAll(where: { $0.title == content.title })
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(likedList) {
@@ -78,7 +80,7 @@ extension MainViewModel {
     func getLikedContent() {
         if let likedContent = defaults.object(forKey: "LikedContent") as? Data {
             let decoder = JSONDecoder()
-            if let loadedContent = try? decoder.decode([ContentRequest].self, from: likedContent) {
+            if let loadedContent = try? decoder.decode([PostRequest].self, from: likedContent) {
                 self.likedList = loadedContent
             }
         }

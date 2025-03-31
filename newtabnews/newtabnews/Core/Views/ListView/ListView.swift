@@ -9,38 +9,36 @@ import SwiftUI
 
 struct ListView: View {
     
+    @EnvironmentObject var viewModel: MainViewModel
     @Binding var searchText: String
     @Binding var isViewInApp: Bool
-    
-    var viewModel: MainViewModel
-    var posts: [ContentRequest]
+    @Binding var currentTheme: Theme
+    var posts: [PostRequest]
     
     var body: some View {
         ScrollView {
-            ForEach(searchText.isEmpty ? posts : posts.filter({ content in
-                guard let title = content.title else { return false }
-                return title.localizedCaseInsensitiveContains(searchText)
-            })) { post in
-                NavigationLink { isViewInApp ?
-                    AnyView(ListDetailView(post: post, viewModel: viewModel)) : AnyView(WebContentView(content: post))
-                } label: {
-                    CardList(title: post.title ?? "titulo", user: post.ownerUsername ?? "username", date: getFormattedDate(value: post.createdAt ?? "asdada"), bodyContent: post.entirePost ?? "erro porra", tabcoins: post.tabcoins ?? 0)
-                        .redacted(reason: viewModel.state == .dataChanged ? .placeholder : [])
+            LazyVStack {
+                ForEach(filteredPosts) { post in
+                    PostRow(
+                        isViewInApp: $isViewInApp,
+                        currentTheme: $currentTheme,
+                        post: post
+                    )
+                    .environmentObject(viewModel)
                 }
-                .contextMenu {
-                    Button {
-                        let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
-                        impactHeavy.impactOccurred()
-                        viewModel.likeContentList(content: post)
-                    } label: {
-                        Text("Curtir")
-                    }
-                }
-                .padding(.top, 20)
             }
         }
         .padding(.bottom, 70)
     }
+    
+    private var filteredPosts: [PostRequest] {
+        if searchText.isEmpty {
+            return posts
+        } else {
+            return posts.filter { post in
+                guard let title = post.title else { return false }
+                return title.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
 }
-
-

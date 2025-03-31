@@ -7,19 +7,18 @@
 
 import SwiftUI
 
-
-//ForEach(Array(zip(contentList.indices, searchText.isEmpty ? contentList : contentList.filter { $0.title.contains(searchText) })), id: \.0) {index, content in
-
 struct MainView: View {
     
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: MainViewModel
     @AppStorage("current_theme") var currentTheme: Theme = .light
     @GestureState var press = false
     
+    @State private var keyboardHeight: CGFloat = 0
     @State var searchText: String = ""
     @State var showSnack: Bool = false
     @State var isSearching = false
     @Binding var isViewInApp: Bool
+    @State private var scrollOffset: CGFloat = 0
     
     var body: some View {
         NavigationView {
@@ -31,24 +30,48 @@ struct MainView: View {
                     .scaledToFill()
                     .blendMode(.overlay)
                     .ignoresSafeArea()
+                
                 VStack {
-                    // MARK: - View State
+                    Text("Tab News")
+                        .font(.title)
+                        .bold()
+                        .opacity(scrollOffset < 50 ? 1 : 0)
+                        .animation(.easeInOut, value: scrollOffset)
+                        .padding(.top, 100)
+                        .padding(.bottom, 10)
+                    
+                    SearchBar(
+                        searchText: $searchText,
+                        isSearching: $isSearching,
+                        searchPlaceHolder: "Pesquisar",
+                        searchCancel: "Cancelar"
+                    )
+                    .padding(.top, isSearching ? 50 : 0)
+                    .zIndex(1)
+                    Spacer()
+                }
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+                
+                VStack(spacing: 0) {
                     switch viewModel.state {
+                        
                     case .loading:
                         ProgressView()
+                        
                     case .requestSucceeded:
-                        VStack {
-                            Group {
-                                Text("Tab News")
-                                    .font(.title)
-                                    .bold()
-                                    .padding(.top, 100)
-                                SearchBar(searchText: $searchText, isSearching: $isSearching, searchPlaceHolder: "Pesquisar", searchCancel: "Cancelar")
-                                    .padding(.top, 20)
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                ListView(
+                                    searchText: $searchText,
+                                    isViewInApp: $isViewInApp,
+                                    currentTheme: $currentTheme,
+                                    posts: viewModel.content
+                                )
+                                .environmentObject(viewModel)
                             }
-                            ListView(searchText: $searchText, isViewInApp: $isViewInApp, viewModel: viewModel, posts: viewModel.content)
-                            Spacer()
                         }
+                        .scrollDismissesKeyboard(.immediately)
+                        .padding(.top, isSearching ? 270 : 210)
                     case .requestFailed:
                         FailureView(currentTheme: $currentTheme)
                     default:
@@ -56,6 +79,7 @@ struct MainView: View {
                     }
                 }
             }
+            .navigationBarHidden(true)
         }
     }
 }

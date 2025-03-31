@@ -1,39 +1,54 @@
+//
+//  NewsletterViewModel.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 11/03/25.
+//
+
+import Foundation
 import SwiftUI
 
-@MainActor
 class NewsletterViewModel: ObservableObject {
-    @Published var newsletter: [Post] = []
-    @Published var state: FetchState = .idle
+    private let service: ContentServiceProtocol
+    @Published var newsletter: [PostRequest] = []
+    @Published var state: DefaultViewState = .started
+    @Published var alreadyLoaded: Bool = false
     
-    let service = ApiService()
+    init(service: ContentServiceProtocol = ContentService()) {
+        self.service = service
+    }
     
-    // Get newsletter titles
+    @MainActor
     func fetchNewsletterContent() async {
         self.state = .loading
-        let contentResponse = await service.getNewsletter(page: "1", perPage: "30", strategy: "new")
-        
-        switch contentResponse {
-        case .success(let response):
-            self.state = .requestSucceeded
-            self.newsletter = response
+        do {
+            self.newsletter = try await service.getNewsletter(page: "1", perPage: "5", strategy: "new")
             
-        case .failure(let error), .customError(let error):
+            if let latestNewsletter = self.newsletter.first {
+                NotificationManager.shared.scheduleDailyNewsletterNotification(for: latestNewsletter)
+            }
+            
+            self.state = .requestSucceeded
+            self.alreadyLoaded = true
+        } catch {
             self.state = .requestFailed
             print(error)
         }
     }
     
-    // Get newsletter post (content)
-    func fetchNewsletterPost(for postIndex: Int, slug: String) async {
-        let postContentResponse = await service.getPost(user: "NewsletterOficial", slug: slug)
-        
-        switch postContentResponse {
-        case .success(let content):
-            DispatchQueue.main.async {
-                self.newsletter[postIndex].content = content // Adiciona o conteúdo ao post
+    @MainActor
+    func fetchNewsletterPost() async {
+        for index in newsletter.indices {
+            do {
+                let response = try await service.getPost(
+                    user: newsletter[index].ownerUsername ?? "erro",
+                    slug: newsletter[index].slug ?? "erro"
+                )
+                newsletter[index].body = response.body
+            } catch {
+                self.state = .requestFailed
+                print("Deu algum erro!! \(error)")
             }
-        case .failure(let error), .customError(let error):
-            print("Erro ao buscar conteúdo do post \(slug): \(error)")
         }
     }
 }

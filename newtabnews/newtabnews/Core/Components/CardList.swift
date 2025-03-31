@@ -8,16 +8,12 @@
 import SwiftUI
 
 struct CardList: View {
-    var title: String
-    var user: String
-    var date: String
-    var bodyContent: String
-    var tabcoins: Int
+    var post: PostRequest
     
     var body: some View {
         ZStack {
             VStack (alignment: .leading) {
-                Text(title)
+                Text(post.title ?? "Ops")
                     .multilineTextAlignment(.leading)
                     .font(.title3)
                     .fontWeight(.semibold)
@@ -25,20 +21,27 @@ struct CardList: View {
                     .padding(.bottom, 5)
                     .padding(.top, 20)
                 HStack {
-                    Text(user)
+                    Text(post.ownerUsername ?? "luizmellodev")
                         .font(.footnote)
+                    
                     Spacer()
-                    Text(date)
+                    
+                    Text(getFormattedDate(value: post.createdAt ?? "sábado-feira, 31 fevereiro"))
                         .font(.footnote)
                         .italic()
                 }
                 .foregroundColor(.gray)
+                
                 Divider()
-                MDText(markdown: String(bodyContent.prefix(300)))
-                    .fontWeight(.light)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(.primary)
-                    .padding(.bottom, 20)
+                
+                if let body = post.body {
+                    MDText(markdown: String(body.prefix(300)))
+                        .fontWeight(.light)
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(.primary)
+                        .padding(.bottom, 20)
+                }
+                
                 HStack {
                     RoundedRectangle(cornerRadius: 5)
                         .frame(height: 40)
@@ -50,7 +53,7 @@ struct CardList: View {
                 }
                 .padding(.bottom, 10)
             }
-            if tabcoins >= 15 {
+            if post.tabcoins ?? 5 >= 15 {
                 VStack {
                     HStack {
                         Spacer()
@@ -74,14 +77,9 @@ struct CardList: View {
         .padding(.horizontal)
         .background {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(Color("CardColor").shadow(.drop(color: .green, radius: tabcoins >= 10 ? 1 : 0)))
+                .fill(Color("CardColor").shadow(.drop(color: .green, radius: post.tabcoins ?? 5 >= 10 ? 1 : 0)))
         }
         .frame(height: 300)
         .padding(.horizontal)
     }
 }
-
-#Preview {
-    CardList(title: "Testeee", user: "luizmellodev", date: "09/04/2000", bodyContent: "asdjnahjdnmsadbhnjsamdfhbdsnjmkfshbnfjmksjhdknmasldjnasldjasliejasldknsaljkdnskdjfnsdkjfndasldmas;odksa;dmasl;kdmsakldnaskjdnsaodsakl", tabcoins: 20)
-}
-
