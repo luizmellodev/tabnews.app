@@ -1,48 +1,43 @@
 # TabNews App
 
-## 📌 Sobre o Projeto
+## 📌 About the Project
 
-O **TabNews.app** é um aplicativo fan-made do site [TabNews](https://www.tabnews.com.br), focado na comunidade de tecnologia para troca de conhecimentos através de publicações e comentários.
+**TabNews.app** is a fan-made app of the [TabNews](https://www.tabnews.com.br) website, focused on the technology community for exchanging knowledge through posts and comments.
 
-O aplicativo proporciona uma experiência aprimorada para a navegação no TabNews, trazendo funcionalidades exclusivas e uma interface fluida para dispositivos móveis.
+The app provides an enhanced experience for navigating TabNews, bringing exclusive features and a smooth interface for mobile devices.
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Technologies Used
 
-Este projeto foi desenvolvido com as seguintes tecnologias:
+This project was developed with the following technologies:
 
-- 🍏 **SwiftUI** para interface moderna e responsiva
-- 🌐 **Integração com API do TabNews** para carregar conteúdos dinâmicos
-- 🔔 **Notificações push** para manter o usuário atualizado
-- ⌚ **Futura integração com Apple Watch**
+- 🍏 **SwiftUI** for a modern and responsive interface
+- 🌐 **Integration with TabNews API** to load dynamic content
+- 🔔 **Push notifications** to keep the user updated
+- ⌚ **Future integration with Apple Watch**
 
+## 🎯 Features
 
-## 🎯 Funcionalidades
+✅ View the most relevant and recent news  
+✅ Quick access to newsletter posts  
+✅ Optimized interface for comfortable reading  
+✅ Light and dark mode for better experience  
+✅ Future updates with daily notifications and more features
 
-✅ Visualização das notícias mais relevantes e recentes
-✅ Acesso rápido às postagens de newsletters
-✅ Interface otimizada para leitura confortável
-✅ Modo claro e escuro para melhor experiência
-✅ Futuras atualizações com notificações diárias e mais recursos
+## 🛠 How to Run the Project
 
-## 🛠 Como Rodar o Projeto
-
-1. Clone o repositório:
+1. Clone the repository:
    ```sh
    git clone https://github.com/luizmellodev/tabnews.app.git
    ```
-2. Abra o projeto no Xcode:
-   ```sh
+2. Open the project in Xcode:
+   ```
    cd tabnews-app/newtabnews
    open newtabnews.xcodeproj
    ```
-3. Configure as dependências e ambiente
-4. Compile e execute no simulador ou dispositivo físico
+3. Build and run on the simulator or physical device
 
-## 📜 Licença
-
-Este projeto está sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+## 📜 License
+This project is licensed under the MIT License - see the LICENSE file for more details.
 
 ---
-
-Feito com ❤️ por [Luiz Mello](https://github.com/luizmellodev)
-
+Made with ❤️ by Luiz Mello
