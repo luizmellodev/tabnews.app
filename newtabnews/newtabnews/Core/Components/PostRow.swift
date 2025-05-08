@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostRow: View {
-    @EnvironmentObject var viewModel: MainViewModel
+    @Environment(MainViewModel.self) var viewModel
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
     
@@ -23,7 +23,7 @@ struct PostRow: View {
                     currentTheme: $currentTheme,
                     post: post
                 )
-                .environmentObject(viewModel)
+                .environment(viewModel)
             } else {
                 WebContentView(content: post)
             }

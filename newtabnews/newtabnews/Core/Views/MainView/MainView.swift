@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @EnvironmentObject var viewModel: MainViewModel
+    @Environment(MainViewModel.self) var viewModel
     @AppStorage("current_theme") var currentTheme: Theme = .light
     @GestureState var press = false
     
@@ -67,7 +67,7 @@ struct MainView: View {
                                     currentTheme: $currentTheme,
                                     posts: viewModel.content
                                 )
-                                .environmentObject(viewModel)
+                                .environment(viewModel)
                             }
                         }
                         .scrollDismissesKeyboard(.immediately)

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @EnvironmentObject var viewModel: MainViewModel
+    @Environment(MainViewModel.self) var viewModel
     @State var isDarkMode: Bool = false
     
     @Binding var isViewInApp: Bool
@@ -21,7 +21,7 @@ struct SettingsView: View {
                 Section(header: Text("Configurações")) {
                     Toggle("Visualizar conteúdo no App:", isOn: $isViewInApp)
                     Toggle("Dark Mode:", isOn: $isDarkMode)
-                        .onChange(of: isDarkMode) { _ in
+                        .onChange(of: isDarkMode) { _,_ in
                             currentTheme = isDarkMode ? .dark : .light
                         }
                 }

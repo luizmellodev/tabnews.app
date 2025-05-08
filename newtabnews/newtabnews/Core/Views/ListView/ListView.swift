@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ListView: View {
     
-    @EnvironmentObject var viewModel: MainViewModel
+    @Environment(MainViewModel.self) var viewModel
     @Binding var searchText: String
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
@@ -24,7 +24,7 @@ struct ListView: View {
                         currentTheme: $currentTheme,
                         post: post
                     )
-                    .environmentObject(viewModel)
+                    .environment(viewModel)
                 }
             }
         }

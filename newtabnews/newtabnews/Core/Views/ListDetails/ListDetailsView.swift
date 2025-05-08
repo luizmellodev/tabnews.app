@@ -10,8 +10,8 @@ import SwiftUI
 
 struct ListDetailView: View {
     
-    @EnvironmentObject var viewModel: MainViewModel
-    
+    @Environment(MainViewModel.self) var viewModel
+
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
     

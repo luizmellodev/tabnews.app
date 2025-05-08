@@ -7,12 +7,14 @@
 
 import Foundation
 
-class MainViewModel: ObservableObject {
+
+@Observable
+class MainViewModel {
     
     private let service: ContentServiceProtocol
-    @Published var likedList: [PostRequest] = []
-    @Published var content: [PostRequest] = []
-    @Published var state: DefaultViewState = .started
+    var likedList: [PostRequest] = []
+    var content: [PostRequest] = []
+    var state: DefaultViewState = .started
     
     let defaults = UserDefaults.standard
     

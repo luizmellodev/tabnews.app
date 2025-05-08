@@ -12,8 +12,8 @@ struct ContentView: View {
     @AppStorage("current_theme") var currentTheme: Theme = .light
     @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
     
-    @StateObject var viewModel: MainViewModel = MainViewModel()
-    @StateObject var newsletterVM: NewsletterViewModel = NewsletterViewModel()
+    @State var viewModel: MainViewModel = MainViewModel()
+    @State var newsletterVM: NewsletterViewModel = NewsletterViewModel()
     
     @State var searchText: String
     @State var showSnack: Bool = false
@@ -41,17 +41,17 @@ struct ContentView: View {
                         .tabItem {
                             Label("Newsletter", systemImage: "newspaper.fill")
                         }
-                        .environmentObject(newsletterVM)
+                        .environment(newsletterVM)
                     
                     SettingsView(isViewInApp: $isViewInApp, currentTheme: $currentTheme)
                         .tabItem {
                             Label("Configurações", systemImage: "gearshape.fill")
                         }
-                        .onChange(of: isViewInApp) { newvalue in
+                        .onChange(of: isViewInApp) { _, newvalue in
                             viewModel.defaults.set(newvalue, forKey: "viewInApp")
                         }
                 }
-                .environmentObject(viewModel)
+                .environment(viewModel)
                 .onAppear {
                     if UserDefaults.standard.bool(forKey: "First") == false && !alreadyLoaded {
                         Task {

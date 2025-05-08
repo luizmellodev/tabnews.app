@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LikedList: View {
-    @EnvironmentObject var viewModel: MainViewModel
+    @Environment(MainViewModel.self) var viewModel
     
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
@@ -17,11 +17,11 @@ struct LikedList: View {
     var body: some View {
         NavigationView {
             LikedListContent(
-                viewModel: viewModel,
                 isViewInApp: $isViewInApp,
                 currentTheme: $currentTheme,
                 showSnack: $showSnack
             )
+            .environment(viewModel)
         }
         .onAppear {
             viewModel.getLikedContent()
@@ -30,7 +30,7 @@ struct LikedList: View {
 }
 
 private struct LikedListContent: View {
-    @ObservedObject var viewModel: MainViewModel
+    @Environment(MainViewModel.self) var viewModel
     
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
@@ -42,7 +42,6 @@ private struct LikedListContent: View {
                 EmptyLikedListView()
             } else {
                 LikedListItems(
-                    viewModel: viewModel,
                     isViewInApp: $isViewInApp,
                     currentTheme: $currentTheme
                 )
@@ -52,7 +51,7 @@ private struct LikedListContent: View {
 }
 
 private struct LikedListItems: View {
-    @ObservedObject var viewModel: MainViewModel
+    @Environment(MainViewModel.self) var viewModel
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
     

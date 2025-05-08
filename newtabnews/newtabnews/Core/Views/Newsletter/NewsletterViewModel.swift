@@ -8,11 +8,12 @@
 import Foundation
 import SwiftUI
 
+@Observable
 class NewsletterViewModel: ObservableObject {
     private let service: ContentServiceProtocol
-    @Published var newsletter: [PostRequest] = []
-    @Published var state: DefaultViewState = .started
-    @Published var alreadyLoaded: Bool = false
+    var newsletter: [PostRequest] = []
+    var state: DefaultViewState = .started
+    var alreadyLoaded: Bool = false
     
     init(service: ContentServiceProtocol = ContentService()) {
         self.service = service
