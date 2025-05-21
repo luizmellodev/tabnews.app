@@ -28,6 +28,6 @@ struct NewsletterDetailsView: View {
             }
             .padding()
         }
-        .navigationTitle("Post")
+        .navigationTitle("Newsletter")
     }
 }

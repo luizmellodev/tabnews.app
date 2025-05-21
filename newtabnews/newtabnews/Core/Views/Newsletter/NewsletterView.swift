@@ -14,59 +14,59 @@ struct NewsletterView: View {
     @Binding var isViewInApp: Bool
     
     var body: some View {
-        ZStack {
-            Color("Background")
-                .ignoresSafeArea()
-            Image("ruido")
-                .resizable()
-                .scaledToFill()
-                .blendMode(.overlay)
-                .ignoresSafeArea()
-            
-            switch viewModel.state {
-            case .loading:
-                ProgressView()
-                    .scaleEffect(1.5)
+        NavigationStack {
+            ZStack {
+                Color("Background")
+                    .ignoresSafeArea()
+                Image("ruido")
+                    .resizable()
+                    .scaledToFill()
+                    .blendMode(.overlay)
+                    .ignoresSafeArea()
                 
-            case .requestSucceeded:
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        headerView
-                        
-                        // Botão de teste só aparece se houver newsletters
-                        if let latestNewsletter = viewModel.newsletter.first {
-                            Button(action: {
-                                NotificationManager.shared.scheduleTestNotification(for: latestNewsletter)
-                            }) {
-                                Text("Testar Notificação (10s)")
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .cornerRadius(10)
+                switch viewModel.state {
+                case .loading:
+                    ProgressView()
+                        .scaleEffect(1.5)
+                    
+                case .requestSucceeded:
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            headerView
+                            
+                            if let latestNewsletter = viewModel.newsletter.first {
+                                Button(action: {
+                                    NotificationManager.shared.scheduleTestNotification(for: latestNewsletter)
+                                }) {
+                                    Text("Testar Notificação (10s)")
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .cornerRadius(10)
+                                }
+                                .padding(.bottom)
                             }
-                            .padding(.bottom)
+                            
+                            ForEach(viewModel.newsletter) { newsletter in
+                                NewsletterCard(newsletter: newsletter, isNew: isCreatedToday(createdAt: newsletter.createdAt))
+                            }
                         }
-                        
-                        ForEach(viewModel.newsletter) { newsletter in
-                            NewsletterCard(newsletter: newsletter, isNew: isCreatedToday(createdAt: newsletter.createdAt))
-                                .transition(.scale.combined(with: .opacity))
-                        }
+                        .padding()
                     }
-                    .padding()
+                    .padding(.top, 60)
+                    
+                case .requestFailed:
+                    FailureView(currentTheme: .constant(.dark))
+                    
+                default:
+                    Color.clear
                 }
-                .padding(.top, 60)
-                
-            case .requestFailed:
-                FailureView(currentTheme: .constant(.dark))
-                
-            default:
-                Color.clear
             }
-        }
-        .task {
-            if !viewModel.alreadyLoaded {
-                await viewModel.fetchNewsletterContent()
-                await viewModel.fetchNewsletterPost()
+            .task {
+                if !viewModel.alreadyLoaded {
+                    await viewModel.fetchNewsletterContent()
+                    await viewModel.fetchNewsletterPost()
+                }
             }
         }
     }

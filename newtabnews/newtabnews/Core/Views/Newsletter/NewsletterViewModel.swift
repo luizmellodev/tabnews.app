@@ -23,7 +23,7 @@ class NewsletterViewModel: ObservableObject {
     func fetchNewsletterContent() async {
         self.state = .loading
         do {
-            self.newsletter = try await service.getNewsletter(page: "1", perPage: "5", strategy: "new")
+            self.newsletter = try await service.getNewsletter(page: "1", perPage: "15", strategy: "new")
             
             if let latestNewsletter = self.newsletter.first {
                 NotificationManager.shared.scheduleDailyNewsletterNotification(for: latestNewsletter)
