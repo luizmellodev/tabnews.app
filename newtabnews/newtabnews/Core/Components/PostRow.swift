@@ -6,15 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PostRow: View {
     @Environment(MainViewModel.self) var viewModel
+    @Environment(\.modelContext) private var modelContext
+    @Query private var folders: [Folder]
+    
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
     
     let post: PostRequest
+    @State private var showingFolderPicker = false
 
-    
     var body: some View {
         NavigationLink {
             if isViewInApp {
@@ -34,11 +38,123 @@ struct PostRow: View {
             Button {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
-                viewModel.likeContentList(content: post)
+                
+                if viewModel.likedList.contains(where: { $0.title == post.title }) {
+                    viewModel.removeContentList(content: post)
+                } else {
+                    viewModel.likeContentList(content: post)
+                }
             } label: {
-                Text("Curtir")
+                Label(
+                    viewModel.likedList.contains(where: { $0.title == post.title }) ? "Descurtir" : "Curtir",
+                    systemImage: viewModel.likedList.contains(where: { $0.title == post.title }) ? "heart.slash" : "heart"
+                )
+            }
+            .accessibilityLabel(viewModel.likedList.contains(where: { $0.title == post.title }) ? "Remover dos curtidos" : "Adicionar aos curtidos")
+            
+            Button {
+                TextToSpeechManager.shared.speak(text: post.body ?? "", title: post.title)
+            } label: {
+                Label("Ouvir Post", systemImage: "speaker.wave.2")
+            }
+            .accessibilityLabel("Ouvir post usando síntese de voz")
+            
+            Button {
+                showingFolderPicker = true
+            } label: {
+                Label("Salvar em Pasta", systemImage: "folder.badge.plus")
+            }
+            .accessibilityLabel("Salvar post em uma pasta")
+        }
+        .sheet(isPresented: $showingFolderPicker) {
+            FolderPickerSheet(post: post, folders: folders, modelContext: modelContext)
+        }
+        .padding(.top, 8)
+    }
+}
+
+// Sheet para escolher pasta
+struct FolderPickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    let post: PostRequest
+    let folders: [Folder]
+    let modelContext: ModelContext
+    
+    @State private var showingNewFolderSheet = false
+    
+    var body: some View {
+        NavigationStack {
+            List {
+                if folders.isEmpty {
+                    ContentUnavailableView(
+                        "Nenhuma pasta",
+                        systemImage: "folder.badge.plus",
+                        description: Text("Crie sua primeira pasta para organizar posts")
+                    )
+                } else {
+                    ForEach(folders) { folder in
+                        Button {
+                            saveToFolder(folder)
+                        } label: {
+                            HStack {
+                                Image(systemName: folder.icon)
+                                    .foregroundColor(Color(hex: folder.colorHex))
+                                
+                                VStack(alignment: .leading) {
+                                    Text(folder.name)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("\(folder.postCount) posts")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                if folder.postIds.contains(post.id ?? "") {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.green)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Salvar em Pasta")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancelar") {
+                        dismiss()
+                    }
+                }
+                
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingNewFolderSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingNewFolderSheet) {
+                AddFolderSheet()
             }
         }
-        .padding(.top, 20)
+    }
+    
+    private func saveToFolder(_ folder: Folder) {
+        guard let postId = post.id else { return }
+        
+        let impact = UIImpactFeedbackGenerator(style: .medium)
+        impact.impactOccurred()
+        
+        if folder.postIds.contains(postId) {
+            folder.removePost(postId)
+        } else {
+            folder.addPost(postId)
+        }
+        
+        dismiss()
     }
 }
