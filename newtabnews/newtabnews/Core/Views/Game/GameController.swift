@@ -2,11 +2,34 @@ import SpriteKit
 import SwiftUI
 
 struct FlappyBirdGame: View {
+    @Environment(\.dismiss) private var dismiss
     let screen = UIScreen.main.bounds
     
     var body: some View {
-        SpriteView(scene: GameScene(size: CGSize(width: screen.width, height: screen.height)))
-            .edgesIgnoringSafeArea(.top)
+        ZStack {
+            SpriteView(scene: GameScene(size: CGSize(width: screen.width, height: screen.height)))
+                .edgesIgnoringSafeArea(.all)
+            
+            // Botão de fechar no canto superior esquerdo
+            VStack {
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 32))
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+                    }
+                    .padding(.leading, 20)
+                    .padding(.top, 50)
+                    
+                    Spacer()
+                }
+                
+                Spacer()
+            }
+        }
     }
 }
 

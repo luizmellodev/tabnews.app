@@ -6,59 +6,338 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
     
+    @Environment(\.modelContext) private var modelContext
     @Environment(MainViewModel.self) var viewModel
-    @State var isDarkMode: Bool = false
+    @Query private var folders: [Folder]
+    @Query private var highlights: [Highlight]
+    @Query private var notes: [Note]
     
     @Binding var isViewInApp: Bool
     @Binding var currentTheme: Theme
     
+    @State private var showingClearCache = false
+    @State private var showingClearLibrary = false
+    
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Configurações")) {
-                    Toggle("Visualizar conteúdo no App:", isOn: $isViewInApp)
-                    Toggle("Dark Mode:", isOn: $isDarkMode)
-                        .onChange(of: isDarkMode) { _,_ in
-                            currentTheme = isDarkMode ? .dark : .light
-                        }
+        NavigationStack {
+            List {
+                // Aparência
+                Section {
+                    Picker("Tema", selection: $currentTheme) {
+                        Label("Sistema", systemImage: "iphone").tag(Theme.system)
+                        Label("Claro", systemImage: "sun.max").tag(Theme.light)
+                        Label("Escuro", systemImage: "moon").tag(Theme.dark)
+                    }
+                    .pickerStyle(.menu)
+                } header: {
+                    Label("Aparência", systemImage: "paintbrush")
                 }
-                Section(header: Text("Sobre esse projeto")) {
+                
+                // Leitura
+                Section {
+                    Toggle(isOn: $isViewInApp) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Visualizar no App")
+                            Text("Abrir posts dentro do aplicativo")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                } header: {
+                    Label("Leitura", systemImage: "book")
+                }
+                
+                // Estatísticas
+                Section {
                     HStack {
-                        Text("Esse projeto não é oficial do TabNews. Criei com o intuito de poder receber doses diárias de conteúdo sem precisar abrir o TabNews, ou seja, através de notificações. A ideia é todos os dias você receber uma notificação sobre um conteúdo postado no TabNews!")
+                        Label("Posts Curtidos", systemImage: "heart")
+                        Spacer()
+                        Text("\(viewModel.likedList.count)")
+                            .foregroundStyle(.secondary)
                     }
-                    VStack(alignment: .leading) {
-                        Group {
-                            Text("Futuros updates:")
-                            Text("- Sincronia com Apple Watch\n")
-                            Text("- Envio de notificações diárias\n")
-                            Text("- Configuração de visualizão de conteúdo (recentes ou relevantes)\n")
-                            Text("- Otimização de requisição da API (desculpa por tudo, Deschamps :p\n")
+                    
+                    HStack {
+                        Label("Destaques", systemImage: "highlighter")
+                        Spacer()
+                        Text("\(highlights.count)")
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    HStack {
+                        Label("Anotações", systemImage: "note.text")
+                        Spacer()
+                        Text("\(notes.count)")
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    HStack {
+                        Label("Pastas Criadas", systemImage: "folder")
+                        Spacer()
+                        Text("\(folders.count)")
+                            .foregroundStyle(.secondary)
+                    }
+                } header: {
+                    Label("Sua Biblioteca", systemImage: "chart.bar")
+                }
+                
+                // Notificações
+                Section {
+                    HStack {
+                        Label("Status das Notificações", systemImage: "bell.badge")
+                        Spacer()
+                        Text(NotificationManager.shared.isPermissionGranted ? "Ativadas" : "Desativadas")
+                            .foregroundStyle(NotificationManager.shared.isPermissionGranted ? .green : .secondary)
+                    }
+                    
+                    if !NotificationManager.shared.isPermissionGranted {
+                        Button {
+                            // Abrir configurações do app
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        } label: {
+                            Label("Abrir Configurações do App", systemImage: "gear")
                         }
-                        .foregroundColor(.gray)
                     }
+                } header: {
+                    Label("Notificações", systemImage: "bell")
+                } footer: {
+                    Text("Receba notificações de novas newsletters do TabNews")
                 }
-                Section(header: Text("Sobre os criadores")) {
-                    NavigationLink(destination: SocialView(github: "filipedeschamps", linkedin: "filipedeschamps", youtube: "FilipeDeschamps", instagram: "filipedeschamps")) {
-                        Text("Felipe Deschamps - Criador do Tab News")
-                        
-                    }
-                    NavigationLink {
-                        SocialView(github: "luizmellodev", linkedin: "luizmellodev", youtube: "", instagram: "luizmello.dev")
+                
+                // Dados
+                Section {
+                    Button(role: .destructive) {
+                        showingClearCache = true
                     } label: {
-                        Text("Luiz Mello  - Criador desse aplicativo não oficial")
+                        Label("Limpar Cache da API", systemImage: "arrow.clockwise.circle")
                     }
+                    
+                    Button(role: .destructive) {
+                        showingClearLibrary = true
+                    } label: {
+                        Label("Limpar Biblioteca Completa", systemImage: "trash.fill")
+                    }
+                } header: {
+                    Label("Dados", systemImage: "internaldrive")
+                } footer: {
+                    Text("O cache força atualização dos posts. Limpar a biblioteca remove TUDO (curtidas, destaques, anotações e pastas)")
                 }
-                .navigationBarTitle(Text("Configurações"))
-                .onAppear {
-                    self.isDarkMode = currentTheme == .dark ? true : false
-                    self.isViewInApp = viewModel.defaults.bool(forKey: "viewInApp")
+                
+                // Sobre
+                Section {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Sobre o App")
+                            .font(.headline)
+                        
+                        Text("Este é um aplicativo não-oficial do TabNews, criado por um entusiasta da comunidade. O objetivo é facilitar o acesso ao conteúdo e permitir organização pessoal através de destaques e anotações.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                }
+                
+                // Criadores
+                Section {
+                    NavigationLink {
+                        SocialView(
+                            github: "filipedeschamps",
+                            linkedin: "filipedeschamps",
+                            youtube: "FilipeDeschamps",
+                            instagram: "filipedeschamps"
+                        )
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "person.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(.blue)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Felipe Deschamps")
+                                    .font(.headline)
+                                Text("Criador do TabNews")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    
+                    NavigationLink {
+                        SocialView(
+                            github: "luizmellodev",
+                            linkedin: "luizmellodev",
+                            youtube: "",
+                            instagram: "luizmello.dev"
+                        )
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "person.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(.green)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Luiz Mello")
+                                    .font(.headline)
+                                Text("Desenvolvedor deste app")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: {
+                    Label("Criadores", systemImage: "person.2")
+                }
+                
+                // Debug (só aparece em desenvolvimento)
+                #if DEBUG
+                Section {
+                    // Info sobre tempo
+                    HStack {
+                        Text("Tempo no app")
+                            .font(.caption)
+                        Spacer()
+                        Text(AppUsageTracker.shared.formattedTime)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    // Botões de jogo
+                    Button {
+                        AppUsageTracker.shared.shouldShowGameButton = true
+                        UserDefaults.standard.set(true, forKey: "hasShownGameButton")
+                    } label: {
+                        Label("🕹️ Forçar Botão de Jogo", systemImage: "gamecontroller")
+                    }
+                    
+                    Button {
+                        AppUsageTracker.shared.shouldShowRestFolder = true
+                        UserDefaults.standard.set(true, forKey: "hasShownRestFolder")
+                    } label: {
+                        Label("🎮 Forçar Pasta 'Descanse'", systemImage: "bed.double")
+                    }
+                    
+                    // Botão de reset
+                    Button(role: .destructive) {
+                        AppUsageTracker.shared.resetUsageForTesting()
+                    } label: {
+                        Label("Resetar Tempo", systemImage: "arrow.counterclockwise")
+                    }
+                    
+                    // Watch sync
+                    Button {
+                        syncWithWatchManually()
+                    } label: {
+                        HStack {
+                            Label("⌚ Sincronizar com Watch", systemImage: "applewatch")
+                            Spacer()
+                            Text("\(viewModel.content.count) posts")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                } header: {
+                    Label("Debug", systemImage: "hammer.fill")
+                } footer: {
+                    Text("Ferramentas de desenvolvimento para testes")
+                }
+                #endif
+                
+                // Versão
+                Section {
+                    HStack {
+                        Text("Versão")
+                        Spacer()
+                        Text("2.0")
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .navigationTitle("Ajustes")
+            .background {
+                ZStack {
+                    Color("Background")
+                        .ignoresSafeArea()
+                    Image("ruido")
+                        .resizable()
+                        .scaledToFill()
+                        .blendMode(.overlay)
+                        .ignoresSafeArea()
+                }
+            }
+            .alert("Limpar Cache da API", isPresented: $showingClearCache) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Limpar", role: .destructive) {
+                    clearAPICache()
+                }
+            } message: {
+                Text("Isso irá remover respostas HTTP em cache, forçando o app a buscar posts atualizados.")
+            }
+            .alert("⚠️ Limpar Biblioteca Completa", isPresented: $showingClearLibrary) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Limpar TUDO", role: .destructive) {
+                    clearCompleteLibrary()
+                }
+            } message: {
+                Text("Isso irá remover PERMANENTEMENTE todos os seus dados: curtidas (\(viewModel.likedList.count)), destaques (\(highlights.count)), anotações (\(notes.count)) e pastas (\(folders.count)). Esta ação não pode ser desfeita!")
+            }
+        }
+    }
+    
+    // MARK: - Functions
+    private func clearAPICache() {
+        // Limpar todas as respostas HTTP em cache (posts, newsletters, etc)
+        URLCache.shared.removeAllCachedResponses()
+        
+        // Opcional: Limpar cookies de sessão (se houver)
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+    }
+    
+    #if DEBUG
+    private func syncWithWatchManually() {
+        let recentPosts = Array(viewModel.content.prefix(5))
+        let likedPosts = Array(viewModel.likedList.prefix(10))
+        
+        let stats = [
+            "liked": viewModel.likedList.count,
+            "highlights": highlights.count,
+            "notes": notes.count,
+            "folders": folders.count
+        ]
+        
+        WatchSyncManager.shared.syncToWatch(
+            posts: recentPosts,
+            likedPosts: likedPosts,
+            stats: stats
+        )
+    }
+    #endif
+    
+    private func clearCompleteLibrary() {
+        // 1. Limpar curtidas
+        viewModel.clearAllLikedContent()
+        
+        // 2. Limpar todos os destaques
+        for highlight in highlights {
+            modelContext.delete(highlight)
         }
         
+        // 3. Limpar todas as anotações
+        for note in notes {
+            modelContext.delete(note)
+        }
+        
+        // 4. Limpar todas as pastas
+        for folder in folders {
+            modelContext.delete(folder)
+        }
+        
+        // Salvar alterações
+        try? modelContext.save()
     }
 }
 
