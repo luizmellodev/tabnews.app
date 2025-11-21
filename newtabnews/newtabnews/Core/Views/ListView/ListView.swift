@@ -16,19 +16,22 @@ struct ListView: View {
     var posts: [PostRequest]
     
     var body: some View {
-        ScrollView {
-            LazyVStack {
-                ForEach(filteredPosts) { post in
-                    PostRow(
-                        isViewInApp: $isViewInApp,
-                        currentTheme: $currentTheme,
-                        post: post
-                    )
-                    .environment(viewModel)
-                }
+        LazyVStack(spacing: 0) {
+            ForEach(Array(filteredPosts.enumerated()), id: \.element.id) { index, post in
+                PostRow(
+                    isViewInApp: $isViewInApp,
+                    currentTheme: $currentTheme,
+                    post: post
+                )
+                .environment(viewModel)
+                .transition(.asymmetric(
+                    insertion: .opacity.combined(with: .move(edge: .top)),
+                    removal: .opacity
+                ))
+                .animation(.easeOut(duration: 0.3).delay(Double(index) * 0.05), value: filteredPosts.count)
             }
         }
-        .padding(.bottom, 70)
+        .padding(.horizontal, 5)
     }
     
     private var filteredPosts: [PostRequest] {

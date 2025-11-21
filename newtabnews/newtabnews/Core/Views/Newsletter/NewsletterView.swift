@@ -34,19 +34,6 @@ struct NewsletterView: View {
                         LazyVStack(spacing: 16) {
                             headerView
                             
-                            if let latestNewsletter = viewModel.newsletter.first {
-                                Button(action: {
-                                    NotificationManager.shared.scheduleTestNotification(for: latestNewsletter)
-                                }) {
-                                    Text("Testar Notificação (10s)")
-                                        .foregroundColor(.white)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .cornerRadius(10)
-                                }
-                                .padding(.bottom)
-                            }
-                            
                             ForEach(viewModel.newsletter) { newsletter in
                                 NewsletterCard(newsletter: newsletter, isNew: isCreatedToday(createdAt: newsletter.createdAt))
                             }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @Environment(MainViewModel.self) var viewModel
+    @Environment(MainViewModel.self) private var viewModel
     @AppStorage("current_theme") var currentTheme: Theme = .light
     @GestureState var press = false
     
@@ -19,67 +19,83 @@ struct MainView: View {
     @State var isSearching = false
     @Binding var isViewInApp: Bool
     @State private var scrollOffset: CGFloat = 0
+    @State private var isLoadingStrategy = false
     
     var body: some View {
+        @Bindable var bindableViewModel = viewModel
+        
         NavigationView {
-            ZStack {
-                Color("Background")
-                    .ignoresSafeArea()
-                Image("ruido")
-                    .resizable()
-                    .scaledToFill()
-                    .blendMode(.overlay)
-                    .ignoresSafeArea()
-                
-                VStack {
-                    Text("Tab News")
-                        .font(.title)
-                        .bold()
-                        .opacity(scrollOffset < 50 ? 1 : 0)
-                        .animation(.easeInOut, value: scrollOffset)
-                        .padding(.top, 100)
-                        .padding(.bottom, 10)
-                    
-                    SearchBar(
-                        searchText: $searchText,
-                        isSearching: $isSearching,
-                        searchPlaceHolder: "Pesquisar",
-                        searchCancel: "Cancelar"
-                    )
-                    .padding(.top, isSearching ? 50 : 0)
-                    .zIndex(1)
-                    Spacer()
+            VStack(spacing: 0) {
+                if viewModel.state == .requestSucceeded || isLoadingStrategy {
+                    Picker("Filtro", selection: $bindableViewModel.currentStrategy) {
+                        ForEach(ContentStrategy.allCases, id: \.self) { strategy in
+                            Label(strategy.displayName, systemImage: strategy.icon)
+                                .tag(strategy)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .disabled(isLoadingStrategy)
+                    .onChange(of: bindableViewModel.currentStrategy) { _, newStrategy in
+                        Task {
+                            isLoadingStrategy = true
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                viewModel.state = .loading
+                            }
+                            await viewModel.fetchContent(with: newStrategy)
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isLoadingStrategy = false
+                            }
+                        }
+                    }
                 }
-                .ignoresSafeArea(.keyboard, edges: .bottom)
                 
-                VStack(spacing: 0) {
+                Group {
                     switch viewModel.state {
-                        
                     case .loading:
                         ProgressView()
+                            .transition(.opacity)
                         
                     case .requestSucceeded:
                         ScrollView {
-                            VStack(spacing: 0) {
-                                ListView(
-                                    searchText: $searchText,
-                                    isViewInApp: $isViewInApp,
-                                    currentTheme: $currentTheme,
-                                    posts: viewModel.content
-                                )
-                                .environment(viewModel)
-                            }
+                            ListView(
+                                searchText: $searchText,
+                                isViewInApp: $isViewInApp,
+                                currentTheme: $currentTheme,
+                                posts: viewModel.content
+                            )
+                            .environment(viewModel)
+                            .padding(.top, 5)
                         }
-                        .scrollDismissesKeyboard(.immediately)
-                        .padding(.top, isSearching ? 270 : 210)
+                        .transition(.opacity)
+                        .id(viewModel.currentStrategy)
+                        
                     case .requestFailed:
                         FailureView(currentTheme: $currentTheme)
+                            .transition(.opacity)
                     default:
                         ProgressView()
+                            .transition(.opacity)
                     }
                 }
+                .animation(.easeInOut(duration: 0.3), value: viewModel.state)
+                .animation(.easeInOut(duration: 0.3), value: viewModel.currentStrategy)
             }
-            .navigationBarHidden(true)
+            .navigationTitle("Tab News")
+            .navigationBarTitleDisplayMode(.large)
+            .background {
+                ZStack {
+                    Color("Background")
+                        .ignoresSafeArea()
+                    Image("ruido")
+                        .resizable()
+                        .scaledToFill()
+                        .blendMode(.overlay)
+                        .ignoresSafeArea()
+                }
+            }
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Pesquisar")
         }
     }
 }

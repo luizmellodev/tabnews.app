@@ -12,7 +12,7 @@ struct CardList: View {
     
     var body: some View {
         ZStack {
-            VStack (alignment: .leading) {
+            VStack(alignment: .leading) {
                 Text(post.title ?? "Ops")
                     .multilineTextAlignment(.leading)
                     .font(.title3)
@@ -25,6 +25,17 @@ struct CardList: View {
                         .font(.footnote)
                     
                     Spacer()
+                    
+                    // Tempo de leitura
+                    if let body = post.body {
+                        HStack(spacing: 4) {
+                            Image(systemName: "clock")
+                                .font(.caption)
+                            Text(body.readingTimeFormatted)
+                        }
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                    }
                     
                     Text(getFormattedDate(value: post.createdAt ?? "sábado-feira, 31 fevereiro"))
                         .font(.footnote)
@@ -77,9 +88,25 @@ struct CardList: View {
         .padding(.horizontal)
         .background {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(Color("CardColor").shadow(.drop(color: .green, radius: post.tabcoins ?? 5 >= 10 ? 1 : 0)))
+                .fill(Color("CardColor"))
+                .shadow(color: (post.tabcoins ?? 5 >= 10) ? .green.opacity(0.5) : .clear, radius: (post.tabcoins ?? 5 >= 10) ? 1 : 0)
         }
         .frame(height: 300)
         .padding(.horizontal)
+        // Acessibilidade
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(accessibilityText)
+        .accessibilityHint("Toque duas vezes para ler o post completo")
+        .accessibilityAddTraits(.isButton)
+    }
+    
+    private var accessibilityText: String {
+        let title = post.title ?? "Post sem título"
+        let author = post.ownerUsername ?? "Autor desconhecido"
+        let tabcoins = post.tabcoins ?? 0
+        let readTime = post.body?.readingTimeFormatted ?? "tempo desconhecido"
+        let isPopular = tabcoins >= 10 ? "Post em alta. " : ""
+        
+        return "\(isPopular)\(title). Por \(author). \(tabcoins) tabcoins. Tempo de leitura: \(readTime)."
     }
 }
