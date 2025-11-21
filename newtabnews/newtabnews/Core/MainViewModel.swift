@@ -15,6 +15,7 @@ class MainViewModel {
     var likedList: [PostRequest] = []
     var content: [PostRequest] = []
     var state: DefaultViewState = .started
+    var currentStrategy: ContentStrategy = .relevant
     
     let defaults = UserDefaults.standard
     
@@ -31,12 +32,20 @@ extension MainViewModel {
     func fetchContent() async {
         self.state = .loading
         do {
-            self.content = try await service.getContent(page: "1", perPage: "5", strategy: "relevant")
+            self.content = try await service.getContent(page: "1", perPage: "5", strategy: currentStrategy.rawValue)
             self.state = .requestSucceeded
         } catch {
             self.state = .requestFailed
             print(error)
         }
+    }
+    
+    // Fetch content with specific strategy
+    @MainActor
+    func fetchContent(with strategy: ContentStrategy) async {
+        self.currentStrategy = strategy
+        await fetchContent()
+        await fetchPost()
     }
     
     // Get tabnews post (content)
@@ -54,7 +63,16 @@ extension MainViewModel {
                 print(error)
             }
         }
+        
+        // ✅ Sincronizar com Watch APÓS carregar posts
+        print("📱 Posts carregados, disparando sincronização...")
+        NotificationCenter.default.post(name: .postsLoaded, object: nil)
     }
+}
+
+// MARK: - Notification
+extension Notification.Name {
+    static let postsLoaded = Notification.Name("postsLoaded")
 }
 
 // MARK: - UserDefaults
@@ -64,27 +82,79 @@ extension MainViewModel {
     }
     
     func likeContentList(content: PostRequest) {
-        self.likedList.append(content)
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(likedList) {
-            defaults.set(encoded, forKey: "LikedContent")
+        // Verificar se já existe antes de adicionar
+        let alreadyExists = likedList.contains { existingPost in
+            isSamePost(existingPost, content)
+        }
+        
+        if !alreadyExists {
+            self.likedList.append(content)
+            saveLikedContent()
         }
     }
     
     func removeContentList(content: PostRequest) {
-        self.likedList.removeAll(where: { $0.title == content.title })
+        self.likedList.removeAll { existingPost in
+            isSamePost(existingPost, content)
+        }
+        saveLikedContent()
+    }
+    
+    func clearAllLikedContent() {
+        self.likedList = []
+        saveLikedContent()
+    }
+    
+    // Helper para comparar posts de forma consistente
+    private func isSamePost(_ post1: PostRequest, _ post2: PostRequest) -> Bool {
+        // Prioridade 1: Comparar por ID se ambos existirem
+        if let id1 = post1.id, let id2 = post2.id, !id1.isEmpty, !id2.isEmpty {
+            return id1 == id2
+        }
+        
+        // Prioridade 2: Comparar por título E owner (mais confiável que só título)
+        if let title1 = post1.title, let title2 = post2.title,
+           let owner1 = post1.ownerUsername, let owner2 = post2.ownerUsername {
+            return title1 == title2 && owner1 == owner2
+        }
+        
+        // Fallback: Apenas título
+        return post1.title == post2.title
+    }
+    
+    private func saveLikedContent() {
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(likedList) {
             defaults.set(encoded, forKey: "LikedContent")
         }
+        
+        // ✅ Sincronizar com Watch App via App Group
+        SharedDataService.saveLikedPosts(likedList)
     }
     
     func getLikedContent() {
         if let likedContent = defaults.object(forKey: "LikedContent") as? Data {
             let decoder = JSONDecoder()
             if let loadedContent = try? decoder.decode([PostRequest].self, from: likedContent) {
-                self.likedList = loadedContent
+                // Remover duplicatas ao carregar
+                self.likedList = removeDuplicates(from: loadedContent)
+                // Salvar lista limpa
+                saveLikedContent()
             }
         }
     }
+    
+    private func removeDuplicates(from posts: [PostRequest]) -> [PostRequest] {
+        var seen: Set<String> = []
+        return posts.filter { post in
+            // Usar ID se disponível, senão usar título
+            let identifier = post.id ?? post.title ?? UUID().uuidString
+            if seen.contains(identifier) {
+                return false
+            }
+            seen.insert(identifier)
+            return true
+        }
+    }
+    
 }
