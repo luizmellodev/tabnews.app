@@ -25,9 +25,8 @@ class NewsletterViewModel: ObservableObject {
         do {
             self.newsletter = try await service.getNewsletter(page: "1", perPage: "15", strategy: "new")
             
-            if let latestNewsletter = self.newsletter.first {
-                NotificationManager.shared.scheduleDailyNewsletterNotification(for: latestNewsletter)
-            }
+            // Notificar sobre newsletters novas (criadas hoje)
+            NotificationManager.shared.notifyNewNewsletters(self.newsletter)
             
             self.state = .requestSucceeded
             self.alreadyLoaded = true
