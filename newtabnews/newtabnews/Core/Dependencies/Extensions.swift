@@ -9,11 +9,36 @@ import Foundation
 import SwiftUI
 
 public func getFormattedDate(value: String) -> String {
-    let dateFormat = DateFormatter()
-    dateFormat.locale = Locale(identifier: "pt_br")
-    dateFormat.dateFormat = "EEEE, dd MMMM"
-    let stringDate = dateFormat.string(from: Date())
-    return stringDate
+    // Parse ISO8601 date
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    
+    guard let date = formatter.date(from: value) else {
+        return "Data desconhecida"
+    }
+    
+    let now = Date()
+    let calendar = Calendar.current
+    let components = calendar.dateComponents([.minute, .hour, .day], from: date, to: now)
+    
+    // Menos de 1 hora
+    if let hours = components.hour, hours == 0,
+       let minutes = components.minute, minutes < 60 {
+        return "Há pouco"
+    }
+    
+    // Menos de 24 horas
+    if let days = components.day, days == 0,
+       let hours = components.hour, hours > 0 {
+        return hours == 1 ? "Há 1 hora" : "Há \(hours) horas"
+    }
+    
+    // 1 dia ou mais
+    if let days = components.day, days > 0 {
+        return days == 1 ? "Há 1 dia" : "Há \(days) dias"
+    }
+    
+    return "Há pouco"
 }
 
 extension String {
