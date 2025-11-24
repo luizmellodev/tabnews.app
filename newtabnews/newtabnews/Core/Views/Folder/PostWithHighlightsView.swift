@@ -107,9 +107,16 @@ struct PostWithHighlightsView: View {
                         Divider()
                             .padding(.horizontal)
                         
-                        MDText(markdown: post.body ?? "Sem conteúdo")
-                            .padding(.horizontal)
-                            .padding(.bottom, 40)
+                        HybridMarkdownView(
+                            markdown: post.body ?? "Sem conteúdo",
+                            postId: post.id ?? "",
+                            highlights: highlights,
+                            isHighlightMode: false,
+                            onHighlight: { _, _ in },
+                            onRemoveHighlight: { _ in }
+                        )
+                        .padding(.horizontal)
+                        .padding(.bottom, 40)
                     }
                     .padding(.top)
                 }

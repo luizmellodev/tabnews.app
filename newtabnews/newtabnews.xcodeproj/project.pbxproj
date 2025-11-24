@@ -34,6 +34,7 @@
 		790AB11D2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */; };
 		791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */; };
 		791B1EBB2ED4CC9400B9143D /* SkeletonListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */; };
+		791B1F172ED4D10400B9143D /* HybridMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */; };
 		791E87D82A4FD99B00C2F0B4 /* newtabnewsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791E87D72A4FD99B00C2F0B4 /* newtabnewsApp.swift */; };
 		791E87DA2A4FD99B00C2F0B4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791E87D92A4FD99B00C2F0B4 /* ContentView.swift */; };
 		791E87DC2A4FD99B00C2F0B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 791E87DB2A4FD99B00C2F0B4 /* Assets.xcassets */; };
@@ -46,7 +47,6 @@
 		799049F42A6C961C0050240C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F32A6C961C0050240C /* ListView.swift */; };
 		799049F62A6C990E0050240C /* CardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F52A6C990E0050240C /* CardList.swift */; };
 		799049F82A72F4BC0050240C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F72A72F4BC0050240C /* Extensions.swift */; };
-		799049FA2A72F5880050240C /* MDText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F92A72F5880050240C /* MDText.swift */; };
 		799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049FC2A72F7BE0050240C /* ListDetailsView.swift */; };
 		799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049FE2A73068E0050240C /* DefaultViewState.swift */; };
 		79904A042A73075A0050240C /* FailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A032A73075A0050240C /* FailureView.swift */; };
@@ -116,6 +116,7 @@
 		790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSyncManager.swift; sourceTree = "<group>"; };
 		791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonCard.swift; sourceTree = "<group>"; };
 		791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonListView.swift; sourceTree = "<group>"; };
+		791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridMarkdownView.swift; sourceTree = "<group>"; };
 		791E87D42A4FD99B00C2F0B4 /* newtabnews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newtabnews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		791E87D72A4FD99B00C2F0B4 /* newtabnewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newtabnewsApp.swift; sourceTree = "<group>"; };
 		791E87D92A4FD99B00C2F0B4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -130,7 +131,6 @@
 		799049F32A6C961C0050240C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		799049F52A6C990E0050240C /* CardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardList.swift; sourceTree = "<group>"; };
 		799049F72A72F4BC0050240C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		799049F92A72F5880050240C /* MDText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDText.swift; sourceTree = "<group>"; };
 		799049FC2A72F7BE0050240C /* ListDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsView.swift; sourceTree = "<group>"; };
 		799049FE2A73068E0050240C /* DefaultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultViewState.swift; sourceTree = "<group>"; };
 		79904A032A73075A0050240C /* FailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailureView.swift; sourceTree = "<group>"; };
@@ -304,6 +304,7 @@
 		799049DC2A6B24240050240C /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */,
 				791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */,
 				791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */,
 				790AB0D22ECEB9BE00E443E6 /* HighlightableTextView.swift */,
@@ -342,7 +343,6 @@
 		799049DF2A6B24460050240C /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				799049F92A72F5880050240C /* MDText.swift */,
 				799049F72A72F4BC0050240C /* Extensions.swift */,
 				79904A072A731F910050240C /* HTMLView.swift */,
 				79904A0F2A732FE30050240C /* DuckView.swift */,
@@ -577,6 +577,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				791E87DA2A4FD99B00C2F0B4 /* ContentView.swift in Sources */,
+				791B1F172ED4D10400B9143D /* HybridMarkdownView.swift in Sources */,
 				79C7062A2D95E534005C26A7 /* NetworkError.swift in Sources */,
 				790AB0D32ECEB9BE00E443E6 /* HighlightableTextView.swift in Sources */,
 				79C706402D9ADD26005C26A7 /* EmptyLikedListView.swift in Sources */,
@@ -590,7 +591,6 @@
 				799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */,
 				79C7063A2D95E766005C26A7 /* PostRequest.swift in Sources */,
 				79D7E37A2D81266A00391C82 /* NewsletterViewModel.swift in Sources */,
-				799049FA2A72F5880050240C /* MDText.swift in Sources */,
 				790AB11D2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */,
 				79904A062A731F6F0050240C /* WebContentView.swift in Sources */,
 				790AB0CD2ECEAF1300E443E6 /* Highlight.swift in Sources */,

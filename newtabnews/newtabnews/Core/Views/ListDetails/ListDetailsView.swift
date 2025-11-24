@@ -226,28 +226,21 @@ struct ListDetailView: View {
                         .padding(.bottom, 8)
                     }
                     
-                    // Conteúdo - usa HighlightableTextView quando em modo highlight
-                    if isHighlightMode || !postHighlights.isEmpty {
-                        HighlightableTextView(
-                            text: post.body ?? "",
-                            postId: post.id ?? "",
-                            highlights: postHighlights,
-                            isHighlightMode: isHighlightMode,
-                            onHighlight: { text, range in
-                                saveHighlight(text: text, range: range)
-                            },
-                            onRemoveHighlight: { highlight in
-                                removeHighlight(highlight)
-                            }
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, 80)
-                    } else {
-                        // Modo normal com markdown
-                        MDText(markdown: post.body ?? "")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 80)
-                    }
+                    // Conteúdo - versão híbrida com markdown e highlights
+                    HybridMarkdownView(
+                        markdown: post.body ?? "",
+                        postId: post.id ?? "",
+                        highlights: postHighlights,
+                        isHighlightMode: isHighlightMode,
+                        onHighlight: { text, range in
+                            saveHighlight(text: text, range: range)
+                        },
+                        onRemoveHighlight: { highlight in
+                            removeHighlight(highlight)
+                        }
+                    )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 80)
                 }
                 .padding(.horizontal, 20)
             }
