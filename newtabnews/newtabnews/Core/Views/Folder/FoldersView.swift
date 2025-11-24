@@ -316,7 +316,7 @@ struct FoldersView: View {
                 viewModel.getLikedContent()
             }
             .fullScreenCover(isPresented: $showingGame) {
-                FlappyBirdGame()
+                FlappyBirdGame(showCloseButton: true)
             }
             .overlay(alignment: .bottomTrailing) {
                 if !folders.isEmpty {
