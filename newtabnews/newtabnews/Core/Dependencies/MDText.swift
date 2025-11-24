@@ -26,13 +26,71 @@ struct MDTextGroup {
         rules.filter{$0.regex != BaseMarkdownRules.none.regex}
     }
     var text: Text {
-        guard let firstRule = applicableRules.first else { return rules[0].regex.output(for: string) }
-        return applicableRules.dropFirst().reduce(firstRule.regex.output(for: string)) { $1.regex.strategy($0) }
+        guard let firstRule = applicableRules.first else { 
+            return Text(string) 
+        }
+        
+        // Limpa o texto primeiro (remove marcadores)
+        var cleanedString = string
+        for rule in applicableRules {
+            cleanedString = rule.regex.outputString(for: cleanedString)
+        }
+        
+        // Depois aplica os estilos no texto limpo
+        return applicableRules.reduce(Text(cleanedString)) { text, rule in
+            rule.regex.strategy(text)
+        }
     }
     
     var viewType: MDViewType {
-        applicableRules.contains(where: { $0.id == BaseMarkdownRules.link.id || $0.id == BaseMarkdownRules.hyperlink.id }) ?
-            .link(self) : .text(self.text)
+        // Check for image first
+        if applicableRules.contains(where: { $0.id == BaseMarkdownRules.image.id }) {
+            let (url, alt) = extractImageInfo()
+            return .image(url, alt)
+        }
+        
+        // Check for divider
+        if applicableRules.contains(where: { $0.id == BaseMarkdownRules.divider.id }) {
+            return .divider
+        }
+        
+        // Check for list item
+        if applicableRules.contains(where: { $0.id == BaseMarkdownRules.listItem.id }) {
+            return .listItem(self.text)
+        }
+        
+        // Check for link
+        if applicableRules.contains(where: { $0.id == BaseMarkdownRules.link.id || $0.id == BaseMarkdownRules.hyperlink.id || $0.id == BaseMarkdownRules.autolink.id }) {
+            return .link(self)
+        }
+        
+        return .text(self.text)
+    }
+    
+    func extractImageInfo() -> (String, String?) {
+        // Extract URL and alt text from ![alt](url) or ![alt](url "title")
+        let pattern = #"!\[([^\]]*)\]\(([^\)]+)\)"#
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            return ("", nil)
+        }
+        
+        let nsString = string as NSString
+        guard let match = regex.firstMatch(in: string, range: NSRange(location: 0, length: nsString.length)) else {
+            return ("", nil)
+        }
+        
+        let alt = match.range(at: 1).location != NSNotFound ? nsString.substring(with: match.range(at: 1)) : nil
+        var urlPart = match.range(at: 2).location != NSNotFound ? nsString.substring(with: match.range(at: 2)) : ""
+        
+        // Remove o título se houver (tudo depois de espaços + " )
+        if let quoteIndex = urlPart.range(of: #"\s+"#, options: .regularExpression) {
+            urlPart = String(urlPart[..<quoteIndex.lowerBound])
+        }
+        
+        // Limpa espaços
+        let url = urlPart.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return (url, alt)
     }
     
     var urlStr: String {
@@ -42,7 +100,7 @@ struct MDTextGroup {
 }
 
 enum MDViewType {
-    case text(Text), link(MDTextGroup)
+    case text(Text), link(MDTextGroup), image(String, String?), divider, listItem(Text)
 }
 
 struct MDViewGroup: Identifiable {
@@ -52,9 +110,110 @@ struct MDViewGroup: Identifiable {
         switch type {
         case .link(let group):
             return Button(action: {self.onLinkTap(urlStr: group.urlStr)}, label: {group.text})
+                .buttonStyle(PlainButtonStyle())
                 .ereaseToAnyView()
         case .text(let text):
-            return text.ereaseToAnyView()
+            return text
+                .fixedSize(horizontal: false, vertical: true)
+                .ereaseToAnyView()
+        case .image(let urlString, let alt):
+            return VStack(alignment: .leading, spacing: 8) {
+                // Limpa e valida a URL
+                let cleanedURL = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                // Cria URL (AsyncImage aceita URLs sem scheme validado)
+                if let url = URL(string: cleanedURL) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            HStack(spacing: 8) {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                                Text("Carregando...")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 150)
+                            .background(Color.gray.opacity(0.05))
+                            .cornerRadius(8)
+                            
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: .infinity)
+                                .cornerRadius(8)
+                                
+                        case .failure:
+                            VStack(spacing: 8) {
+                                HStack {
+                                    Image(systemName: "exclamationmark.triangle")
+                                        .foregroundColor(.orange)
+                                    Text("Erro ao carregar imagem")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Text(cleanedURL)
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                                    .lineLimit(3)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 100)
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
+                            
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                } else {
+                    // URL inválida
+                    VStack(spacing: 8) {
+                        HStack {
+                            Image(systemName: "xmark.circle")
+                                .foregroundColor(.red)
+                            Text("URL inválida")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Text(cleanedURL)
+                            .font(.caption2)
+                            .foregroundColor(.gray)
+                            .lineLimit(3)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 80)
+                    .padding()
+                    .background(Color.red.opacity(0.1))
+                    .cornerRadius(8)
+                }
+                
+                if let altText = alt, !altText.isEmpty {
+                    Text(altText)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .italic()
+                        .padding(.horizontal, 4)
+                }
+            }
+            .padding(.vertical, 8)
+            .ereaseToAnyView()
+        case .divider:
+            return Divider()
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .ereaseToAnyView()
+        case .listItem(let text):
+            return HStack(alignment: .top, spacing: 8) {
+                Text("•")
+                    .fontWeight(.bold)
+                text
+                Spacer()
+            }
+            .padding(.leading, 8)
+            .ereaseToAnyView()
         }
     }
     
@@ -113,7 +272,7 @@ extension RegexMarkdown {
 enum BaseMarkdownRules: String, CaseIterable, MarkdownRule {
     
     
-    case none, header, link, bold, hyperlink, emphasis
+    case none, header, header2, header3, header4, image, divider, listItem, bold, link, autolink, hyperlink, emphasis
     var id: String { self.rawValue }
     //
     //    , , del, quote, inline, ul, ol, blockquotes
@@ -121,26 +280,52 @@ enum BaseMarkdownRules: String, CaseIterable, MarkdownRule {
     var regex: RegexMarkdown {
         switch self {
         case .header:
-            return .init(matchIn: #"(#+)(.*)"#, matchOut: "$2", strategy: self.header(_:))
+            return .init(matchIn: #"^#\s+(.+)"#, matchOut: "$1", strategy: self.header1(_:))
+        case .header2:
+            return .init(matchIn: #"^##\s+(.+)"#, matchOut: "$1", strategy: self.header2(_:))
+        case .header3:
+            return .init(matchIn: #"^###\s+(.+)"#, matchOut: "$1", strategy: self.header3(_:))
+        case .header4:
+            return .init(matchIn: #"^####\s+(.+)"#, matchOut: "$1", strategy: self.header4(_:))
+        case .image:
+            return .init(matchIn: #"!\[([^\]]*)\]\(([^\)]+)\)"#, matchOut: "", strategy: {$0})
+        case .divider:
+            return .init(matchIn: #"^---+\s*$"#, matchOut: "", strategy: {$0})
+        case .listItem:
+            return .init(matchIn: #"^-\s+(.+)"#, matchOut: "$1", strategy: {$0})
+        case .bold:
+            return .init(matchIn: "\\*\\*([^*]+?)\\*\\*", matchOut: "$1", strategy: self.bold(_:))
         case .link:
             return .init(matchIn: #"\[([^\[]+)\]\(([^\)]+)\)"#, matchOut: "$1", strategy: self.link(_:))
-        case .bold:
-            return .init(matchIn: #"(\*\*|__)(.*?)\1"#, matchOut: "$2", strategy: self.bold(_:))
+        case .autolink:
+            return .init(matchIn: "(?<!\\]\\()https?://[^\\s<>]+\\.[^\\s<>]+", matchOut: "$0", strategy: self.link(_:))
         case .hyperlink:
             return .init(matchIn: "<((?i)https?://(?:www\\.)?\\S+(?:/|\\b))>", matchOut: "$1", strategy: self.link(_:))
         case .emphasis:
-            return .init(matchIn: #"(\s)(\*|_)(.+?)\2"#, matchOut: "$1$3", strategy: self.emphasis(_:))
+            return .init(matchIn: "(?<!\\*)\\*([^*]+?)\\*(?!\\*)", matchOut: "$1", strategy: self.emphasis(_:))
         case .none:
             return .init(matchIn: "", matchOut: "", strategy: {$0})
         }
     }
     
-    func header(_ text: Text) -> Text {
-        return text.font(.headline)
+    func header1(_ text: Text) -> Text {
+        return text.font(.title).fontWeight(.bold).foregroundColor(.primary)
+    }
+    
+    func header2(_ text: Text) -> Text {
+        return text.font(.title2).fontWeight(.semibold).foregroundColor(.primary)
+    }
+    
+    func header3(_ text: Text) -> Text {
+        return text.font(.title3).fontWeight(.semibold).foregroundColor(.primary)
+    }
+    
+    func header4(_ text: Text) -> Text {
+        return text.font(.headline).fontWeight(.semibold).foregroundColor(.primary)
     }
     
     func link(_ text: Text) -> Text {
-        return text.foregroundColor(.blue)
+        return text.foregroundColor(.blue).underline()
     }
     
     func bold(_ text: Text) -> Text {
@@ -324,23 +509,110 @@ public struct MDText: View, Equatable {
     }
     
     var views: [MDViewGroup] {
-        vm.parseViews(string: markdown, for: rules)
+        // Primeiro, junta linhas de imagens quebradas
+        let fixedMarkdown = fixMultilineImages(markdown)
+        
+        // Process markdown line by line
+        let lines = fixedMarkdown.components(separatedBy: .newlines)
+        var allViews: [MDViewGroup] = []
+        
+        for line in lines {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            
+            // Skip empty lines
+            if trimmed.isEmpty {
+                allViews.append(MDViewGroup(type: .text(Text(""))))
+                continue
+            }
+            
+            // Skip HTML comments
+            if trimmed.hasPrefix("<!--") {
+                continue
+            }
+            
+            // Check for block elements first (headers, images, dividers, lists)
+            if trimmed.hasPrefix("#") {
+                // É um header
+                let lineViews = vm.parseViews(string: line, for: rules)
+                allViews.append(contentsOf: lineViews)
+            } else if trimmed.hasPrefix("![") {
+                // É uma imagem - extrai DIRETAMENTE sem passar pelo parseViews
+                let (url, alt) = MDTextGroup(string: line, rules: []).extractImageInfo()
+                if !url.isEmpty {
+                    allViews.append(MDViewGroup(type: .image(url, alt)))
+                } else {
+                    // Fallback - tenta processar normalmente
+                    let lineViews = vm.parseViews(string: line, for: rules)
+                    allViews.append(contentsOf: lineViews)
+                }
+            } else if trimmed.hasPrefix("---") {
+                // É um divider
+                let lineViews = vm.parseViews(string: line, for: rules)
+                allViews.append(contentsOf: lineViews)
+            } else if trimmed.hasPrefix("- ") {
+                // É uma lista
+                let lineViews = vm.parseViews(string: line, for: rules)
+                allViews.append(contentsOf: lineViews)
+            } else {
+                // É texto normal/inline
+                let lineViews = vm.parseViews(string: line, for: rules)
+                
+                // Mescla todos os textos inline em um único
+                if lineViews.count == 1 {
+                    allViews.append(contentsOf: lineViews)
+                } else {
+                    // Múltiplos elementos - combina textos
+                    let combinedText = lineViews.map { view -> Text in
+                        switch view.type {
+                        case .text(let t): return t
+                        case .link(let g): return g.text
+                        default: return Text("")
+                        }
+                    }.reduce(Text(""), +)
+                    
+                    allViews.append(MDViewGroup(type: .text(combinedText)))
+                }
+            }
+        }
+        
+        return allViews
+    }
+    
+    // Junta linhas de imagens que foram quebradas
+    private func fixMultilineImages(_ text: String) -> String {
+        var result = text
+        
+        // Pattern para detectar ![alt]( sem fechar no mesmo linha
+        let pattern = #"!\[([^\]]*)\]\(\s*\n\s*([^\)]+)\)"#
+        
+        if let regex = try? NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators]) {
+            result = regex.stringByReplacingMatches(
+                in: result,
+                range: NSRange(result.startIndex..., in: result),
+                withTemplate: "![$1]($2)"
+            )
+        }
+        
+        return result
     }
     
     public var body: some View {
-        VStack(alignment: alignment) {
-            HStack { Spacer() }
-            //            vm.parseText(string: markdown, for: rules)
+        VStack(alignment: alignment, spacing: 6) {
             ForEach(self.views, id: \.id) { viewGroup in
-                viewGroup.view
+                // Elementos block ocupam toda linha, inline ficam juntos
+                if case .divider = viewGroup.type {
+                    viewGroup.view
+                } else if case .image = viewGroup.type {
+                    viewGroup.view
+                } else {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        viewGroup.view
+                        Spacer()
+                    }
+                }
             }
         }
-        //        .onAppear(perform: parse)
     }
-    
-    //    func parse() {
-    //        vm.parse(string: markdown, for: rules)
-    //    }
 }
 
 extension View {
@@ -348,3 +620,5 @@ extension View {
         AnyView(self)
     }
 }
+
+

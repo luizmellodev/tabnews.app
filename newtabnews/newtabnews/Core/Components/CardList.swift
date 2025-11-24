@@ -46,7 +46,7 @@ struct CardList: View {
                 Divider()
                 
                 if let body = post.body {
-                    MDText(markdown: String(body.prefix(300)))
+                    Text(String(body.prefix(200)))
                         .fontWeight(.light)
                         .multilineTextAlignment(.leading)
                         .foregroundColor(.primary)

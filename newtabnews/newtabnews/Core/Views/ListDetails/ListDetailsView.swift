@@ -156,22 +156,12 @@ struct ListDetailView: View {
                         .padding(.bottom, 8)
                     }
                     
-                    // Texto sempre selecionável com highlights visíveis
-                    HighlightableTextView(
-                        text: post.body ?? "",
-                        postId: post.id ?? "",
-                        highlights: postHighlights,
-                        isHighlightMode: isHighlightMode,
-                        onHighlight: { selectedText, range in
-                            saveHighlight(text: selectedText, range: range)
-                        },
-                        onRemoveHighlight: { highlight in
-                            removeHighlight(highlight)
-                        }
-                    )
-                    .padding(.bottom, 80)
+                    // Conteúdo com markdown
+                    MDText(markdown: post.body ?? "")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, 80)
                 }
-                .padding(.horizontal, 30)
+                .padding(.horizontal, 20)
             }
             .sheet(isPresented: $showingTabNews) {
                 WebContentView(content: post)
