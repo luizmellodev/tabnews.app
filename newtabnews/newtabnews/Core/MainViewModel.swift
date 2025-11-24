@@ -14,7 +14,7 @@ class MainViewModel {
     private let service: ContentServiceProtocol
     var likedList: [PostRequest] = []
     var content: [PostRequest] = []
-    var state: DefaultViewState = .started
+    var state: DefaultViewState = .loading // Começa em loading para mostrar skeleton
     var currentStrategy: ContentStrategy = .relevant
     
     let defaults = UserDefaults.standard

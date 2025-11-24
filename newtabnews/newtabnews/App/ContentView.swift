@@ -64,7 +64,8 @@ struct ContentView: View {
                     // Carregar curtidos salvos
                     viewModel.getLikedContent()
                     
-                    if UserDefaults.standard.bool(forKey: "First") == false && !alreadyLoaded {
+                    // Sempre carregar conteúdo ao abrir o app
+                    if !alreadyLoaded {
                         Task {
                             await viewModel.fetchContent()
                             await viewModel.fetchPost()

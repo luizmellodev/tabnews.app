@@ -54,7 +54,7 @@ struct MainView: View {
                 Group {
                     switch viewModel.state {
                     case .loading:
-                        ProgressView()
+                        SkeletonListView()
                             .transition(.opacity)
                         
                     case .requestSucceeded:
@@ -75,7 +75,7 @@ struct MainView: View {
                         FailureView(currentTheme: $currentTheme)
                             .transition(.opacity)
                     default:
-                        ProgressView()
+                        SkeletonListView()
                             .transition(.opacity)
                     }
                 }
