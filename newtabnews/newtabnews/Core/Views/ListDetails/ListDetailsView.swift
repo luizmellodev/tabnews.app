@@ -23,6 +23,7 @@ struct ListDetailView: View {
     @State private var showingAddNote = false
     @State private var showingHighlightSheet = false
     @State private var isHighlightMode = false
+    @State private var showAudioControls = false
     @Query private var highlights: [Highlight]
     
     private var postHighlights: [Highlight] {
@@ -39,94 +40,163 @@ struct ListDetailView: View {
                             .font(.title3)
                             .fontWeight(.semibold)
                         
-                        // Barra de ações
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                // Botão TTS
-                                Button {
-                                    let impact = UIImpactFeedbackGenerator(style: .medium)
-                                    impact.impactOccurred()
-                                    ttsManager.togglePlayPause(
-                                        text: post.body ?? "",
-                                        title: post.title
-                                    )
-                                } label: {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: ttsManager.isPlaying ? "pause.circle" : "speaker.wave.2")
-                                        Text(ttsManager.isPlaying ? "Pausar" : "Ouvir")
+                        // Barra de ações principal
+                        HStack(spacing: 12) {
+                            // Botão Destacar
+                            Button {
+                                withAnimation {
+                                    isHighlightMode.toggle()
+                                }
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image(systemName: isHighlightMode ? "checkmark.circle.fill" : "highlighter")
+                                    if isHighlightMode {
+                                        Text("Concluir")
+                                            .font(.caption)
+                                    } else if !postHighlights.isEmpty {
+                                        Text("\(postHighlights.count)")
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                    } else {
+                                        Text("Destacar")
                                             .font(.caption)
                                     }
+                                }
+                                .foregroundColor(isHighlightMode ? .green : (postHighlights.isEmpty ? .yellow : .orange))
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background((isHighlightMode ? Color.green : (postHighlights.isEmpty ? Color.yellow : Color.orange)).opacity(0.1))
+                                .cornerRadius(8)
+                            }
+                            
+                            // Botão Anotar
+                            Button {
+                                showingAddNote = true
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "note.text.badge.plus")
+                                    Text("Anotar")
+                                        .font(.caption)
+                                }
+                                .foregroundColor(.orange)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.orange.opacity(0.1))
+                                .cornerRadius(8)
+                            }
+                            
+                            // Botão de Like
+                            Button {
+                                let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                                impactHeavy.impactOccurred()
+                                
+                                if viewModel.likedList.contains(where: { $0.title == post.title }) {
+                                    viewModel.removeContentList(content: post)
+                                } else {
+                                    viewModel.likeContentList(content: post)
+                                }
+                            } label: {
+                                Image(systemName: viewModel.likedList.contains(where: { $0.title == post.title }) ? "heart.fill" : "heart")
+                                    .foregroundColor(viewModel.likedList.contains(where: { $0.title == post.title }) ? .red : .gray)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(8)
+                            }
+                            
+                            Spacer()
+                            
+                            // Botão de Áudio (expande/colapsa)
+                            Button {
+                                withAnimation(.spring(response: 0.3)) {
+                                    showAudioControls.toggle()
+                                }
+                            } label: {
+                                Image(systemName: showAudioControls ? "speaker.wave.2.fill" : "speaker.wave.2")
                                     .foregroundColor(.blue)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
-                                    .background(Color.blue.opacity(0.1))
+                                    .background(Color.blue.opacity(showAudioControls ? 0.2 : 0.1))
                                     .cornerRadius(8)
-                                }
-                                
-                                // Botão Destacar
-                                Button {
-                                    withAnimation {
-                                        isHighlightMode.toggle()
-                                    }
-                                } label: {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: isHighlightMode ? "checkmark.circle.fill" : "highlighter")
-                                        if isHighlightMode {
-                                            Text("Concluir")
-                                                .font(.caption)
-                                        } else if !postHighlights.isEmpty {
-                                            Text("\(postHighlights.count)")
-                                                .font(.caption)
-                                                .fontWeight(.semibold)
-                                        } else {
-                                            Text("Destacar")
-                                                .font(.caption)
-                                        }
-                                    }
-                                    .foregroundColor(isHighlightMode ? .green : (postHighlights.isEmpty ? .yellow : .orange))
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background((isHighlightMode ? Color.green : (postHighlights.isEmpty ? Color.yellow : Color.orange)).opacity(0.1))
-                                    .cornerRadius(8)
-                                }
-                                
-                                // Botão Anotar
-                                Button {
-                                    showingAddNote = true
-                                } label: {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: "note.text.badge.plus")
-                                        Text("Anotar")
-                                            .font(.caption)
-                                    }
-                                    .foregroundColor(.orange)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.orange.opacity(0.1))
-                                    .cornerRadius(8)
-                                }
-                                
-                                // Botão de Like
-                                Button {
-                                    let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
-                                    impactHeavy.impactOccurred()
-                                    
-                                    if viewModel.likedList.contains(where: { $0.title == post.title }) {
-                                        viewModel.removeContentList(content: post)
-                                    } else {
-                                        viewModel.likeContentList(content: post)
-                                    }
-                                } label: {
-                                    Image(systemName: viewModel.likedList.contains(where: { $0.title == post.title }) ? "heart.fill" : "heart")
-                                        .foregroundColor(viewModel.likedList.contains(where: { $0.title == post.title }) ? .red : .gray)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 6)
-                                        .background(Color.gray.opacity(0.1))
-                                        .cornerRadius(8)
-                                }
                             }
                         }
                         .padding(.bottom, 4)
+                        
+                        // Controles de Áudio (expandível)
+                        if showAudioControls {
+                            VStack(spacing: 10) {
+                                HStack(spacing: 12) {
+                                    // Botão Play/Pause
+                                    Button {
+                                        let impact = UIImpactFeedbackGenerator(style: .medium)
+                                        impact.impactOccurred()
+                                        
+                                        if ttsManager.isPlaying {
+                                            ttsManager.pause()
+                                        } else if ttsManager.isPaused {
+                                            ttsManager.resume()
+                                        } else {
+                                            ttsManager.speak(text: post.body ?? "", title: post.title)
+                                        }
+                                    } label: {
+                                        HStack(spacing: 6) {
+                                            Image(systemName: ttsManager.isPlaying ? "pause.fill" : "play.fill")
+                                                .font(.callout)
+                                            Text(ttsManager.isPlaying ? "Pausar" : (ttsManager.isPaused ? "Retomar" : "Iniciar"))
+                                                .font(.subheadline)
+                                        }
+                                        .foregroundColor(.blue)
+                                        .frame(height: 44)
+                                        .padding(.horizontal, 16)
+                                        .background(Color.blue.opacity(0.1))
+                                        .cornerRadius(10)
+                                    }
+                                    
+                                    // Botão Stop
+                                    Button {
+                                        ttsManager.stop()
+                                    } label: {
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "stop.fill")
+                                                .font(.callout)
+                                            Text("Parar")
+                                                .font(.subheadline)
+                                        }
+                                        .foregroundColor(ttsManager.isPlaying || ttsManager.isPaused ? .red : .gray)
+                                        .frame(height: 44)
+                                        .padding(.horizontal, 16)
+                                        .background((ttsManager.isPlaying || ttsManager.isPaused ? Color.red : Color.gray).opacity(0.1))
+                                        .cornerRadius(10)
+                                    }
+                                    .disabled(!ttsManager.isPlaying && !ttsManager.isPaused)
+                                    .opacity(ttsManager.isPlaying || ttsManager.isPaused ? 1 : 0.5)
+                                }
+                                
+                                // Controles de velocidade
+                                HStack(spacing: 8) {
+                                    Text("Velocidade:")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    
+                                    ForEach([0.5, 1.0, 1.5, 2.0, 3.0], id: \.self) { speed in
+                                        Button {
+                                            ttsManager.setSpeed(Float(speed))
+                                        } label: {
+                                            Text(formatSpeedShort(Float(speed)))
+                                                .font(.caption)
+                                                .fontWeight(ttsManager.currentRate == Float(speed) ? .semibold : .regular)
+                                                .foregroundColor(ttsManager.currentRate == Float(speed) ? .white : .blue)
+                                                .frame(minWidth: 44, minHeight: 32)
+                                                .background(ttsManager.currentRate == Float(speed) ? Color.blue : Color.blue.opacity(0.1))
+                                                .cornerRadius(8)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.top, 4)
+                            .padding(.bottom, 8)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                        }
                     }
                     HStack {
                         Text(post.ownerUsername ?? "luizmellodev")
@@ -199,6 +269,22 @@ struct ListDetailView: View {
         }
         .sheet(isPresented: $showingHighlightSheet) {
             AddHighlightSheet(post: post, modelContext: modelContext)
+        }
+    }
+    
+    private func formatSpeedShort(_ speed: Float) -> String {
+        if speed == 0.5 {
+            return "0.5x"
+        } else if speed == 1.0 {
+            return "1x"
+        } else if speed == 1.5 {
+            return "1.5x"
+        } else if speed == 2.0 {
+            return "2x"
+        } else if speed == 3.0 {
+            return "3x"
+        } else {
+            return "\(speed)x"
         }
     }
     
