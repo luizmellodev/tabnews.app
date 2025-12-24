@@ -14,6 +14,7 @@ struct FoldersView: View {
     @Query(sort: \Folder.createdAt) private var folders: [Folder]
     @Query private var highlights: [Highlight]
     @Query private var notes: [Note]
+    @Query private var savedPosts: [SavedPost]
     
     // Usar String IDs para pastas especiais (mais seguro que UUID)
     private enum SpecialFolder: String {
@@ -484,15 +485,18 @@ struct FoldersView: View {
         if let post = viewModel.likedList.first(where: { $0.id == id }) {
             return post
         }
-        return viewModel.content.first { $0.id == id }
+        if let post = viewModel.content.first(where: { $0.id == id }) {
+            return post
+        }
+        if let savedPost = savedPosts.first(where: { $0.id == id }) {
+            return savedPost.toPostRequest()
+        }
+        return nil
     }
     
     private func getPostsInFolder(_ folder: Folder) -> [PostRequest] {
-        folder.postIds.compactMap { postId in
-            if let post = viewModel.likedList.first(where: { $0.id == postId }) {
-                return post
-            }
-            return viewModel.content.first { $0.id == postId }
+        return folder.postIds.compactMap { postId in
+            getPost(byId: postId)
         }
     }
     

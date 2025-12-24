@@ -68,6 +68,7 @@ struct PostRow: View {
         }
         .sheet(isPresented: $showingFolderPicker) {
             FolderPickerSheet(post: post, folders: folders, modelContext: modelContext)
+                .id(post.id ?? UUID().uuidString)
         }
         .padding(.top, 8)
     }
@@ -79,6 +80,7 @@ struct FolderPickerSheet: View {
     let post: PostRequest
     let folders: [Folder]
     let modelContext: ModelContext
+    @Query private var savedPosts: [SavedPost]
     
     @State private var showingNewFolderSheet = false
     
@@ -159,6 +161,11 @@ struct FolderPickerSheet: View {
             folder.removePost(postId)
         } else {
             folder.addPost(postId)
+            
+            if !savedPosts.contains(where: { $0.id == postId }) {
+                let savedPost = SavedPost(from: post)
+                modelContext.insert(savedPost)
+            }
         }
         
         dismiss()

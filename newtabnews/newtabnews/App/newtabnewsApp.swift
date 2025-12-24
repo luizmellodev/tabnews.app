@@ -100,6 +100,6 @@ struct newtabnewsApp: App {
                 newsletterVM: dependencies.makeNewsletterViewModel()
             )
         }
-        .modelContainer(for: [Folder.self, Highlight.self, Note.self])
+        .modelContainer(for: [Folder.self, Highlight.self, Note.self, SavedPost.self])
     }
 }
