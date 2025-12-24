@@ -138,6 +138,13 @@ struct FoldersView: View {
                                 selectedPost = post
                             }
                         )
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                viewModel.removeContentList(content: post)
+                            } label: {
+                                Label("Remover", systemImage: "heart.slash")
+                            }
+                        }
                         .contextMenu {
                             Button(role: .destructive) {
                                 viewModel.removeContentList(content: post)
@@ -186,6 +193,13 @@ struct FoldersView: View {
                                     selectedHighlights = postHighlights
                                 }
                             )
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteHighlightsForPost(postId: postId)
+                                } label: {
+                                    Label("Excluir", systemImage: "trash")
+                                }
+                            }
                             .contextMenu {
                                 Button(role: .destructive) {
                                     deleteHighlightsForPost(postId: postId)
@@ -233,6 +247,13 @@ struct FoldersView: View {
                                     selectedPost = post
                                 }
                             )
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteNotesForPost(postId: note.postId)
+                                } label: {
+                                    Label("Excluir", systemImage: "trash")
+                                }
+                            }
                             .contextMenu {
                                 Button(role: .destructive) {
                                     deleteNotesForPost(postId: note.postId)
@@ -350,6 +371,13 @@ struct FoldersView: View {
                                     selectedPost = post
                                 }
                             )
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    removePostFromFolder(post, folder: folder)
+                                } label: {
+                                    Label("Remover", systemImage: "folder.badge.minus")
+                                }
+                            }
                             .contextMenu {
                                 Button(role: .destructive) {
                                     removePostFromFolder(post, folder: folder)
@@ -453,12 +481,18 @@ struct FoldersView: View {
     }
     
     private func getPost(byId id: String) -> PostRequest? {
-        viewModel.likedList.first { $0.id == id }
+        if let post = viewModel.likedList.first(where: { $0.id == id }) {
+            return post
+        }
+        return viewModel.content.first { $0.id == id }
     }
     
     private func getPostsInFolder(_ folder: Folder) -> [PostRequest] {
         folder.postIds.compactMap { postId in
-            viewModel.likedList.first { $0.id == postId }
+            if let post = viewModel.likedList.first(where: { $0.id == postId }) {
+                return post
+            }
+            return viewModel.content.first { $0.id == postId }
         }
     }
     

@@ -111,7 +111,7 @@ struct FolderPickerSheet: View {
                                 
                                 Spacer()
                                 
-                                if folder.postIds.contains(post.id ?? "") {
+                                if let postId = post.id, !postId.isEmpty, folder.postIds.contains(postId) {
                                     Image(systemName: "checkmark")
                                         .foregroundColor(.green)
                                 }
@@ -144,12 +144,18 @@ struct FolderPickerSheet: View {
     }
     
     private func saveToFolder(_ folder: Folder) {
-        guard let postId = post.id else { return }
+        guard let postId = post.id, !postId.isEmpty else {
+            print("⚠️ Tentativa de salvar post sem ID válido. Título: \(post.title ?? "sem título")")
+            dismiss()
+            return
+        }
         
         let impact = UIImpactFeedbackGenerator(style: .medium)
         impact.impactOccurred()
         
-        if folder.postIds.contains(postId) {
+        let wasInFolder = folder.postIds.contains(postId)
+        
+        if wasInFolder {
             folder.removePost(postId)
         } else {
             folder.addPost(postId)
