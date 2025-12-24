@@ -84,6 +84,20 @@ struct SettingsView: View {
                     Label("Sua Biblioteca", systemImage: "chart.bar")
                 }
                 
+                // Ajuda
+                Section {
+                    Button {
+                        UserDefaults.standard.set(false, forKey: "hasSeenTipsOnboarding")
+                        NotificationCenter.default.post(name: .showTipsOnboarding, object: nil)
+                    } label: {
+                        Label("Ver Dicas Novamente", systemImage: "lightbulb.fill")
+                    }
+                } header: {
+                    Label("Ajuda", systemImage: "questionmark.circle")
+                } footer: {
+                    Text("Reveja as dicas de como usar o app")
+                }
+                
                 // Notificações
                 Section {
                     HStack {

@@ -14,6 +14,7 @@ struct ContentView: View {
         
     @AppStorage("current_theme") var currentTheme: Theme = .system
     @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
+    @AppStorage("hasSeenTipsOnboarding") var hasSeenTipsOnboarding: Bool = false
     
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var modelContext
@@ -30,6 +31,7 @@ struct ContentView: View {
     @State var selectedTab: AppTab = .home
     @State var postToOpen: PostRequest? = nil
     @State var isLoadingPost: Bool = false
+    @State var showTipsOnboarding: Bool = false
         
     init(
         searchText: String = "",
@@ -49,15 +51,38 @@ struct ContentView: View {
                 OnboardingView(showOnboarding: $hasSeenOnboarding)
             } else {
                 mainContent
+                
+                if showTipsOnboarding {
+                    OnboardingTipsView(
+                        showOnboarding: $showTipsOnboarding,
+                        onNavigateToLibrary: {
+                            selectedTab = .library
+                        }
+                    )
+                    .transition(.opacity)
+                }
             }
         }
         .preferredColorScheme(currentTheme.colorScheme)
         .onAppear {
             setupObservers()
+            
+            if !hasSeenTipsOnboarding && hasSeenOnboarding {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    withAnimation {
+                        showTipsOnboarding = true
+                    }
+                }
+            }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             if newPhase == .active {
                 syncToWatch()
+            }
+        }
+        .onChange(of: showTipsOnboarding) { _, newValue in
+            if !newValue {
+                hasSeenTipsOnboarding = true
             }
         }
     }
@@ -174,6 +199,28 @@ struct ContentView: View {
             queue: .main
         ) { [self] notification in
             handleWatchLikedPosts(notification)
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .showTipsOnboarding,
+            object: nil,
+            queue: .main
+        ) { [self] _ in
+            selectedTab = .home
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation {
+                    showTipsOnboarding = true
+                }
+            }
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .navigateToHome,
+            object: nil,
+            queue: .main
+        ) { [self] _ in
+            selectedTab = .home
         }
     }
     

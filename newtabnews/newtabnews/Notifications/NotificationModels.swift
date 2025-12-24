@@ -35,4 +35,8 @@ extension Notification.Name {
     static let notesUpdated = Notification.Name("notesUpdated")
     static let foldersUpdated = Notification.Name("foldersUpdated")
     static let watchLikedPostsReceived = Notification.Name("watchLikedPostsReceived")
+    static let showTipsOnboarding = Notification.Name("showTipsOnboarding")
+    static let simulateFirstPostLongPress = Notification.Name("simulateFirstPostLongPress")
+    static let dismissContextMenu = Notification.Name("dismissContextMenu")
+    static let navigateToHome = Notification.Name("navigateToHome")
 }
