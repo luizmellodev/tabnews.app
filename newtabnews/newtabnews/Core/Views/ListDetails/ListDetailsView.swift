@@ -38,7 +38,7 @@ struct ListDetailView: View {
                     PostMetadataView(post: post)
                     Divider()
                     
-                    if isHighlightMode {
+                                    if isHighlightMode {
                         HighlightModeIndicator()
                     }
                     
@@ -59,7 +59,7 @@ struct ListDetailView: View {
         }
         .sheet(isPresented: $showingAddNote) {
             AddNoteSheet(post: post, modelContext: modelContext)
-        }
+                                }
         .sheet(isPresented: $showingHighlightSheet) {
             AddHighlightSheet(post: post, modelContext: modelContext)
         }
@@ -81,54 +81,54 @@ struct ListDetailView: View {
             
             if showAudioControls {
                 AudioControlsView(ttsManager: ttsManager, post: post)
-            }
-        }
-    }
+                                        }
+                                    }
+                                }
     
     private var postContent: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HybridMarkdownView(
-                markdown: post.body ?? "",
-                postId: post.id ?? "",
-                highlights: postHighlights,
-                isHighlightMode: isHighlightMode,
-                onHighlight: { text, range in
-                    saveHighlight(text: text, range: range)
-                },
-                onRemoveHighlight: { highlight in
-                    removeHighlight(highlight)
-                }
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
+                    HybridMarkdownView(
+                        markdown: post.body ?? "",
+                        postId: post.id ?? "",
+                        highlights: postHighlights,
+                        isHighlightMode: isHighlightMode,
+                        onHighlight: { text, range in
+                            saveHighlight(text: text, range: range)
+                        },
+                        onRemoveHighlight: { highlight in
+                            removeHighlight(highlight)
+                        }
+                    )
+                    .frame(maxWidth: .infinity, alignment: .leading)
             
             PostCTAView(post: post)
         }
-        .padding(.bottom, 80)
-    }
+                    .padding(.bottom, 80)
+                }
     
     private var readOnTabNewsButton: some View {
-        VStack {
-            Spacer()
-            HStack {
+            VStack {
                 Spacer()
-                Button(action: {
-                    self.showingTabNews = true
-                }, label: {
-                    Text("Ler no Tab News")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                .fill(Color.blue)
-                        }
-                        .padding(.trailing, 30)
-                        .padding(.bottom, 20)
-                })
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        self.showingTabNews = true
+                    }, label: {
+                        Text("Ler no Tab News")
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                    .fill(Color.blue)
+                            }
+                            .padding(.trailing, 30)
+                            .padding(.bottom, 20)
+                    })
+                }
             }
         }
-    }
     
     // MARK: - Actions
     

@@ -20,9 +20,9 @@ struct PostDetailWatchView: View {
             VStack(alignment: .leading, spacing: 12) {
                 // Título e Like
                 HStack(alignment: .top) {
-                    Text(post.title ?? "Sem título")
-                        .font(.headline)
-                        .multilineTextAlignment(.leading)
+                Text(post.title ?? "Sem título")
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
                     
                     Spacer()
                     

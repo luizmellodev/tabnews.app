@@ -17,6 +17,12 @@ class MainViewModel {
     var state: DefaultViewState = .loading
     var currentStrategy: ContentStrategy = .relevant
     
+    var currentPage: Int = 1
+    var isLoadingMore: Bool = false
+    var hasMorePages: Bool = true
+    private let postsPerPage: Int = 10
+    private let maxCachedPages: Int = 5
+    
     let defaults = UserDefaults.standard
     
     init(service: ContentServiceProtocol = ContentService()) {
@@ -30,8 +36,18 @@ extension MainViewModel {
     @MainActor
     func fetchContent() async {
         self.state = .loading
+        self.currentPage = 1
+        self.hasMorePages = true
+        
         do {
-            self.content = try await service.getContent(page: "1", perPage: "5", strategy: currentStrategy.rawValue)
+            let newPosts = try await service.getContent(
+                page: "\(currentPage)",
+                perPage: "\(postsPerPage)",
+                strategy: currentStrategy.rawValue
+            )
+            
+            self.content = newPosts
+            self.hasMorePages = newPosts.count == postsPerPage
             self.state = .requestSucceeded
         } catch {
             self.state = .requestFailed
@@ -41,7 +57,15 @@ extension MainViewModel {
     
     @MainActor
     func fetchContent(with strategy: ContentStrategy) async {
+        let strategyChanged = self.currentStrategy != strategy
         self.currentStrategy = strategy
+        
+        if strategyChanged {
+            self.currentPage = 1
+            self.hasMorePages = true
+            self.content = []
+        }
+        
         await fetchContent()
         await fetchPost()
     }
@@ -61,7 +85,116 @@ extension MainViewModel {
             }
         }
         
+        saveCachedContent(page: currentPage)
         NotificationCenter.default.post(name: .postsLoaded, object: nil)
+    }
+    
+    @MainActor
+    func fetchNextPage() async {
+        guard !isLoadingMore && hasMorePages else { return }
+        
+        isLoadingMore = true
+        currentPage += 1
+        
+        do {
+            let newPosts = try await service.getContent(
+                page: "\(currentPage)",
+                perPage: "\(postsPerPage)",
+                strategy: currentStrategy.rawValue
+            )
+            
+            if newPosts.isEmpty || newPosts.count < postsPerPage {
+                hasMorePages = false
+            }
+            
+            for index in newPosts.indices {
+                var post = newPosts[index]
+                do {
+                    let response = try await service.getPost(
+                        user: post.ownerUsername ?? "erro",
+                        slug: post.slug ?? "erro"
+                    )
+                    self.content.append(response)
+                } catch {
+                    print("Error fetching post details: \(error)")
+                }
+            }
+            
+            saveCachedContent(page: currentPage)
+            isLoadingMore = false
+        } catch {
+            print("Error fetching next page: \(error)")
+            currentPage -= 1
+            isLoadingMore = false
+        }
+    }
+    
+    @MainActor
+    func resetPagination() async {
+        currentPage = 1
+        hasMorePages = true
+        content = []
+        clearOldCache()
+        await fetchContent()
+        await fetchPost()
+    }
+    
+    @MainActor
+    func loadCachedContent() {
+        let cacheKey = "CachedPosts_\(currentStrategy.rawValue)_page1"
+        let timestampKey = "CachedPosts_\(currentStrategy.rawValue)_timestamp"
+        
+        if let timestamp = defaults.object(forKey: timestampKey) as? Date {
+            let hoursSinceCache = Date().timeIntervalSince(timestamp) / 3600
+            
+            if hoursSinceCache > 1 {
+                clearOldCache()
+                return
+            }
+        }
+        
+        if let cachedData = defaults.object(forKey: cacheKey) as? Data {
+            let decoder = JSONDecoder()
+            if let cachedPosts = try? decoder.decode([PostRequest].self, from: cachedData) {
+                self.content = cachedPosts
+                self.state = .requestSucceeded
+                self.currentPage = 1
+                self.hasMorePages = true
+            }
+        }
+    }
+    
+    private func saveCachedContent(page: Int) {
+        guard page <= maxCachedPages else { return }
+        
+        let cacheKey = "CachedPosts_\(currentStrategy.rawValue)_page\(page)"
+        let timestampKey = "CachedPosts_\(currentStrategy.rawValue)_timestamp"
+        let encoder = JSONEncoder()
+        
+        let startIndex = (page - 1) * postsPerPage
+        let endIndex = min(startIndex + postsPerPage, content.count)
+        
+        guard startIndex < content.count else { return }
+        
+        let postsForPage = Array(content[startIndex..<endIndex])
+        
+        if let encoded = try? encoder.encode(postsForPage) {
+            defaults.set(encoded, forKey: cacheKey)
+            
+            if page == 1 {
+                defaults.set(Date(), forKey: timestampKey)
+            }
+        }
+    }
+    
+    private func clearOldCache() {
+        for page in 1...maxCachedPages {
+            let cacheKey = "CachedPosts_\(currentStrategy.rawValue)_page\(page)"
+            defaults.removeObject(forKey: cacheKey)
+        }
+        
+        let timestampKey = "CachedPosts_\(currentStrategy.rawValue)_timestamp"
+        defaults.removeObject(forKey: timestampKey)
     }
 }
 

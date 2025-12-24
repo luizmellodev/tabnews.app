@@ -129,7 +129,7 @@ extension WatchSyncManager: WCSessionDelegate {
         
         if let likedJSON = applicationContext["likedPosts"] as? String,
            let likedData = likedJSON.data(using: .utf8) {
-            UserDefaults.standard.set(likedData, forKey: "WatchLikedPosts")
+                UserDefaults.standard.set(likedData, forKey: "WatchLikedPosts")
         }
         
         if let stats = applicationContext["stats"] as? [String: Int] {

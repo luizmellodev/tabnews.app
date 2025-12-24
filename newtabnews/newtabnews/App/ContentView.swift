@@ -124,6 +124,8 @@ struct ContentView: View {
         viewModel.getLikedContent()
         
         if !alreadyLoaded {
+            viewModel.loadCachedContent()
+            
             Task {
                 await viewModel.fetchContent()
                 await viewModel.fetchPost()
@@ -262,8 +264,8 @@ struct ContentView: View {
     // MARK: - Watch Sync
     
     private func syncToWatch() {
-        let recentPosts = Array(viewModel.content.prefix(5))
-        let likedPosts = Array(viewModel.likedList.prefix(10))
+        let recentPosts = Array(viewModel.content.prefix(10))
+        let likedPosts = Array(viewModel.likedList.prefix(15))
         
         let stats = [
             "liked": viewModel.likedList.count,

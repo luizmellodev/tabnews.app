@@ -29,6 +29,23 @@ struct ListView: View {
                     removal: .opacity
                 ))
                 .animation(.easeOut(duration: 0.3).delay(Double(index) * 0.05), value: filteredPosts.count)
+                .onAppear {
+                    if index == filteredPosts.count - 3 {
+                        Task {
+                            await viewModel.fetchNextPage()
+                        }
+                    }
+                }
+            }
+            
+            if viewModel.isLoadingMore {
+                LoadingMoreView()
+                    .padding(.vertical, 20)
+            }
+            
+            if !viewModel.hasMorePages && !filteredPosts.isEmpty {
+                EndOfListView()
+                    .padding(.vertical, 20)
             }
         }
         .padding(.horizontal, 5)
@@ -42,6 +59,31 @@ struct ListView: View {
                 guard let title = post.title else { return false }
                 return title.localizedCaseInsensitiveContains(searchText)
             }
+        }
+    }
+}
+
+struct LoadingMoreView: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            ProgressView()
+                .scaleEffect(0.8)
+            Text("Carregando mais posts...")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+struct EndOfListView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.title2)
+                .foregroundColor(.green)
+            Text("Você viu todos os posts!")
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
     }
 }

@@ -68,6 +68,9 @@ struct MainView: View {
                             .environment(viewModel)
                             .padding(.top, 5)
                         }
+                        .refreshable {
+                            await refreshContent()
+                        }
                         .transition(.opacity)
                         .id(viewModel.currentStrategy)
                         
@@ -97,5 +100,9 @@ struct MainView: View {
             }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Pesquisar")
         }
+    }
+    
+    private func refreshContent() async {
+        await viewModel.resetPagination()
     }
 }
