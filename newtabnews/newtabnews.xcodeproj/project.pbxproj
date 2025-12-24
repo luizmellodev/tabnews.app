@@ -88,6 +88,8 @@
 		79E727F92EFB9E27007BF27A /* MockContentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E727F82EFB9E27007BF27A /* MockContentService.swift */; };
 		79E727FA2EFB9E27007BF27A /* MockContentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E727F82EFB9E27007BF27A /* MockContentService.swift */; };
 		79E727FC2EFB9E76007BF27A /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E727FB2EFB9E76007BF27A /* AppDependencies.swift */; };
+		79E728012EFB9FCC007BF27A /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E728002EFB9FCC007BF27A /* NotificationHandler.swift */; };
+		79E728022EFB9FCC007BF27A /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E728002EFB9FCC007BF27A /* NotificationHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -179,6 +181,7 @@
 		79E727F62EFB9DA2007BF27A /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		79E727F82EFB9E27007BF27A /* MockContentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContentService.swift; sourceTree = "<group>"; };
 		79E727FB2EFB9E76007BF27A /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
+		79E728002EFB9FCC007BF27A /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -430,6 +433,7 @@
 		79C706112D95E446005C26A7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				79E728002EFB9FCC007BF27A /* NotificationHandler.swift */,
 				79E727F82EFB9E27007BF27A /* MockContentService.swift */,
 				79259D2E2EFB81FE004BC057 /* FirebasePushNotificationService.swift */,
 				790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */,
@@ -590,6 +594,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				790AB0EE2ECF674600E443E6 /* PostRequest.swift in Sources */,
+				79E728022EFB9FCC007BF27A /* NotificationHandler.swift in Sources */,
 				790AB0ED2ECF674200E443E6 /* Folder.swift in Sources */,
 				790AB10C2ECF68F000E443E6 /* RequestBuilder.swift in Sources */,
 				79E727FA2EFB9E27007BF27A /* MockContentService.swift in Sources */,
@@ -665,6 +670,7 @@
 				791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */,
 				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
 				79C706262D95E51F005C26A7 /* NetworkManagerProtocol.swift in Sources */,
+				79E728012EFB9FCC007BF27A /* NotificationHandler.swift in Sources */,
 				794863862B5B55ED009AA720 /* GameController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
