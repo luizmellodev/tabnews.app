@@ -192,11 +192,18 @@
 			);
 			target = 791E87D32A4FD99B00C2F0B4 /* newtabnews */;
 		};
+		79E728042EFBA133007BF27A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				NotificationModels.swift,
+			);
+			target = 790AB0DB2ECF66FF00E443E6 /* TabNews Watch Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		790AB0DD2ECF66FF00E443E6 /* TabNews Watch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (790AB1062ECF67FD00E443E6 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "TabNews Watch Watch App"; sourceTree = "<group>"; };
-		79C706412D9ADF07005C26A7 /* Notifications */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Notifications; sourceTree = "<group>"; };
+		79C706412D9ADF07005C26A7 /* Notifications */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (79E728042EFBA133007BF27A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Notifications; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
