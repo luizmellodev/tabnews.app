@@ -46,8 +46,11 @@ class NewsletterViewModel: ObservableObject {
                 )
                 newsletter[index].body = response.body
             } catch {
-                self.state = .requestFailed
-                print("Deu algum erro!! \(error)")
+                // Não mudar o estado geral por erro individual
+                // Apenas logar o erro e continuar com as próximas
+                print("Erro ao buscar newsletter [\(newsletter[index].slug ?? "unknown")]: \(error)")
+                // Marcar o body como erro para este item específico
+                newsletter[index].body = "Erro ao carregar conteúdo"
             }
         }
     }
