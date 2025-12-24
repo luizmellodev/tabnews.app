@@ -34,245 +34,15 @@ struct FoldersView: View {
     var body: some View {
         NavigationStack {
             Group {
-            if folders.isEmpty && highlights.isEmpty && notes.isEmpty && uniqueLikedPosts.isEmpty {
-                emptyState
-            } else {
+                if folders.isEmpty && highlights.isEmpty && notes.isEmpty && uniqueLikedPosts.isEmpty {
+                    emptyState
+                } else {
                     List {
-                        // Pasta Especial: Curtidos
-                        if !uniqueLikedPosts.isEmpty {
-                            Section {
-                                SpecialFolderRow(
-                                    name: "Curtidos",
-                                    icon: "heart.fill",
-                                    color: "#FF3B30",
-                                    count: uniqueLikedPosts.count,
-                                    isExpanded: expandedFolders.contains(SpecialFolder.liked.rawValue),
-                                    onToggle: {
-                                        toggleSpecialFolder(.liked)
-                                    }
-                                )
-                                .contextMenu {
-                                    Button(role: .destructive) {
-                                        clearAllLiked()
-                                    } label: {
-                                        Label("Remover Todos os Curtidos", systemImage: "heart.slash.fill")
-                                    }
-                                    .disabled(uniqueLikedPosts.isEmpty)
-                                }
-                                
-                                if expandedFolders.contains(SpecialFolder.liked.rawValue) {
-                                    ForEach(uniqueLikedPosts) { post in
-                                        PostFileRow(
-                                            post: post,
-                                            onTap: {
-                                                selectedPost = post
-                                            }
-                                        )
-                                        .contextMenu {
-                                            Button(role: .destructive) {
-                                                viewModel.removeContentList(content: post)
-                                            } label: {
-                                                Label("Remover dos Curtidos", systemImage: "heart.slash")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Pasta Especial: Destaques
-                        if !highlights.isEmpty {
-                            Section {
-                                SpecialFolderRow(
-                                    name: "Destaques",
-                                    icon: "highlighter",
-                                    color: "#FFFF00",
-                                    count: highlights.count,
-                                    isExpanded: expandedFolders.contains(SpecialFolder.highlights.rawValue),
-                                    onToggle: {
-                                        toggleSpecialFolder(.highlights)
-                                    }
-                                )
-                                .contextMenu {
-                                    Button(role: .destructive) {
-                                        clearAllHighlights()
-                                    } label: {
-                                        Label("Excluir Todos os Destaques", systemImage: "trash")
-                                    }
-                                    .disabled(highlights.isEmpty)
-                                }
-                                
-                                if expandedFolders.contains(SpecialFolder.highlights.rawValue) {
-                                    ForEach(groupedHighlights, id: \.key) { postId, postHighlights in
-                                        if let post = getPost(byId: postId) {
-                                            PostFileRow(
-                                                post: post,
-                                                hasHighlights: true,
-                                                highlightPreview: postHighlights.first?.highlightedText,
-                                                onTap: {
-                                                    selectedPost = post
-                                                    selectedHighlights = postHighlights
-                                                }
-                                            )
-                                            .contextMenu {
-                                                Button(role: .destructive) {
-                                                    deleteHighlightsForPost(postId: postId)
-                                                } label: {
-                                                    Label("Excluir Todos os Destaques", systemImage: "trash")
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Pasta Especial: Anotações
-                        if !notes.isEmpty {
-                            Section {
-                                SpecialFolderRow(
-                                    name: "Anotações",
-                                    icon: "note.text",
-                                    color: "#FF9500",
-                                    count: notes.count,
-                                    isExpanded: expandedFolders.contains(SpecialFolder.notes.rawValue),
-                                    onToggle: {
-                                        toggleSpecialFolder(.notes)
-                                    }
-                                )
-                                .contextMenu {
-                                    Button(role: .destructive) {
-                                        clearAllNotes()
-                                    } label: {
-                                        Label("Excluir Todas as Anotações", systemImage: "trash")
-                                    }
-                                    .disabled(notes.isEmpty)
-                                }
-                                
-                                if expandedFolders.contains(SpecialFolder.notes.rawValue) {
-                                    ForEach(notes) { note in
-                                        if let post = getPost(byId: note.postId) {
-                                            PostFileRow(
-                                                post: post,
-                                                hasNote: true,
-                                                onTap: {
-                                                    selectedPost = post
-                                                }
-                                            )
-                                            .contextMenu {
-                                                Button(role: .destructive) {
-                                                    deleteNotesForPost(postId: note.postId)
-                                                } label: {
-                                                    Label("Excluir Todas as Anotações", systemImage: "trash")
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Pasta Especial: Descanse (Easter Egg após 30 min)
-                        if usageTracker.shouldShowRestFolder {
-                            Section {
-                                Button(action: {
-                                    showingGame = true
-                                }) {
-                                    HStack(spacing: 12) {
-                                        Image(systemName: "chevron.right")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                            .frame(width: 12)
-                                        
-                                        Image(systemName: "moon.stars.fill")
-                                            .foregroundColor(Color(hex: "#9B59B6"))
-                                            .font(.title3)
-                                        
-                                        VStack(alignment: .leading, spacing: 2) {
-                                            Text("Descanse")
-                                                .foregroundColor(.primary)
-                                                .font(.body)
-                                                .fontWeight(.medium)
-                                            
-                                            Text("Você merece uma pausa! 🎮")
-                                                .font(.caption2)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Text("1")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .background(Color.secondary.opacity(0.1))
-                                            .cornerRadius(8)
-                                    }
-                                    .padding(.vertical, 4)
-                                    .contentShape(Rectangle())
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        
-                        // Pastas do Usuário
-                        if !folders.isEmpty {
-                            Section("Minhas Pastas") {
-                                ForEach(folders) { folder in
-                                    UserFolderRow(
-                                        name: folder.name,
-                                        icon: folder.icon,
-                                        color: folder.colorHex,
-                                        count: folder.postCount,
-                                        isExpanded: expandedFolders.contains(folder.id.uuidString),
-                                        isEditMode: isEditMode,
-                                        isSelected: selectedFolderIds.contains(folder.id),
-                                        onToggle: {
-                                            if isEditMode {
-                                                toggleSelection(folder.id)
-                                            } else {
-                                                toggleUserFolder(folder.id)
-                                            }
-                                        }
-                                    )
-                                    .contextMenu {
-                                        Button {
-                                            clearFolder(folder)
-                                        } label: {
-                                            Label("Limpar Tudo", systemImage: "trash.slash")
-                                        }
-                                        .disabled(folder.postIds.isEmpty)
-                                        
-                                        Divider()
-                                        
-                                        Button(role: .destructive) {
-                                            deleteFolder(folder)
-                                        } label: {
-                                            Label("Excluir Pasta", systemImage: "trash")
-                                        }
-                                    }
-                                    
-                                    if expandedFolders.contains(folder.id.uuidString) {
-                                        ForEach(getPostsInFolder(folder)) { post in
-                                            PostFileRow(
-                                                post: post,
-                                                onTap: {
-                                                    selectedPost = post
-                                                }
-                                            )
-                                            .contextMenu {
-                                                Button(role: .destructive) {
-                                                    removePostFromFolder(post, folder: folder)
-                                                } label: {
-                                                    Label("Remover da Pasta", systemImage: "folder.badge.minus")
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        likedPostsSection
+                        highlightsSection
+                        notesSection
+                        restFolderSection
+                        userFoldersSection
                     }
                     .listStyle(.insetGrouped)
                     .scrollContentBackground(.hidden)
@@ -320,137 +90,337 @@ struct FoldersView: View {
             }
             .overlay(alignment: .bottomTrailing) {
                 if !folders.isEmpty {
-                    Button {
-                        withAnimation(.spring(response: 0.3)) {
-                            isEditMode.toggle()
-                            if !isEditMode {
-                                selectedFolderIds.removeAll()
-                            }
-                        }
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: isEditMode ? "checkmark" : "pencil")
-                                .font(.headline)
-                            Text(isEditMode ? "Concluir" : "Editar")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background {
-                            Capsule()
-                                .fill(isEditMode ? Color.green : Color.blue)
-                                .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
-                        }
-                    }
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 20)
-                    .accessibilityLabel(isEditMode ? "Concluir edição" : "Entrar no modo de edição")
+                    editModeButton
                 }
             }
             .overlay(alignment: .bottom) {
                 if isEditMode && !selectedFolderIds.isEmpty {
-                    HStack(spacing: 20) {
-                        Button {
-                            deleteSelectedFolders()
-                        } label: {
-                            VStack(spacing: 4) {
-                                Image(systemName: "trash")
-                                    .font(.title3)
-                                Text("Excluir (\(selectedFolderIds.count))")
-                                    .font(.caption)
+                    EditModeToolbar(
+                        selectedCount: selectedFolderIds.count,
+                        onDelete: deleteSelectedFolders,
+                        onClear: clearSelectedFolders
+                    )
+                }
+            }
+        }
+    }
+    
+    // MARK: - View Builders
+    
+    @ViewBuilder
+    private var likedPostsSection: some View {
+        if !uniqueLikedPosts.isEmpty {
+            Section {
+                SpecialFolderRow(
+                    name: "Curtidos",
+                    icon: "heart.fill",
+                    color: "#FF3B30",
+                    count: uniqueLikedPosts.count,
+                    isExpanded: expandedFolders.contains(SpecialFolder.liked.rawValue),
+                    onToggle: {
+                        toggleSpecialFolder(.liked)
+                    }
+                )
+                .contextMenu {
+                    Button(role: .destructive) {
+                        clearAllLiked()
+                    } label: {
+                        Label("Remover Todos os Curtidos", systemImage: "heart.slash.fill")
+                    }
+                    .disabled(uniqueLikedPosts.isEmpty)
+                }
+                
+                if expandedFolders.contains(SpecialFolder.liked.rawValue) {
+                    ForEach(uniqueLikedPosts) { post in
+                        PostFileRow(
+                            post: post,
+                            onTap: {
+                                selectedPost = post
                             }
-                            .foregroundColor(.red)
+                        )
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                viewModel.removeContentList(content: post)
+                            } label: {
+                                Label("Remover dos Curtidos", systemImage: "heart.slash")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var highlightsSection: some View {
+        if !highlights.isEmpty {
+            Section {
+                SpecialFolderRow(
+                    name: "Destaques",
+                    icon: "highlighter",
+                    color: "#FFFF00",
+                    count: highlights.count,
+                    isExpanded: expandedFolders.contains(SpecialFolder.highlights.rawValue),
+                    onToggle: {
+                        toggleSpecialFolder(.highlights)
+                    }
+                )
+                .contextMenu {
+                    Button(role: .destructive) {
+                        clearAllHighlights()
+                    } label: {
+                        Label("Excluir Todos os Destaques", systemImage: "trash")
+                    }
+                    .disabled(highlights.isEmpty)
+                }
+                
+                if expandedFolders.contains(SpecialFolder.highlights.rawValue) {
+                    ForEach(groupedHighlights, id: \.key) { postId, postHighlights in
+                        if let post = getPost(byId: postId) {
+                            PostFileRow(
+                                post: post,
+                                hasHighlights: true,
+                                highlightPreview: postHighlights.first?.highlightedText,
+                                onTap: {
+                                    selectedPost = post
+                                    selectedHighlights = postHighlights
+                                }
+                            )
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    deleteHighlightsForPost(postId: postId)
+                                } label: {
+                                    Label("Excluir Todos os Destaques", systemImage: "trash")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var notesSection: some View {
+        if !notes.isEmpty {
+            Section {
+                SpecialFolderRow(
+                    name: "Anotações",
+                    icon: "note.text",
+                    color: "#FF9500",
+                    count: notes.count,
+                    isExpanded: expandedFolders.contains(SpecialFolder.notes.rawValue),
+                    onToggle: {
+                        toggleSpecialFolder(.notes)
+                    }
+                )
+                .contextMenu {
+                    Button(role: .destructive) {
+                        clearAllNotes()
+                    } label: {
+                        Label("Excluir Todas as Anotações", systemImage: "trash")
+                    }
+                    .disabled(notes.isEmpty)
+                }
+                
+                if expandedFolders.contains(SpecialFolder.notes.rawValue) {
+                    ForEach(notes) { note in
+                        if let post = getPost(byId: note.postId) {
+                            PostFileRow(
+                                post: post,
+                                hasNote: true,
+                                onTap: {
+                                    selectedPost = post
+                                }
+                            )
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    deleteNotesForPost(postId: note.postId)
+                                } label: {
+                                    Label("Excluir Todas as Anotações", systemImage: "trash")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var restFolderSection: some View {
+        if usageTracker.shouldShowRestFolder {
+            Section {
+                Button(action: {
+                    showingGame = true
+                }) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 12)
+                        
+                        Image(systemName: "moon.stars.fill")
+                            .foregroundColor(Color(hex: "#9B59B6"))
+                            .font(.title3)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Descanse")
+                                .foregroundColor(.primary)
+                                .font(.body)
+                                .fontWeight(.medium)
+                            
+                            Text("Você merece uma pausa! 🎮")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
                         }
                         
                         Spacer()
                         
-                        Button {
-                            clearSelectedFolders()
-                        } label: {
-                            VStack(spacing: 4) {
-                                Image(systemName: "trash.slash")
-                                    .font(.title3)
-                                Text("Limpar (\(selectedFolderIds.count))")
-                                    .font(.caption)
+                        Text("1")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.secondary.opacity(0.1))
+                            .cornerRadius(8)
+                    }
+                    .padding(.vertical, 4)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var userFoldersSection: some View {
+        Section {
+            if folders.isEmpty {
+                Button {
+                    showingAddFolder = true
+                } label: {
+                    HStack {
+                        Image(systemName: "folder.badge.plus")
+                            .foregroundStyle(.blue)
+                        Text("Criar Primeira Pasta")
+                            .foregroundStyle(.blue)
+                    }
+                }
+            } else {
+                ForEach(folders) { folder in
+                    UserFolderRow(
+                        name: folder.name,
+                        icon: folder.icon,
+                        color: folder.colorHex,
+                        count: folder.postCount,
+                        isExpanded: expandedFolders.contains(folder.id.uuidString),
+                        isEditMode: isEditMode,
+                        isSelected: selectedFolderIds.contains(folder.id),
+                        onToggle: {
+                            if isEditMode {
+                                toggleSelection(folder.id)
+                            } else {
+                                toggleUserFolder(folder.id)
                             }
-                            .foregroundColor(.orange)
+                        }
+                    )
+                    .contextMenu {
+                        Button {
+                            clearFolder(folder)
+                        } label: {
+                            Label("Limpar Tudo", systemImage: "trash.slash")
+                        }
+                        .disabled(folder.postIds.isEmpty)
+                        
+                        Divider()
+                        
+                        Button(role: .destructive) {
+                            deleteFolder(folder)
+                        } label: {
+                            Label("Excluir Pasta", systemImage: "trash")
                         }
                     }
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 16)
-                    .background {
-                        Rectangle()
-                            .fill(.ultraThinMaterial)
-                            .ignoresSafeArea(edges: .bottom)
+                    
+                    if expandedFolders.contains(folder.id.uuidString) {
+                        ForEach(getPostsInFolder(folder)) { post in
+                            PostFileRow(
+                                post: post,
+                                onTap: {
+                                    selectedPost = post
+                                }
+                            )
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    removePostFromFolder(post, folder: folder)
+                                } label: {
+                                    Label("Remover da Pasta", systemImage: "folder.badge.minus")
+                                }
+                            }
+                        }
                     }
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+        } header: {
+            HStack {
+                Text("Minhas Pastas")
+                Spacer()
+                if !folders.isEmpty {
+                    Button {
+                        showingAddFolder = true
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundStyle(.blue)
+                            .imageScale(.medium)
+                    }
                 }
             }
         }
+    }
+    
+    private var editModeButton: some View {
+        Button {
+            withAnimation(.spring(response: 0.3)) {
+                isEditMode.toggle()
+                if !isEditMode {
+                    selectedFolderIds.removeAll()
+                }
+            }
+        } label: {
+            Image(systemName: isEditMode ? "checkmark.circle.fill" : "slider.horizontal.3")
+                .font(.title2)
+                .foregroundColor(.white)
+                .frame(width: 56, height: 56)
+                .background {
+                    Circle()
+                        .fill(isEditMode ? Color.green : Color.blue)
+                        .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
+                }
+        }
+        .padding(.trailing, 20)
+        .padding(.bottom, 20)
+        .accessibilityLabel(isEditMode ? "Concluir edição" : "Entrar no modo de edição")
     }
     
     private var emptyState: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "books.vertical")
-                .font(.system(size: 70))
-                .foregroundStyle(.secondary)
-            
-            VStack(spacing: 8) {
-                Text("Sua Biblioteca")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Text("Curta posts, crie destaques ou organize em pastas")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-            }
-            
-            Button {
-                showingAddFolder = true
-            } label: {
-                Label("Criar Pasta", systemImage: "folder.badge.plus")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
-                    .background(Color.accentColor)
-                    .cornerRadius(12)
-            }
-            .padding(.top, 8)
-            
-            // Easter Egg: Jogar enquanto não tem nada (só aparece após 10 min de uso)
-            if usageTracker.shouldShowGameButton {
-                NavigationLink {
-                    FlappyBirdGame()
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "gamecontroller.fill")
-                            .font(.caption)
-                        Text("Jogar enquanto isso")
-                            .font(.caption)
-                    }
-                    .foregroundColor(.secondary)
-                    .padding(.top, 20)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        EmptyLibraryView(
+            showGameButton: usageTracker.shouldShowGameButton,
+            onCreateFolder: { showingAddFolder = true },
+            onPlayGame: { showingGame = true }
+        )
     }
+    
+    // MARK: - Computed Properties
     
     private var groupedHighlights: [(key: String, value: [Highlight])] {
         Dictionary(grouping: highlights, by: { $0.postId })
-            .sorted { $0.value.first?.createdAt ?? Date() > $1.value.first?.createdAt ?? Date() }
+            .sorted { $0.key < $1.key }
     }
     
     private var uniqueLikedPosts: [PostRequest] {
-        // Remover duplicatas baseado no ID
         var seen: Set<String> = []
         return viewModel.likedList.filter { post in
-            guard let id = post.id else { return false }
+            guard let id = post.id, !id.isEmpty else { return false }
             if seen.contains(id) {
                 return false
             }
@@ -458,6 +428,8 @@ struct FoldersView: View {
             return true
         }
     }
+    
+    // MARK: - Actions
     
     private func toggleSpecialFolder(_ folder: SpecialFolder) {
         withAnimation {
@@ -481,13 +453,12 @@ struct FoldersView: View {
     }
     
     private func getPost(byId id: String) -> PostRequest? {
-        viewModel.content.first { $0.id == id }
+        viewModel.likedList.first { $0.id == id }
     }
     
     private func getPostsInFolder(_ folder: Folder) -> [PostRequest] {
-        viewModel.content.filter { post in
-            guard let postId = post.id else { return false }
-            return folder.postIds.contains(postId)
+        folder.postIds.compactMap { postId in
+            viewModel.likedList.first { $0.id == postId }
         }
     }
     
@@ -553,10 +524,12 @@ struct FoldersView: View {
     }
     
     private func toggleSelection(_ folderId: UUID) {
-        if selectedFolderIds.contains(folderId) {
-            selectedFolderIds.remove(folderId)
-        } else {
-            selectedFolderIds.insert(folderId)
+        withAnimation {
+            if selectedFolderIds.contains(folderId) {
+                selectedFolderIds.remove(folderId)
+            } else {
+                selectedFolderIds.insert(folderId)
+            }
         }
     }
     
@@ -568,7 +541,6 @@ struct FoldersView: View {
                 }
             }
             selectedFolderIds.removeAll()
-            isEditMode = false
         }
     }
     
@@ -581,215 +553,5 @@ struct FoldersView: View {
             }
             selectedFolderIds.removeAll()
         }
-    }
-}
-
-// Componente de Linha de Pasta Especial
-struct SpecialFolderRow: View {
-    let name: String
-    let icon: String
-    let color: String
-    let count: Int
-    let isExpanded: Bool
-    let onToggle: () -> Void
-    
-    var body: some View {
-        Button(action: onToggle) {
-            HStack(spacing: 12) {
-                Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 12)
-                    .animation(.spring(response: 0.3), value: isExpanded)
-                
-                Image(systemName: icon)
-                    .foregroundColor(Color(hex: color))
-                    .font(.title3)
-                
-                Text(name)
-                    .foregroundColor(.primary)
-                    .font(.body)
-                    .fontWeight(.medium)
-                
-                Spacer()
-                
-                Text("\(count)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.secondary.opacity(0.1))
-                    .cornerRadius(8)
-            }
-            .padding(.vertical, 4)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-// Componente de Linha de Pasta do Usuário
-struct UserFolderRow: View {
-    let name: String
-    let icon: String
-    let color: String
-    let count: Int
-    let isExpanded: Bool
-    var isEditMode: Bool = false
-    var isSelected: Bool = false
-    let onToggle: () -> Void
-    
-    var body: some View {
-        Button(action: onToggle) {
-            HStack(spacing: 12) {
-                if isEditMode {
-                    Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                        .font(.title3)
-                        .foregroundColor(isSelected ? .blue : .secondary)
-                        .animation(.spring(response: 0.3), value: isSelected)
-                } else {
-                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .frame(width: 12)
-                        .animation(.spring(response: 0.3), value: isExpanded)
-                }
-                
-                Image(systemName: icon)
-                    .foregroundColor(Color(hex: color))
-                    .font(.title3)
-                
-                Text(name)
-                    .foregroundColor(.primary)
-                    .font(.body)
-                    .fontWeight(.medium)
-                
-                Spacer()
-                
-                if !isEditMode {
-                    Text("\(count)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.secondary.opacity(0.1))
-                        .cornerRadius(8)
-                }
-            }
-            .padding(.vertical, 4)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-// Componente de Linha de Post (Arquivo)
-struct PostFileRow: View {
-    let post: PostRequest
-    var hasHighlights: Bool = false
-    var hasNote: Bool = false
-    var highlightPreview: String? = nil
-    let onTap: () -> Void
-    
-    var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 12) {
-                Spacer()
-                    .frame(width: 12)
-                
-                Image(systemName: "doc.text")
-                    .foregroundStyle(.secondary)
-                    .font(.body)
-                
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(post.title ?? "Sem título")
-                        .font(.subheadline)
-                        .lineLimit(2)
-                        .foregroundColor(.primary)
-                    
-                    // Mostrar preview do highlight se existir
-                    if let preview = highlightPreview, hasHighlights {
-                        Text("\(preview)")
-                            .font(.caption)
-                            .italic()
-                            .lineLimit(1)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.yellow.opacity(0.2))
-                            .cornerRadius(4)
-                    }
-                    
-                    HStack(spacing: 6) {
-                        if hasHighlights {
-                            HStack(spacing: 2) {
-                                Image(systemName: "highlighter")
-                                    .font(.caption2)
-                                Text("Destacado")
-                                    .font(.caption2)
-                            }
-                            .foregroundStyle(.yellow)
-                        }
-                        if hasNote {
-                            HStack(spacing: 2) {
-                                Image(systemName: "note.text")
-                                    .font(.caption2)
-                                Text("Anotação")
-                                    .font(.caption2)
-                            }
-                            .foregroundStyle(.orange)
-                        }
-                        
-                        if hasHighlights || hasNote {
-                            Text("•")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                        }
-                        
-                        Text(post.ownerUsername ?? "")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
-            }
-            .padding(.vertical, 6)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .padding(.leading, 28)
-    }
-}
-
-// Extensão para converter hex em Color
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3:
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6:
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8:
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (255, 0, 0, 0)
-        }
-        
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue: Double(b) / 255,
-            opacity: Double(a) / 255
-        )
     }
 }

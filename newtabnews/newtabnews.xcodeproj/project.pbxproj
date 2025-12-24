@@ -32,6 +32,19 @@
 		790AB1172ECF69A800E443E6 /* TextToSpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */; };
 		790AB11C2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */; };
 		790AB11D2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */; };
+		7915846F2EFC869B00C69745 /* AudioControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7915846E2EFC869B00C69745 /* AudioControlsView.swift */; };
+		791584712EFC86A700C69745 /* HighlightModeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584702EFC86A700C69745 /* HighlightModeIndicator.swift */; };
+		791584732EFC86AE00C69745 /* PostActionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584722EFC86AE00C69745 /* PostActionsBar.swift */; };
+		791584752EFC86B600C69745 /* PostHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584742EFC86B600C69745 /* PostHeaderView.swift */; };
+		791584772EFC86BE00C69745 /* PostMetadataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584762EFC86BE00C69745 /* PostMetadataView.swift */; };
+		7915847A2EFC86E800C69745 /* AddHighlightSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584792EFC86E800C69745 /* AddHighlightSheet.swift */; };
+		7915847C2EFC86FC00C69745 /* AddNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7915847B2EFC86FC00C69745 /* AddNoteSheet.swift */; };
+		791584862EFC89F200C69745 /* UserFolderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584852EFC89F200C69745 /* UserFolderRow.swift */; };
+		791584872EFC89F200C69745 /* EmptyLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584822EFC89F200C69745 /* EmptyLibraryView.swift */; };
+		791584882EFC89F200C69745 /* SpecialFolderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584842EFC89F200C69745 /* SpecialFolderRow.swift */; };
+		791584892EFC89F200C69745 /* PostFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584832EFC89F200C69745 /* PostFileRow.swift */; };
+		7915848A2EFC89F200C69745 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584802EFC89F200C69745 /* ColorExtension.swift */; };
+		7915848B2EFC89F200C69745 /* EditModeToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584812EFC89F200C69745 /* EditModeToolbar.swift */; };
 		791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */; };
 		791B1EBB2ED4CC9400B9143D /* SkeletonListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */; };
 		791B1F172ED4D10400B9143D /* HybridMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */; };
@@ -129,6 +142,19 @@
 		790AB0D42ECEBE3A00E443E6 /* AppUsageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUsageTracker.swift; sourceTree = "<group>"; };
 		790AB0DC2ECF66FF00E443E6 /* TabNews Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TabNews Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSyncManager.swift; sourceTree = "<group>"; };
+		7915846E2EFC869B00C69745 /* AudioControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioControlsView.swift; sourceTree = "<group>"; };
+		791584702EFC86A700C69745 /* HighlightModeIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightModeIndicator.swift; sourceTree = "<group>"; };
+		791584722EFC86AE00C69745 /* PostActionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostActionsBar.swift; sourceTree = "<group>"; };
+		791584742EFC86B600C69745 /* PostHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHeaderView.swift; sourceTree = "<group>"; };
+		791584762EFC86BE00C69745 /* PostMetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMetadataView.swift; sourceTree = "<group>"; };
+		791584792EFC86E800C69745 /* AddHighlightSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHighlightSheet.swift; sourceTree = "<group>"; };
+		7915847B2EFC86FC00C69745 /* AddNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteSheet.swift; sourceTree = "<group>"; };
+		791584802EFC89F200C69745 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		791584812EFC89F200C69745 /* EditModeToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeToolbar.swift; sourceTree = "<group>"; };
+		791584822EFC89F200C69745 /* EmptyLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyLibraryView.swift; sourceTree = "<group>"; };
+		791584832EFC89F200C69745 /* PostFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostFileRow.swift; sourceTree = "<group>"; };
+		791584842EFC89F200C69745 /* SpecialFolderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialFolderRow.swift; sourceTree = "<group>"; };
+		791584852EFC89F200C69745 /* UserFolderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFolderRow.swift; sourceTree = "<group>"; };
 		791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonCard.swift; sourceTree = "<group>"; };
 		791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonListView.swift; sourceTree = "<group>"; };
 		791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridMarkdownView.swift; sourceTree = "<group>"; };
@@ -229,11 +255,46 @@
 		790AB0C92ECEAEE000E443E6 /* Folder */ = {
 			isa = PBXGroup;
 			children = (
+				7915847E2EFC878A00C69745 /* Components */,
 				790AB0D02ECEB21C00E443E6 /* PostWithHighlightsView.swift */,
 				790AB0C32ECEAEB100E443E6 /* AddFolderSheet.swift */,
 				790AB0C72ECEAED600E443E6 /* FoldersView.swift */,
 			);
 			path = Folder;
+			sourceTree = "<group>";
+		};
+		791584782EFC86C800C69745 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				791584762EFC86BE00C69745 /* PostMetadataView.swift */,
+				791584742EFC86B600C69745 /* PostHeaderView.swift */,
+				791584722EFC86AE00C69745 /* PostActionsBar.swift */,
+				791584702EFC86A700C69745 /* HighlightModeIndicator.swift */,
+				7915846E2EFC869B00C69745 /* AudioControlsView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		7915847D2EFC870200C69745 /* Sheets */ = {
+			isa = PBXGroup;
+			children = (
+				7915847B2EFC86FC00C69745 /* AddNoteSheet.swift */,
+				791584792EFC86E800C69745 /* AddHighlightSheet.swift */,
+			);
+			path = Sheets;
+			sourceTree = "<group>";
+		};
+		7915847E2EFC878A00C69745 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				791584802EFC89F200C69745 /* ColorExtension.swift */,
+				791584812EFC89F200C69745 /* EditModeToolbar.swift */,
+				791584822EFC89F200C69745 /* EmptyLibraryView.swift */,
+				791584832EFC89F200C69745 /* PostFileRow.swift */,
+				791584842EFC89F200C69745 /* SpecialFolderRow.swift */,
+				791584852EFC89F200C69745 /* UserFolderRow.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		791E87CB2A4FD99B00C2F0B4 = {
@@ -405,6 +466,8 @@
 		799049FB2A72F6D10050240C /* ListDetails */ = {
 			isa = PBXGroup;
 			children = (
+				7915847D2EFC870200C69745 /* Sheets */,
+				791584782EFC86C800C69745 /* Components */,
 				799049FC2A72F7BE0050240C /* ListDetailsView.swift */,
 				79904A052A731F6F0050240C /* WebContentView.swift */,
 			);
@@ -630,11 +693,18 @@
 				79C7062A2D95E534005C26A7 /* NetworkError.swift in Sources */,
 				790AB0D32ECEB9BE00E443E6 /* HighlightableTextView.swift in Sources */,
 				79C706402D9ADD26005C26A7 /* EmptyLikedListView.swift in Sources */,
+				7915847C2EFC86FC00C69745 /* AddNoteSheet.swift in Sources */,
 				79D7E37C2D81280100391C82 /* NewsletterDetailsView.swift in Sources */,
 				79904A082A731F910050240C /* HTMLView.swift in Sources */,
 				790AB0C42ECEAEB100E443E6 /* AddFolderSheet.swift in Sources */,
 				79C706282D95E528005C26A7 /* RequestBuilder.swift in Sources */,
 				79C706482D9AE477005C26A7 /* SocialView.swift in Sources */,
+				791584862EFC89F200C69745 /* UserFolderRow.swift in Sources */,
+				791584872EFC89F200C69745 /* EmptyLibraryView.swift in Sources */,
+				791584882EFC89F200C69745 /* SpecialFolderRow.swift in Sources */,
+				791584892EFC89F200C69745 /* PostFileRow.swift in Sources */,
+				7915848A2EFC89F200C69745 /* ColorExtension.swift in Sources */,
+				7915848B2EFC89F200C69745 /* EditModeToolbar.swift in Sources */,
 				79C7063E2D9ADBFA005C26A7 /* PostRow.swift in Sources */,
 				79C706352D95E643005C26A7 /* Logger.swift in Sources */,
 				799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */,
@@ -642,6 +712,7 @@
 				79C7063A2D95E766005C26A7 /* PostRequest.swift in Sources */,
 				79D7E37A2D81266A00391C82 /* NewsletterViewModel.swift in Sources */,
 				79E727FC2EFB9E76007BF27A /* AppDependencies.swift in Sources */,
+				791584712EFC86A700C69745 /* HighlightModeIndicator.swift in Sources */,
 				79E727F92EFB9E27007BF27A /* MockContentService.swift in Sources */,
 				790AB11D2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */,
 				79904A062A731F6F0050240C /* WebContentView.swift in Sources */,
@@ -650,6 +721,7 @@
 				790AB0D12ECEB21C00E443E6 /* PostWithHighlightsView.swift in Sources */,
 				79904A0E2A732FC90050240C /* SettingsView.swift in Sources */,
 				79904A102A732FE30050240C /* DuckView.swift in Sources */,
+				7915847A2EFC86E800C69745 /* AddHighlightSheet.swift in Sources */,
 				790AB0D52ECEBE3A00E443E6 /* AppUsageTracker.swift in Sources */,
 				79C706122D95E485005C26A7 /* NetworkManager.swift in Sources */,
 				79C706462D9AE157005C26A7 /* NewsletterCard.swift in Sources */,
@@ -657,8 +729,10 @@
 				79E727F72EFB9DA2007BF27A /* MainTabView.swift in Sources */,
 				790AB0C82ECEAED600E443E6 /* FoldersView.swift in Sources */,
 				79C7064B2D9AFCE5005C26A7 /* OnboardingView.swift in Sources */,
+				791584752EFC86B600C69745 /* PostHeaderView.swift in Sources */,
 				799049F82A72F4BC0050240C /* Extensions.swift in Sources */,
 				790AB0C12ECEAE9500E443E6 /* TextToSpeechManager.swift in Sources */,
+				791584732EFC86AE00C69745 /* PostActionsBar.swift in Sources */,
 				799049F42A6C961C0050240C /* ListView.swift in Sources */,
 				799049EA2A6C94050050240C /* SearchBar.swift in Sources */,
 				79C7062D2D95E5E2005C26A7 /* ContentServiceProtocol.swift in Sources */,
@@ -674,7 +748,9 @@
 				79C7062F2D95E5E6005C26A7 /* ContentService.swift in Sources */,
 				799049E82A6C93D90050240C /* MainViewModel.swift in Sources */,
 				790AB0CB2ECEAF0500E443E6 /* Folder.swift in Sources */,
+				791584772EFC86BE00C69745 /* PostMetadataView.swift in Sources */,
 				791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */,
+				7915846F2EFC869B00C69745 /* AudioControlsView.swift in Sources */,
 				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
 				79C706262D95E51F005C26A7 /* NetworkManagerProtocol.swift in Sources */,
 				79E728012EFB9FCC007BF27A /* NotificationHandler.swift in Sources */,
