@@ -11,6 +11,38 @@ import FirebaseCore
 import FirebaseMessaging
 import UserNotifications
 
+// MARK: - Models
+
+/// Enum para tipos de notificação (type safety)
+enum NotificationType: String {
+    case newsletter
+    case testNewsletter = "test_newsletter"
+    case relevant
+    case testRelevant = "test_relevant"
+    
+    var isNewsletter: Bool {
+        self == .newsletter || self == .testNewsletter
+    }
+    
+    var isRelevant: Bool {
+        self == .relevant || self == .testRelevant
+    }
+}
+
+/// Struct para passar dados do post via NotificationCenter
+struct PostDeepLinkData {
+    let owner: String
+    let slug: String
+    let type: NotificationType
+}
+
+// MARK: - Notification Names
+
+extension Notification.Name {
+    static let openNewsletterTab = Notification.Name("openNewsletterTab")
+    static let openPostFromNotification = Notification.Name("openPostFromNotification")
+}
+
 // AppDelegate para configurar Firebase e notificações push
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
@@ -73,16 +105,69 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         
-        // Navegar para a aba Newsletter quando clicar na notificação
-        if let type = userInfo["type"] as? String, type == "newsletter" || type == "test" {
-            print("📰 Usuário tocou na notificação - navegando para Newsletter")
+        print("📱 Notificação tocada. Dados: \(userInfo)")
+        
+        guard let type = userInfo["type"] as? String else {
+            print("⚠️ Tipo de notificação não encontrado")
+            completionHandler()
+            return
+        }
+        
+        // Verificar se tem dados do post (owner e slug)
+        if let owner = userInfo["owner"] as? String,
+           let slug = userInfo["slug"] as? String,
+           !owner.isEmpty,
+           !slug.isEmpty {
             
-            // Postar notificação para ContentView navegar
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                NotificationCenter.default.post(name: .openNewsletterTab, object: nil)
+            // NEWSLETTER: navegar para aba Newsletter + abrir post
+            if type == "newsletter" || type == "test_newsletter" {
+                print("📰 Notificação de Newsletter - navegando para Newsletter e abrindo post: \(owner)/\(slug)")
+                
+                let postData = PostDeepLinkData(owner: owner, slug: slug, type: type)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    NotificationCenter.default.post(
+                        name: .openPostFromNotification,
+                        object: postData
+                    )
+                }
+                
+                completionHandler()
+                return
+            }
+            
+            // POST RELEVANTE: abrir post específico na Home
+            if type == "relevant" || type == "test_relevant" {
+                print("🔥 Notificação de Post Relevante - abrindo post na Home: \(owner)/\(slug)")
+                
+                let postData = PostDeepLinkData(owner: owner, slug: slug, type: type)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    NotificationCenter.default.post(
+                        name: .openPostFromNotification,
+                        object: postData
+                    )
+                }
+                
+                completionHandler()
+                return
+            }
+        } else {
+            // Fallback: sem dados do post, apenas abrir aba Newsletter
+            if type == "newsletter" || type == "test_newsletter" {
+                print("📰 Notificação de Newsletter sem dados - apenas abrindo aba")
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    NotificationCenter.default.post(name: .openNewsletterTab, object: nil)
+                }
+                
+                completionHandler()
+                return
             }
         }
         
+        // Fallback: tipo desconhecido
+        print("⚠️ Tipo de notificação desconhecido: \(type)")
         completionHandler()
     }
 }

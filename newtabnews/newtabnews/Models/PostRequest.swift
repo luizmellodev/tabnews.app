@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PostRequest: Codable, Identifiable {
+struct PostRequest: Codable, Identifiable, Hashable {
     let id: String?
     let ownerId: String?
     let parentId: String?
