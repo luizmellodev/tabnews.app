@@ -41,8 +41,14 @@ struct HighlightableTextView: UIViewRepresentable {
     func updateUIView(_ textView: UITextView, context: Context) {
         context.coordinator.parent = self
         
-        // Controlar se o texto é selecionável
-        textView.isSelectable = isHighlightMode
+        // Sempre permitir seleção para que links funcionem
+        textView.isSelectable = true
+        
+        // Controlar se o texto pode ser selecionado pelo usuário
+        // No modo normal, os links funcionam mas o usuário não pode selecionar texto
+        if !isHighlightMode {
+            textView.selectedTextRange = nil
+        }
         
         // Criar attributed string com markdown básico
         let attributedString = processMarkdown(text)
@@ -351,6 +357,24 @@ struct HighlightableTextView: UIViewRepresentable {
         
         init(_ parent: HighlightableTextView) {
             self.parent = parent
+        }
+        
+        // Permitir interação com links
+        func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+            // Sempre permitir abrir links
+            return true
+        }
+        
+        // Controlar seleção de texto
+        func textViewDidChangeSelection(_ textView: UITextView) {
+            // Se não estiver no modo destaque, limpar seleção
+            // (mas ainda permite cliques em links)
+            if !parent.isHighlightMode, let selectedRange = textView.selectedTextRange {
+                // Verificar se há texto selecionado (não é apenas o cursor)
+                if !selectedRange.isEmpty {
+                    textView.selectedTextRange = nil
+                }
+            }
         }
         
         // Customizar o menu de contexto

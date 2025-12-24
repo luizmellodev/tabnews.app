@@ -148,7 +148,7 @@ private struct OnboardingPageView: View {
                 } label: {
                     Text("Começar")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.background)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .background {
