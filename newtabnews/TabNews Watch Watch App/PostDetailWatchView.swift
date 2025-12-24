@@ -10,17 +10,31 @@ import SwiftUI
 struct PostDetailWatchView: View {
     let post: PostRequest
     @StateObject private var ttsManager = TextToSpeechManager.shared
-    @State private var selectedSpeed: Float = 1.0 // Velocidade normal por padrão
+    @State private var selectedSpeed: Float = 1.0
+    @State private var isLiked: Bool = false
     
     let speeds: [Float] = [0.5, 1.0, 1.5, 2.0]
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                // Título
-                Text(post.title ?? "Sem título")
-                    .font(.headline)
-                    .multilineTextAlignment(.leading)
+                // Título e Like
+                HStack(alignment: .top) {
+                    Text(post.title ?? "Sem título")
+                        .font(.headline)
+                        .multilineTextAlignment(.leading)
+                    
+                    Spacer()
+                    
+                    Button {
+                        toggleLike()
+                    } label: {
+                        Image(systemName: isLiked ? "heart.fill" : "heart")
+                            .font(.title3)
+                            .foregroundColor(isLiked ? .pink : .gray)
+                    }
+                    .buttonStyle(.plain)
+                }
                 
                 // Informações do post
                 HStack {
@@ -54,7 +68,6 @@ struct PostDetailWatchView: View {
                 if let body = post.body, !body.isEmpty {
                     Text(cleanMarkdown(body))
                         .font(.caption)
-                        .lineLimit(50)
                         .multilineTextAlignment(.leading)
                 } else {
                     Text("Conteúdo não disponível")
@@ -62,6 +75,27 @@ struct PostDetailWatchView: View {
                         .foregroundColor(.secondary)
                         .italic()
                 }
+                
+                // CTA no final do post
+                VStack(alignment: .leading, spacing: 8) {
+                    Divider()
+                        .padding(.vertical, 8)
+                    
+                    Text("Gostou do que leu?")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                    
+                    Text("Lembre-se de abrir o site do TabNews e dar upvote no post para ajudar \(post.ownerUsername ?? "o autor")!")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    
+                    Text("💡 Curta ou adicione o post a uma pasta no iPhone para ter salvo no app")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.vertical, 8)
                 
                 Divider()
                     .padding(.top, 8)
@@ -134,12 +168,51 @@ struct PostDetailWatchView: View {
         }
         .navigationTitle("Post")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            loadLikeStatus()
+        }
         .onDisappear {
-            // Parar áudio ao sair
             if ttsManager.isPlaying {
                 ttsManager.stop()
             }
         }
+    }
+    
+    // MARK: - Like Functions
+    
+    private func loadLikeStatus() {
+        guard let postId = post.id else { return }
+        
+        if let likedData = UserDefaults.standard.data(forKey: "WatchLikedPosts"),
+           let likedPosts = try? JSONDecoder().decode([PostRequest].self, from: likedData) {
+            isLiked = likedPosts.contains(where: { $0.id == postId })
+        }
+    }
+    
+    private func toggleLike() {
+        guard let postId = post.id else { return }
+        
+        WKInterfaceDevice.current().play(.click)
+        
+        var likedPosts: [PostRequest] = []
+        if let likedData = UserDefaults.standard.data(forKey: "WatchLikedPosts"),
+           let decoded = try? JSONDecoder().decode([PostRequest].self, from: likedData) {
+            likedPosts = decoded
+        }
+        
+        if isLiked {
+            likedPosts.removeAll { $0.id == postId }
+            isLiked = false
+        } else {
+            likedPosts.append(post)
+            isLiked = true
+        }
+        
+        if let encoded = try? JSONEncoder().encode(likedPosts) {
+            UserDefaults.standard.set(encoded, forKey: "WatchLikedPosts")
+        }
+        
+        WatchConnectivityManager.shared.syncLikedPostsToiPhone()
     }
     
     // MARK: - Helper Functions

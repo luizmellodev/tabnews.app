@@ -34,4 +34,5 @@ extension Notification.Name {
     static let highlightsUpdated = Notification.Name("highlightsUpdated")
     static let notesUpdated = Notification.Name("notesUpdated")
     static let foldersUpdated = Notification.Name("foldersUpdated")
+    static let watchLikedPostsReceived = Notification.Name("watchLikedPostsReceived")
 }

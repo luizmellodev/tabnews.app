@@ -167,6 +167,14 @@ struct ContentView: View {
         ) { [self] notification in
             handleOpenPost(from: notification)
         }
+        
+        NotificationCenter.default.addObserver(
+            forName: .watchLikedPostsReceived,
+            object: nil,
+            queue: .main
+        ) { [self] notification in
+            handleWatchLikedPosts(notification)
+        }
     }
     
     // MARK: - Notification Handlers
@@ -222,5 +230,15 @@ struct ContentView: View {
             likedPosts: likedPosts,
             stats: stats
         )
+    }
+    
+    private func handleWatchLikedPosts(_ notification: Notification) {
+        guard let watchLikedPosts = notification.object as? [PostRequest] else { return }
+        
+        for post in watchLikedPosts {
+            if !viewModel.likedList.contains(where: { $0.id == post.id }) {
+                viewModel.likeContentList(content: post)
+            }
+        }
     }
 }

@@ -46,19 +46,22 @@ struct LibraryWatchView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 loadLibrary()
+                setupNotificationObserver()
             }
         }
     }
     
+    private func setupNotificationObserver() {
+        NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [self] _ in
+            loadLibrary()
+        }
+    }
+    
     private func loadLibrary() {
-        // Carregar stats
-        stats = (
-            liked: UserDefaults.standard.integer(forKey: "WatchLiked"),
-            highlights: UserDefaults.standard.integer(forKey: "WatchHighlights"),
-            notes: UserDefaults.standard.integer(forKey: "WatchNotes"),
-            folders: UserDefaults.standard.integer(forKey: "WatchFolders")
-        )
-        
         // Carregar posts curtidos
         if let data = UserDefaults.standard.data(forKey: "WatchLikedPosts") {
             print("⌚ [LibraryWatchView] Data encontrado para WatchLikedPosts: \(data.count) bytes")
@@ -77,6 +80,14 @@ struct LibraryWatchView: View {
             likedPosts = []
             print("⌚ [LibraryWatchView] ⚠️ Nenhum dado para WatchLikedPosts no UserDefaults")
         }
+        
+        // Carregar stats (usar contagem local de curtidos)
+        stats = (
+            liked: likedPosts.count,
+            highlights: UserDefaults.standard.integer(forKey: "WatchHighlights"),
+            notes: UserDefaults.standard.integer(forKey: "WatchNotes"),
+            folders: UserDefaults.standard.integer(forKey: "WatchFolders")
+        )
         
         print("⌚ [LibraryWatchView] Stats: ❤️\(stats.liked) 🖍\(stats.highlights) 📝\(stats.notes) 📁\(stats.folders)")
     }

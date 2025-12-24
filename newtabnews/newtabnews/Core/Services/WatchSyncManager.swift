@@ -140,6 +140,16 @@ extension WatchSyncManager: WCSessionDelegate {
         }
         
         UserDefaults.standard.synchronize()
+        #else
+        if let likedJSON = applicationContext["watchLikedPosts"] as? String,
+           let likedData = likedJSON.data(using: .utf8),
+           let watchLikedPosts = try? JSONDecoder().decode([PostRequest].self, from: likedData) {
+            
+            NotificationCenter.default.post(
+                name: .watchLikedPostsReceived,
+                object: watchLikedPosts
+            )
+        }
         #endif
     }
     
