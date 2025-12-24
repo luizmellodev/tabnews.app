@@ -86,19 +86,23 @@ struct ListDetailView: View {
     }
     
     private var postContent: some View {
-        HybridMarkdownView(
-            markdown: post.body ?? "",
-            postId: post.id ?? "",
-            highlights: postHighlights,
-            isHighlightMode: isHighlightMode,
-            onHighlight: { text, range in
-                saveHighlight(text: text, range: range)
-            },
-            onRemoveHighlight: { highlight in
-                removeHighlight(highlight)
-            }
-        )
-        .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(alignment: .leading, spacing: 0) {
+            HybridMarkdownView(
+                markdown: post.body ?? "",
+                postId: post.id ?? "",
+                highlights: postHighlights,
+                isHighlightMode: isHighlightMode,
+                onHighlight: { text, range in
+                    saveHighlight(text: text, range: range)
+                },
+                onRemoveHighlight: { highlight in
+                    removeHighlight(highlight)
+                }
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            PostCTAView(post: post)
+        }
         .padding(.bottom, 80)
     }
     
