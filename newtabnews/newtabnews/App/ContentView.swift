@@ -9,8 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    
-    // MARK: - Properties
+        
     let contentService: ContentServiceProtocol
         
     @AppStorage("current_theme") var currentTheme: Theme = .system
@@ -24,7 +23,6 @@ struct ContentView: View {
     
     @State var viewModel: MainViewModel
     @State var newsletterVM: NewsletterViewModel
-    
     @State var searchText: String
     @State var showSnack: Bool = false
     @State var isViewInApp: Bool = true
@@ -32,7 +30,7 @@ struct ContentView: View {
     @State var selectedTab: AppTab = .home
     @State var postToOpen: PostRequest? = nil
     @State var isLoadingPost: Bool = false
-    
+        
     init(
         searchText: String = "",
         contentService: ContentServiceProtocol = ContentService(),
@@ -66,7 +64,6 @@ struct ContentView: View {
     
     // MARK: - Views
     
-    /// Conteúdo principal do app (TabView + Navegação)
     private var mainContent: some View {
         NavigationStack {
             MainTabView(
@@ -98,12 +95,9 @@ struct ContentView: View {
     
     // MARK: - Lifecycle
     
-    /// Carrega conteúdo inicial ao abrir o app
     private func loadInitialContent() {
-        // Carregar curtidos salvos
         viewModel.getLikedContent()
         
-        // Sempre carregar conteúdo ao abrir o app
         if !alreadyLoaded {
             Task {
                 await viewModel.fetchContent()
@@ -116,8 +110,8 @@ struct ContentView: View {
     }
     
     // MARK: - Observers
+    
     private func setupObservers() {
-        // Sincronizar APÓS posts carregarem
         NotificationCenter.default.addObserver(
             forName: .postsLoaded,
             object: nil,
@@ -127,7 +121,6 @@ struct ContentView: View {
             syncToWatch()
         }
         
-        // Observar quando clicar em notificação push (apenas abrir aba)
         NotificationCenter.default.addObserver(
             forName: .openNewsletterTab,
             object: nil,
@@ -136,7 +129,6 @@ struct ContentView: View {
             handleOpenNewsletterTab()
         }
         
-        // Observar quando clicar em notificação push (abrir post específico)
         NotificationCenter.default.addObserver(
             forName: .openPostFromNotification,
             object: nil,
@@ -148,13 +140,11 @@ struct ContentView: View {
     
     // MARK: - Notification Handlers
     
-    /// Navega para a aba Newsletter
     private func handleOpenNewsletterTab() {
         print("📰 Navegando para aba Newsletter via notificação")
         selectedTab = .newsletter
     }
     
-    /// Processa deep link de notificação e abre post específico
     private func handleOpenPost(from notification: Notification) {
         guard let postData = notification.object as? PostDeepLinkData else {
             print("❌ Dados do post inválidos")
@@ -163,10 +153,8 @@ struct ContentView: View {
         
         print("🔗 Deep link recebido: \(postData.owner)/\(postData.slug) (tipo: \(postData.type.rawValue))")
         
-        // Navegar para aba apropriada baseado no tipo
         selectedTab = postData.type.isNewsletter ? .newsletter : .home
         
-        // Buscar e abrir o post
         Task {
             await openPost(owner: postData.owner, slug: postData.slug)
         }
@@ -174,16 +162,13 @@ struct ContentView: View {
     
     // MARK: - Deep Link
     
-    /// Busca e abre um post específico via deep link
     @MainActor
     private func openPost(owner: String, slug: String) async {
         isLoadingPost = true
         
         do {
             let post = try await contentService.getPost(user: owner, slug: slug)
-            
-            // Aguardar um pouco para garantir que a navegação da tab terminou
-            try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 segundos
+            try? await Task.sleep(nanoseconds: 300_000_000)
             
             postToOpen = post
             isLoadingPost = false
@@ -195,17 +180,11 @@ struct ContentView: View {
         }
     }
     
-    // MARK: - Watch Sync (SUPER SIMPLES!)
+    // MARK: - Watch Sync
+    
     private func syncToWatch() {
         let recentPosts = Array(viewModel.content.prefix(5))
-        let likedPosts = Array(viewModel.likedList.prefix(10)) // Últimos 10 curtidos
-        
-        // DEBUG: Ver quais posts curtidos estão sendo enviados
-        print("📱 [ContentView] likedList total: \(viewModel.likedList.count)")
-        print("📱 [ContentView] Enviando \(likedPosts.count) posts curtidos:")
-        for (i, post) in likedPosts.enumerated() {
-            print("   \(i+1). \(post.title ?? "sem título")")
-        }
+        let likedPosts = Array(viewModel.likedList.prefix(10))
         
         let stats = [
             "liked": viewModel.likedList.count,
