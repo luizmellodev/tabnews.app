@@ -10,6 +10,9 @@ import SwiftData
 
 struct ContentView: View {
     
+    // MARK: - Properties
+    let contentService: ContentServiceProtocol
+        
     @AppStorage("current_theme") var currentTheme: Theme = .system
     @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
     
@@ -19,91 +22,35 @@ struct ContentView: View {
     @Query private var highlights: [Highlight]
     @Query private var notes: [Note]
     
-    @State var viewModel: MainViewModel = MainViewModel()
-    @State var newsletterVM: NewsletterViewModel = NewsletterViewModel()
+    @State var viewModel: MainViewModel
+    @State var newsletterVM: NewsletterViewModel
     
     @State var searchText: String
     @State var showSnack: Bool = false
     @State var isViewInApp: Bool = true
     @State var alreadyLoaded: Bool = false
-    @State var selectedTab: Int = 0 // 0=Início, 1=Biblioteca, 2=Newsletter, 3=Ajustes
+    @State var selectedTab: AppTab = .home
     @State var postToOpen: PostRequest? = nil
     @State var isLoadingPost: Bool = false
+    
+    init(
+        searchText: String = "",
+        contentService: ContentServiceProtocol = ContentService(),
+        viewModel: MainViewModel? = nil,
+        newsletterVM: NewsletterViewModel? = nil
+    ) {
+        self.searchText = searchText
+        self.contentService = contentService
+        self._viewModel = State(initialValue: viewModel ?? MainViewModel(service: contentService))
+        self._newsletterVM = State(initialValue: newsletterVM ?? NewsletterViewModel(service: contentService))
+    }
     
     var body: some View {
         ZStack {
             if !hasSeenOnboarding {
                 OnboardingView(showOnboarding: $hasSeenOnboarding)
             } else {
-                NavigationStack {
-                    TabView(selection: $selectedTab) {
-                    MainView(isViewInApp: $isViewInApp)
-                        .tabItem {
-                            Label("Início", systemImage: "house.fill")
-                        }
-                        .tag(0)
-                    
-                    FoldersView()
-                        .tabItem {
-                            Label("Biblioteca", systemImage: "book.pages")
-                        }
-                        .environment(viewModel)
-                        .tag(1)
-                    
-                    NewsletterView(isViewInApp: $isViewInApp)
-                        .tabItem {
-                            Label("Newsletter", systemImage: "newspaper.fill")
-                        }
-                        .environment(newsletterVM)
-                        .tag(2)
-                    
-                    SettingsView(isViewInApp: $isViewInApp, currentTheme: $currentTheme)
-                        .tabItem {
-                            Label("Ajustes", systemImage: "gearshape.fill")
-                        }
-                        .environment(viewModel)
-                        .onChange(of: isViewInApp) { _, newvalue in
-                            viewModel.defaults.set(newvalue, forKey: "viewInApp")
-                        }
-                        .tag(3)
-                    }
-                    .environment(viewModel)
-                    .navigationDestination(item: $postToOpen) { post in
-                        ListDetailView(
-                            isViewInApp: $isViewInApp,
-                            currentTheme: $currentTheme,
-                            post: post
-                        )
-                        .environment(viewModel)
-                    }
-                    .overlay {
-                        if isLoadingPost {
-                            ZStack {
-                                Color.black.opacity(0.3)
-                                    .ignoresSafeArea()
-                                ProgressView("Carregando post...")
-                                    .padding()
-                                    .background(.ultraThinMaterial)
-                                    .cornerRadius(10)
-                            }
-                        }
-                    }
-                }
-                .environment(viewModel)
-                .onAppear {
-                    // Carregar curtidos salvos
-                    viewModel.getLikedContent()
-                    
-                    // Sempre carregar conteúdo ao abrir o app
-                    if !alreadyLoaded {
-                        Task {
-                            await viewModel.fetchContent()
-                            await viewModel.fetchPost()
-                            self.alreadyLoaded = true
-                        }
-                    }
-                    viewModel.saveInAppSettings(viewInApp: isViewInApp)
-                }
+                mainContent
             }
         }
         .preferredColorScheme(currentTheme.colorScheme)
@@ -115,6 +62,57 @@ struct ContentView: View {
                 syncToWatch()
             }
         }
+    }
+    
+    // MARK: - Views
+    
+    /// Conteúdo principal do app (TabView + Navegação)
+    private var mainContent: some View {
+        NavigationStack {
+            MainTabView(
+                selectedTab: $selectedTab,
+                isViewInApp: $isViewInApp,
+                currentTheme: $currentTheme,
+                viewModel: viewModel,
+                newsletterVM: newsletterVM
+            )
+            .navigationDestination(item: $postToOpen) { post in
+                ListDetailView(
+                    isViewInApp: $isViewInApp,
+                    currentTheme: $currentTheme,
+                    post: post
+                )
+                .environment(viewModel)
+            }
+            .overlay {
+                if isLoadingPost {
+                    LoadingOverlayView(message: "Carregando post...")
+                }
+            }
+        }
+        .environment(viewModel)
+        .onAppear {
+            loadInitialContent()
+        }
+    }
+    
+    // MARK: - Lifecycle
+    
+    /// Carrega conteúdo inicial ao abrir o app
+    private func loadInitialContent() {
+        // Carregar curtidos salvos
+        viewModel.getLikedContent()
+        
+        // Sempre carregar conteúdo ao abrir o app
+        if !alreadyLoaded {
+            Task {
+                await viewModel.fetchContent()
+                await viewModel.fetchPost()
+                alreadyLoaded = true
+            }
+        }
+        
+        viewModel.saveInAppSettings(viewInApp: isViewInApp)
     }
     
     // MARK: - Observers
@@ -135,8 +133,7 @@ struct ContentView: View {
             object: nil,
             queue: .main
         ) { [self] _ in
-            print("📰 Navegando para aba Newsletter via notificação")
-            selectedTab = 2
+            handleOpenNewsletterTab()
         }
         
         // Observar quando clicar em notificação push (abrir post específico)
@@ -145,38 +142,45 @@ struct ContentView: View {
             object: nil,
             queue: .main
         ) { [self] notification in
-            guard let postData = notification.object as? PostDeepLinkData else {
-                print("❌ Dados do post inválidos")
-                return
-            }
-            
-            print("🔗 Deep link recebido: \(postData.owner)/\(postData.slug) (tipo: \(postData.type))")
-            
-            // Se for newsletter, navegar para aba Newsletter
-            if postData.type == "newsletter" || postData.type == "test_newsletter" {
-                print("📰 Tipo newsletter - navegando para tab Newsletter")
-                selectedTab = 2
-            } else {
-                // Se for post relevante, manter na Home (tab 0)
-                print("🔥 Tipo post relevante - mantendo na Home")
-                selectedTab = 0
-            }
-            
-            // Buscar e abrir o post
-            Task {
-                await openPost(owner: postData.owner, slug: postData.slug)
-            }
+            handleOpenPost(from: notification)
+        }
+    }
+    
+    // MARK: - Notification Handlers
+    
+    /// Navega para a aba Newsletter
+    private func handleOpenNewsletterTab() {
+        print("📰 Navegando para aba Newsletter via notificação")
+        selectedTab = .newsletter
+    }
+    
+    /// Processa deep link de notificação e abre post específico
+    private func handleOpenPost(from notification: Notification) {
+        guard let postData = notification.object as? PostDeepLinkData else {
+            print("❌ Dados do post inválidos")
+            return
+        }
+        
+        print("🔗 Deep link recebido: \(postData.owner)/\(postData.slug) (tipo: \(postData.type.rawValue))")
+        
+        // Navegar para aba apropriada baseado no tipo
+        selectedTab = postData.type.isNewsletter ? .newsletter : .home
+        
+        // Buscar e abrir o post
+        Task {
+            await openPost(owner: postData.owner, slug: postData.slug)
         }
     }
     
     // MARK: - Deep Link
+    
+    /// Busca e abre um post específico via deep link
     @MainActor
     private func openPost(owner: String, slug: String) async {
         isLoadingPost = true
         
         do {
-            let service = ContentService()
-            let post = try await service.getPost(user: owner, slug: slug)
+            let post = try await contentService.getPost(user: owner, slug: slug)
             
             // Aguardar um pouco para garantir que a navegação da tab terminou
             try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 segundos
