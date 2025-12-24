@@ -106,6 +106,9 @@ struct AddFolderSheet: View {
     private func createFolder() {
         let folder = Folder(name: folderName, icon: selectedIcon, colorHex: selectedColor)
         modelContext.insert(folder)
+        
+        NotificationCenter.default.post(name: .foldersUpdated, object: nil)
+        
         dismiss()
     }
 }

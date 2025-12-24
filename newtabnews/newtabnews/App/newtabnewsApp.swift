@@ -17,16 +17,12 @@ import UserNotifications
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // Configurar Firebase
         FirebaseApp.configure()
         
-        // Configurar Firebase Messaging delegate
         Messaging.messaging().delegate = self
         
-        // Configurar UNUserNotificationCenter delegate
         UNUserNotificationCenter.current().delegate = self
         
-        // Registrar para notificações remotas
         application.registerForRemoteNotifications()
         
         return true
@@ -91,7 +87,8 @@ struct newtabnewsApp: App {
     
     init() {
         NotificationManager.shared.requestPermission()
-        AppUsageTracker.shared.startTracking() // Iniciar tracking de tempo
+        AppUsageTracker.shared.startTracking()
+        _ = WatchSyncManager.shared
     }
         
     var body: some Scene {

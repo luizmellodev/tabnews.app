@@ -14,7 +14,7 @@ class MainViewModel {
     private let service: ContentServiceProtocol
     var likedList: [PostRequest] = []
     var content: [PostRequest] = []
-    var state: DefaultViewState = .loading // Começa em loading para mostrar skeleton
+    var state: DefaultViewState = .loading
     var currentStrategy: ContentStrategy = .relevant
     
     let defaults = UserDefaults.standard
@@ -27,7 +27,6 @@ class MainViewModel {
 // MARK: - Fetch Functions
 extension MainViewModel {
     
-    // Get tabnews titles
     @MainActor
     func fetchContent() async {
         self.state = .loading
@@ -40,7 +39,6 @@ extension MainViewModel {
         }
     }
     
-    // Fetch content with specific strategy
     @MainActor
     func fetchContent(with strategy: ContentStrategy) async {
         self.currentStrategy = strategy
@@ -48,7 +46,6 @@ extension MainViewModel {
         await fetchPost()
     }
     
-    // Get tabnews post (content)
     @MainActor
     func fetchPost() async {
         for index in content.indices {
@@ -64,8 +61,6 @@ extension MainViewModel {
             }
         }
         
-        // ✅ Sincronizar com Watch APÓS carregar posts
-        print("📱 Posts carregados, disparando sincronização...")
         NotificationCenter.default.post(name: .postsLoaded, object: nil)
     }
 }
@@ -73,6 +68,7 @@ extension MainViewModel {
 // MARK: - Notification
 extension Notification.Name {
     static let postsLoaded = Notification.Name("postsLoaded")
+    static let likedListUpdated = Notification.Name("likedListUpdated")
 }
 
 // MARK: - UserDefaults
@@ -82,7 +78,6 @@ extension MainViewModel {
     }
     
     func likeContentList(content: PostRequest) {
-        // Verificar se já existe antes de adicionar
         let alreadyExists = likedList.contains { existingPost in
             isSamePost(existingPost, content)
         }
@@ -105,20 +100,16 @@ extension MainViewModel {
         saveLikedContent()
     }
     
-    // Helper para comparar posts de forma consistente
     private func isSamePost(_ post1: PostRequest, _ post2: PostRequest) -> Bool {
-        // Prioridade 1: Comparar por ID se ambos existirem
         if let id1 = post1.id, let id2 = post2.id, !id1.isEmpty, !id2.isEmpty {
             return id1 == id2
         }
         
-        // Prioridade 2: Comparar por título E owner (mais confiável que só título)
         if let title1 = post1.title, let title2 = post2.title,
            let owner1 = post1.ownerUsername, let owner2 = post2.ownerUsername {
             return title1 == title2 && owner1 == owner2
         }
         
-        // Fallback: Apenas título
         return post1.title == post2.title
     }
     
@@ -128,17 +119,15 @@ extension MainViewModel {
             defaults.set(encoded, forKey: "LikedContent")
         }
         
-        // ✅ Sincronizar com Watch App via App Group
         SharedDataService.saveLikedPosts(likedList)
+        NotificationCenter.default.post(name: .likedListUpdated, object: nil)
     }
     
     func getLikedContent() {
         if let likedContent = defaults.object(forKey: "LikedContent") as? Data {
             let decoder = JSONDecoder()
             if let loadedContent = try? decoder.decode([PostRequest].self, from: likedContent) {
-                // Remover duplicatas ao carregar
                 self.likedList = removeDuplicates(from: loadedContent)
-                // Salvar lista limpa
                 saveLikedContent()
             }
         }
@@ -147,7 +136,6 @@ extension MainViewModel {
     private func removeDuplicates(from posts: [PostRequest]) -> [PostRequest] {
         var seen: Set<String> = []
         return posts.filter { post in
-            // Usar ID se disponível, senão usar título
             let identifier = post.id ?? post.title ?? UUID().uuidString
             if seen.contains(identifier) {
                 return false

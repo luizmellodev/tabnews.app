@@ -29,9 +29,9 @@ struct PostDeepLinkData {
 }
 
 extension Notification.Name {
-    /// Notificação para abrir apenas a aba Newsletter
     static let openNewsletterTab = Notification.Name("openNewsletterTab")
-    
-    /// Notificação para abrir um post específico via deep link
     static let openPostFromNotification = Notification.Name("openPostFromNotification")
+    static let highlightsUpdated = Notification.Name("highlightsUpdated")
+    static let notesUpdated = Notification.Name("notesUpdated")
+    static let foldersUpdated = Notification.Name("foldersUpdated")
 }

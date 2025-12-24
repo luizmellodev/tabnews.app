@@ -495,6 +495,8 @@ struct FoldersView: View {
         withAnimation {
             modelContext.delete(folder)
         }
+        
+        NotificationCenter.default.post(name: .foldersUpdated, object: nil)
     }
     
     private func clearFolder(_ folder: Folder) {

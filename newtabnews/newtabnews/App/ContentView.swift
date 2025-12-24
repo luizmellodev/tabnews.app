@@ -117,7 +117,38 @@ struct ContentView: View {
             object: nil,
             queue: .main
         ) { _ in
-            print("📱 Posts carregados, sincronizando com Watch...")
+            syncToWatch()
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .likedListUpdated,
+            object: nil,
+            queue: .main
+        ) { _ in
+            syncToWatch()
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .highlightsUpdated,
+            object: nil,
+            queue: .main
+        ) { _ in
+            syncToWatch()
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .notesUpdated,
+            object: nil,
+            queue: .main
+        ) { _ in
+            syncToWatch()
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .foldersUpdated,
+            object: nil,
+            queue: .main
+        ) { _ in
             syncToWatch()
         }
         
@@ -141,17 +172,13 @@ struct ContentView: View {
     // MARK: - Notification Handlers
     
     private func handleOpenNewsletterTab() {
-        print("📰 Navegando para aba Newsletter via notificação")
         selectedTab = .newsletter
     }
     
     private func handleOpenPost(from notification: Notification) {
         guard let postData = notification.object as? PostDeepLinkData else {
-            print("❌ Dados do post inválidos")
             return
         }
-        
-        print("🔗 Deep link recebido: \(postData.owner)/\(postData.slug) (tipo: \(postData.type.rawValue))")
         
         selectedTab = postData.type.isNewsletter ? .newsletter : .home
         
@@ -172,10 +199,7 @@ struct ContentView: View {
             
             postToOpen = post
             isLoadingPost = false
-            
-            print("✅ Post carregado e navegação iniciada")
         } catch {
-            print("❌ Erro ao buscar post: \(error)")
             isLoadingPost = false
         }
     }

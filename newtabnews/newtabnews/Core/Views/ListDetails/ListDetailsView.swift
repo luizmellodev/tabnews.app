@@ -40,7 +40,6 @@ struct ListDetailView: View {
                             .font(.title3)
                             .fontWeight(.semibold)
                         
-                        // Barra de ações principal
                         HStack(spacing: 12) {
                             // Botão Destacar
                             Button {
@@ -314,17 +313,19 @@ struct ListDetailView: View {
         
         modelContext.insert(highlight)
         
-        // Feedback háptico
         let impact = UINotificationFeedbackGenerator()
         impact.notificationOccurred(.success)
+        
+        NotificationCenter.default.post(name: .highlightsUpdated, object: nil)
     }
     
     private func removeHighlight(_ highlight: Highlight) {
         modelContext.delete(highlight)
         
-        // Feedback háptico
         let impact = UINotificationFeedbackGenerator()
         impact.notificationOccurred(.warning)
+        
+        NotificationCenter.default.post(name: .highlightsUpdated, object: nil)
     }
 }
 
@@ -382,6 +383,8 @@ struct AddNoteSheet: View {
         
         let impact = UINotificationFeedbackGenerator()
         impact.notificationOccurred(.success)
+        
+        NotificationCenter.default.post(name: .notesUpdated, object: nil)
         
         dismiss()
     }
@@ -485,6 +488,8 @@ struct AddHighlightSheet: View {
         
         let impact = UINotificationFeedbackGenerator()
         impact.notificationOccurred(.success)
+        
+        NotificationCenter.default.post(name: .highlightsUpdated, object: nil)
         
         dismiss()
     }
