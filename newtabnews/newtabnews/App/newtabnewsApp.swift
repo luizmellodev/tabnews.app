@@ -77,11 +77,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if let type = userInfo["type"] as? String, type == "newsletter" || type == "test" {
             print("📰 Usuário tocou na notificação - navegando para Newsletter")
             
-            // Usar deep link para navegar
+            // Postar notificação para ContentView navegar
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                if let url = URL(string: "tabnews://newsletter") {
-                    UIApplication.shared.open(url)
-                }
+                NotificationCenter.default.post(name: .openNewsletterTab, object: nil)
             }
         }
         

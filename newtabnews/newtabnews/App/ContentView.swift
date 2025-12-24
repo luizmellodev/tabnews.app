@@ -8,6 +8,11 @@
 import SwiftUI
 import SwiftData
 
+// Extensão para NotificationCenter
+extension Notification.Name {
+    static let openNewsletterTab = Notification.Name("openNewsletterTab")
+}
+
 struct ContentView: View {
     
     @AppStorage("current_theme") var currentTheme: Theme = .system
@@ -90,9 +95,6 @@ struct ContentView: View {
                 syncToWatch()
             }
         }
-        .onOpenURL { url in
-            handleDeepLink(url)
-        }
     }
     
     // MARK: - Observers
@@ -106,13 +108,15 @@ struct ContentView: View {
             print("📱 Posts carregados, sincronizando com Watch...")
             syncToWatch()
         }
-    }
-    
-    // MARK: - Deep Link Handler
-    private func handleDeepLink(_ url: URL) {
-        // Formato: tabnews://newsletter
-        if url.host == "newsletter" {
-            selectedTab = 2 // Navegar para aba Newsletter
+        
+        // Observar quando clicar em notificação push
+        NotificationCenter.default.addObserver(
+            forName: .openNewsletterTab,
+            object: nil,
+            queue: .main
+        ) { [self] _ in
+            print("📰 Navegando para aba Newsletter via notificação")
+            selectedTab = 2
         }
     }
     
