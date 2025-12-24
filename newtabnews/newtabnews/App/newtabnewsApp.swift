@@ -73,10 +73,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         
-        // Aqui você pode navegar para a newsletter específica
-        if let postId = userInfo["postId"] as? String {
-            print("📰 Usuário tocou na notificação do post: \(postId)")
-            // TODO: Navegar para a newsletter
+        // Navegar para a aba Newsletter quando clicar na notificação
+        if let type = userInfo["type"] as? String, type == "newsletter" || type == "test" {
+            print("📰 Usuário tocou na notificação - navegando para Newsletter")
+            
+            // Usar deep link para navegar
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if let url = URL(string: "tabnews://newsletter") {
+                    UIApplication.shared.open(url)
+                }
+            }
         }
         
         completionHandler()

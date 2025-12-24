@@ -26,29 +26,33 @@ struct ContentView: View {
     @State var showSnack: Bool = false
     @State var isViewInApp: Bool = true
     @State var alreadyLoaded: Bool = false
+    @State var selectedTab: Int = 0 // 0=Início, 1=Biblioteca, 2=Newsletter, 3=Ajustes
     
     var body: some View {
         ZStack {
             if !hasSeenOnboarding {
                 OnboardingView(showOnboarding: $hasSeenOnboarding)
             } else {
-                TabView {
+                TabView(selection: $selectedTab) {
                     MainView(isViewInApp: $isViewInApp)
                         .tabItem {
                             Label("Início", systemImage: "house.fill")
                         }
+                        .tag(0)
                     
                     FoldersView()
                         .tabItem {
                             Label("Biblioteca", systemImage: "book.pages")
                         }
                         .environment(viewModel)
+                        .tag(1)
                     
                     NewsletterView(isViewInApp: $isViewInApp)
                         .tabItem {
                             Label("Newsletter", systemImage: "newspaper.fill")
                         }
                         .environment(newsletterVM)
+                        .tag(2)
                     
                     SettingsView(isViewInApp: $isViewInApp, currentTheme: $currentTheme)
                         .tabItem {
@@ -58,6 +62,7 @@ struct ContentView: View {
                         .onChange(of: isViewInApp) { _, newvalue in
                             viewModel.defaults.set(newvalue, forKey: "viewInApp")
                         }
+                        .tag(3)
                 }
                 .environment(viewModel)
                 .onAppear {
@@ -85,6 +90,9 @@ struct ContentView: View {
                 syncToWatch()
             }
         }
+        .onOpenURL { url in
+            handleDeepLink(url)
+        }
     }
     
     // MARK: - Observers
@@ -97,6 +105,14 @@ struct ContentView: View {
         ) { _ in
             print("📱 Posts carregados, sincronizando com Watch...")
             syncToWatch()
+        }
+    }
+    
+    // MARK: - Deep Link Handler
+    private func handleDeepLink(_ url: URL) {
+        // Formato: tabnews://newsletter
+        if url.host == "newsletter" {
+            selectedTab = 2 // Navegar para aba Newsletter
         }
     }
     
