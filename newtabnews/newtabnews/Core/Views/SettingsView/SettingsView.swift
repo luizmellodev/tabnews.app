@@ -270,6 +270,7 @@ struct SettingsView: View {
                     }
                 }
             }
+            .padding(.top, 50)
             .scrollContentBackground(.hidden)
             .navigationTitle("Ajustes")
             .background {
