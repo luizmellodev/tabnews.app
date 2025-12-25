@@ -52,6 +52,15 @@ extension AppDelegate: MessagingDelegate {
         
         // Salvar token no Firestore para a Cloud Function usar
         FirebasePushNotificationService.shared.saveDeviceToken(token)
+        
+        // Inscrever no tópico "all_users" para notificações gerais
+        Messaging.messaging().subscribe(toTopic: "all_users") { error in
+            if let error = error {
+                print("❌ Erro ao inscrever no tópico 'all_users': \(error.localizedDescription)")
+            } else {
+                print("✅ Inscrito no tópico 'all_users' com sucesso!")
+            }
+        }
     }
 }
 
