@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 struct ContentView: View {
         
@@ -77,6 +78,7 @@ struct ContentView: View {
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             if newPhase == .active {
+                clearBadge()
                 syncToWatch()
             }
         }
@@ -287,6 +289,19 @@ struct ContentView: View {
         for post in watchLikedPosts {
             if !viewModel.likedList.contains(where: { $0.id == post.id }) {
                 viewModel.likeContentList(content: post)
+            }
+        }
+    }
+    
+    // MARK: - Badge Management
+    
+    /// Limpa o badge de notificações quando o app abre
+    private func clearBadge() {
+        UNUserNotificationCenter.current().setBadgeCount(0) { error in
+            if let error = error {
+                print("❌ Erro ao limpar badge: \(error.localizedDescription)")
+            } else {
+                print("✅ Badge limpo ao abrir o app")
             }
         }
     }

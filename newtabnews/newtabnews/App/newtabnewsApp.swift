@@ -82,10 +82,24 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         print("📱 Notificação tocada. Dados: \(userInfo)")
         
+        // Limpar badge ao tocar na notificação
+        clearBadge()
+        
         // Delegar para NotificationHandler
         NotificationHandler.shared.handleNotificationTap(userInfo: userInfo)
         
         completionHandler()
+    }
+    
+    /// Limpa o badge de notificações
+    private func clearBadge() {
+        UNUserNotificationCenter.current().setBadgeCount(0) { error in
+            if let error = error {
+                print("❌ Erro ao limpar badge: \(error.localizedDescription)")
+            } else {
+                print("✅ Badge limpo com sucesso")
+            }
+        }
     }
 }
 
