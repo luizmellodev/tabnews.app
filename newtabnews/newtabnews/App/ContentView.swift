@@ -33,6 +33,7 @@ struct ContentView: View {
     @State var postToOpen: PostRequest? = nil
     @State var isLoadingPost: Bool = false
     @State var showTipsOnboarding: Bool = false
+    @State var showDigestSheet: Bool = false
         
     init(
         searchText: String = "",
@@ -65,6 +66,24 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(currentTheme.colorScheme)
+        .sheet(isPresented: $showDigestSheet) {
+            NavigationStack {
+                DigestListView()
+                    .navigationTitle("Resumo Semanal")
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Fechar") {
+                                showDigestSheet = false
+                            }
+                        }
+                    }
+            }
+            .environment(viewModel)
+            .presentationDragIndicator(.hidden)
+            .presentationDetents([.large])
+            .interactiveDismissDisabled(false)
+        }
         .onAppear {
             setupObservers()
             
@@ -226,6 +245,14 @@ struct ContentView: View {
         ) { [self] _ in
             selectedTab = .home
         }
+        
+        NotificationCenter.default.addObserver(
+            forName: .navigateToDigest,
+            object: nil,
+            queue: .main
+        ) { [self] _ in
+            handleNavigateToDigest()
+        }
     }
     
     // MARK: - Notification Handlers
@@ -234,12 +261,25 @@ struct ContentView: View {
         selectedTab = .newsletter
     }
     
+    private func handleNavigateToDigest() {
+        // Abre sheet com DigestListView
+        showDigestSheet = true
+    }
+    
     private func handleOpenPost(from notification: Notification) {
         guard let postData = notification.object as? PostDeepLinkData else {
             return
         }
         
-        selectedTab = postData.type.isNewsletter ? .newsletter : .home
+        if postData.type.isNewsletter {
+            selectedTab = .newsletter
+        } else if postData.type.isDigest {
+            // Digest abre em sheet
+            showDigestSheet = true
+            return // Não precisa abrir post específico
+        } else {
+            selectedTab = .home
+        }
         
         Task {
             await openPost(owner: postData.owner, slug: postData.slug)
@@ -247,7 +287,6 @@ struct ContentView: View {
     }
     
     // MARK: - Deep Link
-    
     @MainActor
     private func openPost(owner: String, slug: String) async {
         isLoadingPost = true

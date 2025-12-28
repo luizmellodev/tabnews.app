@@ -21,6 +21,7 @@ struct SettingsView: View {
     
     @State private var showingClearCache = false
     @State private var showingClearLibrary = false
+    @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
     
     var body: some View {
         NavigationStack {
@@ -120,7 +121,7 @@ struct SettingsView: View {
                 } header: {
                     Label("Notificações", systemImage: "bell")
                 } footer: {
-                    Text("Receba notificações de novas newsletters do TabNews")
+                    Text("Receba notificações de novas newsletters e resumos semanais do TabNews")
                 }
                 
                 // Dados
@@ -253,10 +254,20 @@ struct SettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    
+                    // Toggle do banner de Digest
+                    Toggle(isOn: $debugShowDigestBanner) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("🔥 Mostrar Banner de Digest")
+                            Text("Simula sábado para testar o banner")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 } header: {
                     Label("Debug", systemImage: "hammer.fill")
                 } footer: {
-                    Text("Ferramentas de desenvolvimento para testes")
+                    Text("Ferramentas de desenvolvimento para testes. O banner de Digest normalmente só aparece aos sábados.")
                 }
                 #endif
                 

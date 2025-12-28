@@ -63,6 +63,12 @@
 		79259E8D2EFB83BD004BC057 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 79259E8B2EFB82FB004BC057 /* GoogleService-Info.plist */; };
 		794863862B5B55ED009AA720 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794863852B5B55ED009AA720 /* GameController.swift */; };
 		795261722A7B0B6D001FD010 /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795261712A7B0B6D001FD010 /* NewsletterView.swift */; };
+		7982B7512F00B3CA00666726 /* DigestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74B2F00B3CA00666726 /* DigestCard.swift */; };
+		7982B7522F00B3CA00666726 /* DigestBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74A2F00B3CA00666726 /* DigestBannerView.swift */; };
+		7982B7532F00B3CA00666726 /* DigestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74F2F00B3CA00666726 /* DigestViewModel.swift */; };
+		7982B7542F00B3CA00666726 /* DigestListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74D2F00B3CA00666726 /* DigestListView.swift */; };
+		7982B7552F00B3CA00666726 /* DigestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74C2F00B3CA00666726 /* DigestDetailsView.swift */; };
+		7982B7562F00B3CA00666726 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74E2F00B3CA00666726 /* DigestView.swift */; };
 		799049E62A6C93D30050240C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E52A6C93D30050240C /* MainView.swift */; };
 		799049E82A6C93D90050240C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E72A6C93D90050240C /* MainViewModel.swift */; };
 		799049EA2A6C94050050240C /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E92A6C94050050240C /* SearchBar.swift */; };
@@ -175,6 +181,12 @@
 		79259E8B2EFB82FB004BC057 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		794863852B5B55ED009AA720 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		795261712A7B0B6D001FD010 /* NewsletterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterView.swift; sourceTree = "<group>"; };
+		7982B74A2F00B3CA00666726 /* DigestBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestBannerView.swift; sourceTree = "<group>"; };
+		7982B74B2F00B3CA00666726 /* DigestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestCard.swift; sourceTree = "<group>"; };
+		7982B74C2F00B3CA00666726 /* DigestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestDetailsView.swift; sourceTree = "<group>"; };
+		7982B74D2F00B3CA00666726 /* DigestListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestListView.swift; sourceTree = "<group>"; };
+		7982B74E2F00B3CA00666726 /* DigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestView.swift; sourceTree = "<group>"; };
+		7982B74F2F00B3CA00666726 /* DigestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestViewModel.swift; sourceTree = "<group>"; };
 		799049E52A6C93D30050240C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		799049E72A6C93D90050240C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		799049E92A6C94050050240C /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
@@ -392,6 +404,19 @@
 			path = Newsletter;
 			sourceTree = "<group>";
 		};
+		7982B7502F00B3CA00666726 /* Digest */ = {
+			isa = PBXGroup;
+			children = (
+				7982B74A2F00B3CA00666726 /* DigestBannerView.swift */,
+				7982B74B2F00B3CA00666726 /* DigestCard.swift */,
+				7982B74C2F00B3CA00666726 /* DigestDetailsView.swift */,
+				7982B74D2F00B3CA00666726 /* DigestListView.swift */,
+				7982B74E2F00B3CA00666726 /* DigestView.swift */,
+				7982B74F2F00B3CA00666726 /* DigestViewModel.swift */,
+			);
+			path = Digest;
+			sourceTree = "<group>";
+		};
 		799049DB2A6B241F0050240C /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -433,6 +458,7 @@
 				799049FB2A72F6D10050240C /* ListDetails */,
 				799049F22A6C96130050240C /* ListView */,
 				799049E42A6C93C60050240C /* MainView */,
+				7982B7502F00B3CA00666726 /* Digest */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -766,6 +792,12 @@
 				791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */,
 				7915846F2EFC869B00C69745 /* AudioControlsView.swift in Sources */,
 				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
+				7982B7512F00B3CA00666726 /* DigestCard.swift in Sources */,
+				7982B7522F00B3CA00666726 /* DigestBannerView.swift in Sources */,
+				7982B7532F00B3CA00666726 /* DigestViewModel.swift in Sources */,
+				7982B7542F00B3CA00666726 /* DigestListView.swift in Sources */,
+				7982B7552F00B3CA00666726 /* DigestDetailsView.swift in Sources */,
+				7982B7562F00B3CA00666726 /* DigestView.swift in Sources */,
 				79C706262D95E51F005C26A7 /* NetworkManagerProtocol.swift in Sources */,
 				79E728012EFB9FCC007BF27A /* NotificationHandler.swift in Sources */,
 				794863862B5B55ED009AA720 /* GameController.swift in Sources */,
@@ -979,7 +1011,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1022,7 +1054,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;

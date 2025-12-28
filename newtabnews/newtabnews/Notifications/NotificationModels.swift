@@ -12,6 +12,8 @@ enum NotificationType: String {
     case testNewsletter = "test_newsletter"
     case relevant
     case testRelevant = "test_relevant"
+    case digest
+    case testDigest = "test_digest"
     
     var isNewsletter: Bool {
         self == .newsletter || self == .testNewsletter
@@ -19,6 +21,10 @@ enum NotificationType: String {
     
     var isRelevant: Bool {
         self == .relevant || self == .testRelevant
+    }
+    
+    var isDigest: Bool {
+        self == .digest || self == .testDigest
     }
 }
 
@@ -30,7 +36,9 @@ struct PostDeepLinkData {
 
 extension Notification.Name {
     static let openNewsletterTab = Notification.Name("openNewsletterTab")
+    static let openDigestTab = Notification.Name("openDigestTab")
     static let openPostFromNotification = Notification.Name("openPostFromNotification")
+    static let navigateToDigest = Notification.Name("navigateToDigest")
     static let highlightsUpdated = Notification.Name("highlightsUpdated")
     static let notesUpdated = Notification.Name("notesUpdated")
     static let foldersUpdated = Notification.Name("foldersUpdated")

@@ -20,6 +20,21 @@ struct MainView: View {
     @Binding var isViewInApp: Bool
     @State private var scrollOffset: CGFloat = 0
     @State private var isLoadingStrategy = false
+    @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
+    @State private var showDigestSheet = false
+    
+    // Verifica se é sábado (ou modo debug ativado)
+    private var shouldShowDigestBanner: Bool {
+        #if DEBUG
+        if debugShowDigestBanner {
+            return true
+        }
+        #endif
+        
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: Date())
+        return weekday == 7 // 7 = Sábado
+    }
     
     var body: some View {
         @Bindable var bindableViewModel = viewModel
@@ -59,13 +74,26 @@ struct MainView: View {
                         
                     case .requestSucceeded:
                         ScrollView {
-                            ListView(
-                                searchText: $searchText,
-                                isViewInApp: $isViewInApp,
-                                currentTheme: $currentTheme,
-                                posts: viewModel.content
-                            )
-                            .environment(viewModel)
+                            VStack(spacing: 16) {
+                                // Banner de Digest (só aos sábados ou em debug)
+                                if shouldShowDigestBanner {
+                                    DigestBannerView {
+                                        // Abre sheet com DigestListView
+                                        showDigestSheet = true
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.top, 8)
+                                    .transition(.move(edge: .top).combined(with: .opacity))
+                                }
+                                
+                                ListView(
+                                    searchText: $searchText,
+                                    isViewInApp: $isViewInApp,
+                                    currentTheme: $currentTheme,
+                                    posts: viewModel.content
+                                )
+                                .environment(viewModel)
+                            }
                             .padding(.top, 5)
                         }
                         .refreshable {
@@ -73,6 +101,7 @@ struct MainView: View {
                         }
                         .transition(.opacity)
                         .id(viewModel.currentStrategy)
+                        .animation(.spring(), value: shouldShowDigestBanner)
                         
                     case .requestFailed:
                         FailureView(currentTheme: $currentTheme)
@@ -99,6 +128,24 @@ struct MainView: View {
                 }
             }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Pesquisar")
+            .sheet(isPresented: $showDigestSheet) {
+                NavigationStack {
+                    DigestListView()
+                        .navigationTitle("Resumo Semanal")
+                        .navigationBarTitleDisplayMode(.large)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Fechar") {
+                                    showDigestSheet = false
+                                }
+                            }
+                        }
+                }
+                .environment(viewModel)
+                .presentationDragIndicator(.hidden)
+                .presentationDetents([.large])
+                .interactiveDismissDisabled(false)
+            }
         }
     }
     

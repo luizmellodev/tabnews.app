@@ -41,6 +41,14 @@ class MockContentService: ContentServiceProtocol {
         return mockPosts.isEmpty ? createMockNewsletters() : mockPosts
     }
     
+    func getDigest(page: String, perPage: String, strategy: String) async throws -> [PostRequest] {
+        if shouldFail {
+            throw NSError(domain: "MockError", code: 500, userInfo: [NSLocalizedDescriptionKey: "Mock error"])
+        }
+        
+        return mockPosts.isEmpty ? createMockDigests() : mockPosts
+    }
+    
     // MARK: - Mock Helpers
     
     private func createMockPosts() -> [PostRequest] {
@@ -70,6 +78,18 @@ class MockContentService: ContentServiceProtocol {
                 slug: "newsletter-exemplo",
                 title: "Newsletter Exemplo",
                 body: "Esta é uma newsletter de exemplo."
+            )
+        ]
+    }
+    
+    private func createMockDigests() -> [PostRequest] {
+        return [
+            createMockPost(
+                id: "digest-1",
+                owner: "TabNewsDigest",
+                slug: "o-melhor-da-semana-no-tabnews-1",
+                title: "🔥 O Melhor da Semana no TabNews #1",
+                body: "Semana de 21/12 a 27/12\n\nEste é o seu Digest Semanal..."
             )
         ]
     }

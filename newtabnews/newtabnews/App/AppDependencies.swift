@@ -23,6 +23,10 @@ class AppDependencies {
     func makeNewsletterViewModel() -> NewsletterViewModel {
         return NewsletterViewModel(service: contentService)
     }
+    
+    func makeDigestViewModel() -> DigestViewModel {
+        return DigestViewModel(service: contentService)
+    }
 }
 
 extension AppDependencies {

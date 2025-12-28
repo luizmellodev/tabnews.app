@@ -11,4 +11,5 @@ protocol ContentServiceProtocol {
     func getContent(page: String, perPage: String, strategy: String) async throws -> [PostRequest]
     func getPost(user: String, slug: String) async throws -> PostRequest
     func getNewsletter(page: String, perPage: String, strategy: String) async throws -> [PostRequest]
+    func getDigest(page: String, perPage: String, strategy: String) async throws -> [PostRequest]
 }

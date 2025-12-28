@@ -39,6 +39,7 @@ struct FoldersView: View {
                 emptyState
             } else {
                     List {
+                        digestSection
                         likedPostsSection
                         highlightsSection
                         notesSection
@@ -107,6 +108,45 @@ struct FoldersView: View {
     }
     
     // MARK: - View Builders
+    
+    @ViewBuilder
+    private var digestSection: some View {
+        Section {
+            NavigationLink {
+                DigestListView()
+            } label: {
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.orange, Color.red],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 32, height: 32)
+                        
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.white)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Resumo Semanal")
+                            .font(.headline)
+                        Text("O melhor da semana no TabNews")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+            }
+        } header: {
+            Label("Conteúdo Especial", systemImage: "star.fill")
+        }
+    }
     
     @ViewBuilder
     private var likedPostsSection: some View {

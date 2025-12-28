@@ -70,4 +70,24 @@ class ContentService: ContentServiceProtocol {
             throw error
         }
     }
+    
+    func getDigest(page: String, perPage: String, strategy: String) async throws -> [PostRequest] {
+        do {
+            return try await networkManager.sendRequest(
+                "/contents/TabNewsDigest",
+                method: "GET",
+                parameters: [
+                    "page": page,
+                    "per_page": perPage,
+                    "strategy": strategy
+                ],
+                authentication: nil,
+                token: nil,
+                body: nil
+            ) as [PostRequest]
+        } catch {
+            Logger.error("Digest fetch error: \(error.localizedDescription)")
+            throw error
+        }
+    }
 }

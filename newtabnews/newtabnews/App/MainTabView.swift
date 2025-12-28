@@ -38,15 +38,18 @@ struct MainTabView: View {
                 .environment(newsletterVM)
                 .tag(AppTab.newsletter)
             
-            SettingsView(isViewInApp: $isViewInApp, currentTheme: $currentTheme)
-                .tabItem {
-                    Label(AppTab.settings.title, systemImage: AppTab.settings.icon)
-                }
-                .environment(viewModel)
-                .onChange(of: isViewInApp) { _, newValue in
-                    viewModel.defaults.set(newValue, forKey: "viewInApp")
-                }
-                .tag(AppTab.settings)
+            SettingsView(
+                isViewInApp: $isViewInApp,
+                currentTheme: $currentTheme
+            )
+            .tabItem {
+                Label(AppTab.settings.title, systemImage: AppTab.settings.icon)
+            }
+            .environment(viewModel)
+            .onChange(of: isViewInApp) { _, newValue in
+                viewModel.defaults.set(newValue, forKey: "viewInApp")
+            }
+            .tag(AppTab.settings)
         }
         .environment(viewModel)
     }

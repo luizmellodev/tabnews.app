@@ -29,9 +29,11 @@ class NotificationHandler {
         if !owner.isEmpty && !slug.isEmpty {
             openPost(owner: owner, slug: slug, type: notificationType)
         } else {
-            // Fallback: apenas abrir aba Newsletter (se for newsletter)
+            // Fallback: apenas abrir aba correspondente
             if notificationType.isNewsletter {
                 openNewsletterTab()
+            } else if notificationType.isDigest {
+                openDigestTab()
             }
         }
     }
@@ -40,8 +42,19 @@ class NotificationHandler {
     
     /// Abre um post específico via deep link
     private func openPost(owner: String, slug: String, type: NotificationType) {
-        let icon = type.isNewsletter ? "📰" : "🔥"
-        let destination = type.isNewsletter ? "Newsletter" : "Home"
+        let icon: String
+        let destination: String
+        
+        if type.isNewsletter {
+            icon = "📰"
+            destination = "Newsletter"
+        } else if type.isDigest {
+            icon = "🔥"
+            destination = "Resumo"
+        } else {
+            icon = "🔥"
+            destination = "Home"
+        }
         
         print("\(icon) Abrindo post em \(destination): \(owner)/\(slug)")
         
@@ -61,6 +74,15 @@ class NotificationHandler {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             NotificationCenter.default.post(name: .openNewsletterTab, object: nil)
+        }
+    }
+    
+    /// Abre apenas a aba Digest (sem post específico)
+    private func openDigestTab() {
+        print("🔥 Abrindo aba Resumo")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            NotificationCenter.default.post(name: .openDigestTab, object: nil)
         }
     }
 }
