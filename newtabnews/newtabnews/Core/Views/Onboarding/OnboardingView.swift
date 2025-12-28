@@ -59,6 +59,8 @@ struct OnboardingView: View {
                                 withAnimation {
                                     showOnboarding = false
                                     UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
+                                    // Garantir que os tips vão aparecer após o onboarding inicial
+                                    UserDefaults.standard.set(false, forKey: "hasSeenTipsOnboarding")
                                 }
                             }
                         )

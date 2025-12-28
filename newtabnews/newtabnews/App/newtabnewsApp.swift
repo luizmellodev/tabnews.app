@@ -112,6 +112,7 @@ struct newtabnewsApp: App {
         NotificationManager.shared.requestPermission()
         AppUsageTracker.shared.startTracking()
         _ = WatchSyncManager.shared
+        _ = BetaTesterService.shared // Inicializa detecção de beta tester
     }
         
     var body: some Scene {

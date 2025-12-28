@@ -69,6 +69,8 @@
 		7982B7542F00B3CA00666726 /* DigestListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74D2F00B3CA00666726 /* DigestListView.swift */; };
 		7982B7552F00B3CA00666726 /* DigestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74C2F00B3CA00666726 /* DigestDetailsView.swift */; };
 		7982B7562F00B3CA00666726 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74E2F00B3CA00666726 /* DigestView.swift */; };
+		7982B7752F01778100666726 /* BetaTesterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B7742F01778100666726 /* BetaTesterService.swift */; };
+		7982B7762F01778100666726 /* BetaTesterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B7742F01778100666726 /* BetaTesterService.swift */; };
 		799049E62A6C93D30050240C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E52A6C93D30050240C /* MainView.swift */; };
 		799049E82A6C93D90050240C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E72A6C93D90050240C /* MainViewModel.swift */; };
 		799049EA2A6C94050050240C /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E92A6C94050050240C /* SearchBar.swift */; };
@@ -187,6 +189,7 @@
 		7982B74D2F00B3CA00666726 /* DigestListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestListView.swift; sourceTree = "<group>"; };
 		7982B74E2F00B3CA00666726 /* DigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestView.swift; sourceTree = "<group>"; };
 		7982B74F2F00B3CA00666726 /* DigestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestViewModel.swift; sourceTree = "<group>"; };
+		7982B7742F01778100666726 /* BetaTesterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetaTesterService.swift; sourceTree = "<group>"; };
 		799049E52A6C93D30050240C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		799049E72A6C93D90050240C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		799049E92A6C94050050240C /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
@@ -545,6 +548,7 @@
 				790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */,
 				79C7062E2D95E5E6005C26A7 /* ContentService.swift */,
 				79C7062C2D95E5E2005C26A7 /* ContentServiceProtocol.swift */,
+				7982B7742F01778100666726 /* BetaTesterService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -705,6 +709,7 @@
 				790AB10C2ECF68F000E443E6 /* RequestBuilder.swift in Sources */,
 				79E727FA2EFB9E27007BF27A /* MockContentService.swift in Sources */,
 				790AB1102ECF691D00E443E6 /* ContentServiceProtocol.swift in Sources */,
+				7982B7762F01778100666726 /* BetaTesterService.swift in Sources */,
 				790AB1082ECF68CE00E443E6 /* Logger.swift in Sources */,
 				79E727F52EFB9D25007BF27A /* AppTab.swift in Sources */,
 				790AB10B2ECF68E800E443E6 /* APIError.swift in Sources */,
@@ -746,6 +751,7 @@
 				79C706352D95E643005C26A7 /* Logger.swift in Sources */,
 				799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */,
 				79E727F42EFB9D25007BF27A /* AppTab.swift in Sources */,
+				7982B7752F01778100666726 /* BetaTesterService.swift in Sources */,
 				79C7063A2D95E766005C26A7 /* PostRequest.swift in Sources */,
 				79D7E37A2D81266A00391C82 /* NewsletterViewModel.swift in Sources */,
 				79E727FC2EFB9E76007BF27A /* AppDependencies.swift in Sources */,
@@ -1011,7 +1017,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1054,7 +1060,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;

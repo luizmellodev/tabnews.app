@@ -106,6 +106,16 @@ struct ContentView: View {
                 hasSeenTipsOnboarding = true
             }
         }
+        .onChange(of: hasSeenOnboarding) { _, newValue in
+            // Quando terminar o onboarding inicial, mostrar tips automaticamente
+            if newValue && !hasSeenTipsOnboarding {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation {
+                        showTipsOnboarding = true
+                    }
+                }
+            }
+        }
     }
     
     // MARK: - Views

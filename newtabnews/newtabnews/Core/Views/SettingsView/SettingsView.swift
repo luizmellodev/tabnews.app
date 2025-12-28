@@ -26,31 +26,41 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                // Aparência
-                Section {
-                    Picker("Tema", selection: $currentTheme) {
-                        Label("Sistema", systemImage: "iphone").tag(Theme.system)
-                        Label("Claro", systemImage: "sun.max").tag(Theme.light)
-                        Label("Escuro", systemImage: "moon").tag(Theme.dark)
+                // Badge Beta Tester - Seção especial no topo
+                if BetaTesterService.shared.isBetaTester {
+                    Section {
+                        betaTesterBadgeCard
                     }
-                    .pickerStyle(.menu)
-                } header: {
-                    Label("Aparência", systemImage: "paintbrush")
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
+                    .listRowSeparator(.hidden)
                 }
                 
-                // Leitura
-                Section {
-                    Toggle(isOn: $isViewInApp) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Visualizar no App")
-                            Text("Abrir posts dentro do aplicativo")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                // Aparência
+                    Section {
+                        Picker("Tema", selection: $currentTheme) {
+                            Label("Sistema", systemImage: "iphone").tag(Theme.system)
+                            Label("Claro", systemImage: "sun.max").tag(Theme.light)
+                            Label("Escuro", systemImage: "moon").tag(Theme.dark)
                         }
+                        .pickerStyle(.menu)
+                    } header: {
+                        Label("Aparência", systemImage: "paintbrush")
                     }
-                } header: {
-                    Label("Leitura", systemImage: "book")
-                }
+                    
+                    // Leitura
+                    Section {
+                        Toggle(isOn: $isViewInApp) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Visualizar no App")
+                                Text("Abrir posts dentro do aplicativo")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    } header: {
+                        Label("Leitura", systemImage: "book")
+                    }
                 
                 // Estatísticas
                 Section {
@@ -93,10 +103,19 @@ struct SettingsView: View {
                     } label: {
                         Label("Ver Dicas Novamente", systemImage: "lightbulb.fill")
                     }
+                    
+                    Button {
+                        UserDefaults.standard.set(false, forKey: "hasSeenOnboarding")
+                        UserDefaults.standard.set(false, forKey: "hasSeenTipsOnboarding")
+                        // Reiniciar o app para mostrar o onboarding completo
+                        exit(0)
+                    } label: {
+                        Label("Resetar Onboarding Completo", systemImage: "arrow.counterclockwise.circle")
+                    }
                 } header: {
                     Label("Ajuda", systemImage: "questionmark.circle")
                 } footer: {
-                    Text("Reveja as dicas de como usar o app")
+                    Text("Ver dicas: mostra apenas as dicas contextuais. Resetar completo: reinicia o app e mostra todo o onboarding inicial + dicas.")
                 }
                 
                 // Notificações
@@ -264,6 +283,18 @@ struct SettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    
+                    // Beta Tester Debug
+                    Button {
+                        withAnimation {
+                            BetaTesterService.shared.forceBetaTesterStatus(!BetaTesterService.shared.isBetaTester)
+                        }
+                    } label: {
+                        Label(
+                            BetaTesterService.shared.isBetaTester ? "⭐ Remover Badge Beta" : "⭐ Ativar Badge Beta",
+                            systemImage: "star.circle"
+                        )
+                    }
                 } header: {
                     Label("Debug", systemImage: "hammer.fill")
                 } footer: {
@@ -312,6 +343,73 @@ struct SettingsView: View {
                 Text("Isso irá remover PERMANENTEMENTE todos os seus dados: curtidas (\(viewModel.likedList.count)), destaques (\(highlights.count)), anotações (\(notes.count)) e pastas (\(folders.count)). Esta ação não pode ser desfeita!")
             }
         }
+    }
+    
+    // MARK: - Views
+    
+    private var betaTesterBadgeCard: some View {
+        HStack(spacing: 16) {
+            // Ícone animado com gradiente
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [.purple, .blue, .pink],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 60, height: 60)
+                    .shadow(color: .purple.opacity(0.3), radius: 10, x: 0, y: 5)
+                
+                Image(systemName: "star.fill")
+                    .font(.title2)
+                    .foregroundColor(.white)
+            }
+            
+            // Conteúdo
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    Text("Beta Tester")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                    
+                    Image(systemName: "checkmark.seal.fill")
+                        .foregroundColor(.blue)
+                        .font(.body)
+                }
+            }
+            
+            Spacer()
+            
+            // Sparkles decoration
+            Image(systemName: "sparkles")
+                .font(.title2)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.purple, .pink],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+        }
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color("CardColor"))
+                .shadow(color: .black.opacity(0.1), radius: 15, x: 0, y: 5)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(
+                    LinearGradient(
+                        colors: [.purple.opacity(0.3), .blue.opacity(0.3), .pink.opacity(0.3)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        )
     }
     
     // MARK: - Functions
