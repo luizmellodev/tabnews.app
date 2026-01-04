@@ -82,7 +82,7 @@ struct PostHeader: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     
-                    // Tabcoins + botões de voto (inline, discreto)
+                    // Tabcoins + botões de voto (inline, mas com área de toque adequada)
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .font(.caption2)
@@ -92,30 +92,36 @@ struct PostHeader: View {
                     }
                     .foregroundStyle(displayTabcoins > 0 ? .orange : .secondary)
                     
-                    // Botões de voto (só aparecem se não votou)
+                    // Botões de voto com área de toque adequada (44x44)
                     if !hasVoted && !isVoting {
                         Button {
                             handleVote(transactionType: "credit")
                         } label: {
-                            Image(systemName: "arrow.up")
-                                .font(.caption)
+                            Image(systemName: "arrow.up.circle")
+                                .font(.body)
                                 .foregroundStyle(.secondary)
+                                .frame(width: 32, height: 32)
+                                .contentShape(Rectangle())
                         }
+                        .buttonStyle(.plain)
                         
                         Button {
                             handleVote(transactionType: "debit")
                         } label: {
-                            Image(systemName: "arrow.down")
-                                .font(.caption)
+                            Image(systemName: "arrow.down.circle")
+                                .font(.body)
                                 .foregroundStyle(.secondary)
+                                .frame(width: 32, height: 32)
+                                .contentShape(Rectangle())
                         }
+                        .buttonStyle(.plain)
                     } else if isVoting {
                         ProgressView()
                             .controlSize(.mini)
                     } else if hasVoted {
-                        Image(systemName: "checkmark")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.body)
+                            .foregroundStyle(.green)
                     }
                 }
                 

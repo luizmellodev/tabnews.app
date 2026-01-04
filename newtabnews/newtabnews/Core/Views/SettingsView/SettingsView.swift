@@ -550,62 +550,61 @@ struct SettingsView: View {
                     }
                 }
             } else {
-                // Usuário não logado - Design minimalista estilo Uber/BeReal
-                VStack(spacing: 12) {
-                    // Card de login - super minimalista
-                    VStack(spacing: 12) {
+                // Usuário não logado - Design minimalista e discreto
+                VStack(spacing: 10) {
+                    // Icon minúsculo e info compacta
+                    HStack(spacing: 10) {
                         Circle()
                             .fill(Color.primary.opacity(0.1))
-                            .frame(width: 48, height: 48)
+                            .frame(width: 32, height: 32)
                             .overlay(
                                 Image(systemName: "person.fill")
-                                    .font(.title3)
-                                    .foregroundStyle(.primary)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             )
                         
-                        VStack(spacing: 4) {
-                            Text("Faça login")
-                                .font(.headline)
-                                .fontWeight(.semibold)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Não conectado")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
                             
-                            Text("Entre ou crie uma conta para comentar")
-                                .font(.subheadline)
+                            Text("Entre para comentar ou votar")
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center)
-                        }
-                    }
-                    .padding(.vertical, 20)
-                    .padding(.horizontal, 16)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
-                    
-                    // Botões de ação - estilo Uber/BeReal
-                    VStack(spacing: 8) {
-                        Button {
-                            showAuthSheet = true
-                        } label: {
-                            Text("Criar Conta")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
-                                .background(Color.primary)
-                                .foregroundStyle(Color("Background"))
-                                .cornerRadius(8)
                         }
                         
+                        Spacer()
+                    }
+                    .padding(12)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    
+                    // Botões compactos lado a lado
+                    HStack(spacing: 8) {
                         Button {
                             showAuthSheet = true
                         } label: {
                             Text("Entrar")
-                                .font(.subheadline)
+                                .font(.caption)
                                 .fontWeight(.medium)
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
-                                .background(Color(.systemGray6))
+                                .padding(.vertical, 8)
+                                .background(Color(.systemGray5))
                                 .foregroundStyle(.primary)
-                                .cornerRadius(8)
+                                .cornerRadius(6)
+                        }
+                        
+                        Button {
+                            showAuthSheet = true
+                        } label: {
+                            Text("Criar Conta")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .background(Color.primary)
+                                .foregroundStyle(Color("Background"))
+                                .cornerRadius(6)
                         }
                     }
                 }

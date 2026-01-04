@@ -11,11 +11,12 @@ struct PostHeaderView: View {
     let post: PostRequest
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             Text(post.title ?? "Título indisponível :/")
                 .padding(.top, 30)
-                .font(.title3)
-                .fontWeight(.semibold)
+                .font(.title2)
+                .fontWeight(.medium)
+                .lineSpacing(2)
         }
     }
 }
