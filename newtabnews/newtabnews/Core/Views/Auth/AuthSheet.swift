@@ -98,17 +98,21 @@ struct AuthSheet: View {
                             await handleAuth()
                         }
                     } label: {
-                        if isLoading {
-                            ProgressView()
-                                .tint(Color("Background"))
-                        } else {
-                            Text(mode == .login ? "Entrar" : "Criar Conta")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
+                        ZStack {
+                            if isLoading {
+                                ProgressView()
+                                    .tint(Color("Background"))
+                            } else {
+                                Text(mode == .login ? "Entrar" : "Criar Conta")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                            }
                         }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 48)
+                        .contentShape(Rectangle())
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
+                    .buttonStyle(.plain)
                     .background(isFormValid ? Color.primary : Color.gray)
                     .foregroundStyle(Color("Background"))
                     .cornerRadius(8)
