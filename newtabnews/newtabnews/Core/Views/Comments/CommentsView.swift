@@ -284,14 +284,16 @@ struct CommentsView: View {
                 )
                 print("✅ [CommentsView] Voto registrado com sucesso")
                 
-                // Aguardar um pouco e recarregar comentários
-                try? await Task.sleep(nanoseconds: 500_000_000)
-                await viewModel.refresh(user: user, slug: slug)
-                
-                // Notificar sucesso
+                // Notificar sucesso PRIMEIRO (para disparar o confete)
                 await MainActor.run {
                     completion(true)
                 }
+                
+                // Aguardar 2 segundos para o confete aparecer
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                
+                // DEPOIS recarregar comentários
+                await viewModel.refresh(user: user, slug: slug)
             } catch {
                 print("❌ [CommentsView] Erro ao votar: \(error)")
                 

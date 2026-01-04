@@ -52,6 +52,7 @@
 		791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */; };
 		791B1EBB2ED4CC9400B9143D /* SkeletonListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */; };
 		791B1F172ED4D10400B9143D /* HybridMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */; };
+		791CC1A92F0B134E00C8B38D /* VoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791CC1A82F0B134E00C8B38D /* VoteManager.swift */; };
 		791E87D82A4FD99B00C2F0B4 /* newtabnewsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791E87D72A4FD99B00C2F0B4 /* newtabnewsApp.swift */; };
 		791E87DA2A4FD99B00C2F0B4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791E87D92A4FD99B00C2F0B4 /* ContentView.swift */; };
 		791E87DC2A4FD99B00C2F0B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 791E87DB2A4FD99B00C2F0B4 /* Assets.xcassets */; };
@@ -219,6 +220,7 @@
 		791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonCard.swift; sourceTree = "<group>"; };
 		791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonListView.swift; sourceTree = "<group>"; };
 		791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridMarkdownView.swift; sourceTree = "<group>"; };
+		791CC1A82F0B134E00C8B38D /* VoteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteManager.swift; sourceTree = "<group>"; };
 		791E87D42A4FD99B00C2F0B4 /* newtabnews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newtabnews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		791E87D72A4FD99B00C2F0B4 /* newtabnewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newtabnewsApp.swift; sourceTree = "<group>"; };
 		791E87D92A4FD99B00C2F0B4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -668,6 +670,7 @@
 				79C7062E2D95E5E6005C26A7 /* ContentService.swift */,
 				79C7062C2D95E5E2005C26A7 /* ContentServiceProtocol.swift */,
 				7982B7742F01778100666726 /* BetaTesterService.swift */,
+				791CC1A82F0B134E00C8B38D /* VoteManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -964,6 +967,7 @@
 				79C7062F2D95E5E6005C26A7 /* ContentService.swift in Sources */,
 				799049E82A6C93D90050240C /* MainViewModel.swift in Sources */,
 				790AB0CB2ECEAF0500E443E6 /* Folder.swift in Sources */,
+				791CC1A92F0B134E00C8B38D /* VoteManager.swift in Sources */,
 				791584772EFC86BE00C69745 /* PostMetadataView.swift in Sources */,
 				791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */,
 				796D063E2F0AE4C50064A2BC /* CommentsView.swift in Sources */,

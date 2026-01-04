@@ -230,6 +230,7 @@ class AuthService: ObservableObject {
     
     func logout() {
         _ = keychainManager.clearAll()
+        VoteManager.shared.clearAllVotes() // Limpar votos ao deslogar
         
         DispatchQueue.main.async {
             self.isAuthenticated = false

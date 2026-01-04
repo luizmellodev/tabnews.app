@@ -21,23 +21,37 @@ struct CommentRow: View {
     
     private let maxDepth = 5
     private let indentWidth: CGFloat = 16
+    private let voteManager = VoteManager.shared
+    
+    init(comment: Comment, depth: Int, onReply: ((Comment) -> Void)? = nil, onVote: ((Comment, String, @escaping (Bool) -> Void) -> Void)? = nil) {
+        self.comment = comment
+        self.depth = depth
+        self.onReply = onReply
+        self.onVote = onVote
+        
+        // Verificar se já votou ao criar a view
+        if let commentId = comment.id {
+            _hasVoted = State(initialValue: VoteManager.shared.hasVoted(contentId: commentId))
+        }
+    }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Comentário principal
-            HStack(alignment: .top, spacing: 0) {
-                // Linha vertical de indentação
-                if depth > 0 {
-                    ForEach(0..<min(depth, maxDepth), id: \.self) { _ in
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .frame(width: 2)
-                            .padding(.leading, indentWidth - 2)
+        ZStack {
+            VStack(alignment: .leading, spacing: 0) {
+                // Comentário principal
+                HStack(alignment: .top, spacing: 0) {
+                    // Linha vertical de indentação
+                    if depth > 0 {
+                        ForEach(0..<min(depth, maxDepth), id: \.self) { _ in
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .frame(width: 2)
+                                .padding(.leading, indentWidth - 2)
+                        }
                     }
-                }
-                
-                // Conteúdo do comentário
-                VStack(alignment: .leading, spacing: 8) {
+                    
+                    // Conteúdo do comentário
+                    VStack(alignment: .leading, spacing: 8) {
                     // Header (autor, data, tabcoins)
                     HStack(spacing: 8) {
                         // Avatar placeholder
@@ -107,7 +121,7 @@ struct CommentRow: View {
                         if !hasVoted {
                             if !isVoting {
                                 HStack(spacing: 12) {
-                                // Upvote (Ache relevante) - com confete!
+                                // Upvote (Ache relevante)
                                 Button {
                                     handleVote(transactionType: "credit")
                                 } label: {
@@ -119,21 +133,6 @@ struct CommentRow: View {
                                     }
                                     .foregroundStyle(.green)
                                 }
-                                .particleEmitter(
-                                    configuration: ParticleSystemConfiguration(
-                                        particleCount: 30,
-                                        shapes: [.confetti, .star],
-                                        colors: [.green, .yellow, .orange],
-                                        minSize: 4,
-                                        maxSize: 8,
-                                        minVelocity: 100,
-                                        maxVelocity: 200,
-                                        gravity: 400,
-                                        lifetime: 2.0,
-                                        emissionAngle: -60...60
-                                    ),
-                                    isEmitting: $showConfetti
-                                )
                                     
                                     // Downvote (Não achei relevante)
                                     Button {
@@ -204,7 +203,30 @@ struct CommentRow: View {
                 }
             }
         }
+        
+        // Confete overlay
+        if showConfetti {
+            GeometryReader { geometry in
+                ParticleSystemView(
+                    configuration: ParticleSystemConfiguration(
+                        particleCount: 50,
+                        shapes: [.confetti],
+                        colors: [.red, .blue, .green, .yellow, .purple, .orange, .pink],
+                        minSize: 6,
+                        maxSize: 12,
+                        minVelocity: 200,
+                        maxVelocity: 400,
+                        gravity: 600,
+                        lifetime: 2.0,
+                        emissionAngle: -90...90
+                    ),
+                    origin: CGPoint(x: geometry.size.width / 2, y: 50)
+                )
+                .allowsHitTesting(false)
+            }
+        }
     }
+}
     
     // MARK: - Actions
     
@@ -224,6 +246,11 @@ struct CommentRow: View {
             
             if success {
                 hasVoted = true // Desabilita botões permanentemente
+                
+                // Marcar como votado persistentemente
+                if let commentId = comment.id {
+                    voteManager.markAsVoted(contentId: commentId)
+                }
                 
                 // 🎉 Disparar confete se for upvote e teve sucesso!
                 if transactionType == "credit" {
@@ -269,8 +296,7 @@ struct CommentRow: View {
                     children: nil
                 ),
                 depth: 0,
-                onReply: { _ in },
-                onVote: { _, _, completion in completion(true) }
+                onReply: { _ in }
             )
             
             Divider()
@@ -284,8 +310,7 @@ struct CommentRow: View {
             CommentRow(
                 comment: Comment.mockComment,
                 depth: 0,
-                onReply: { _ in },
-                onVote: { _, _, completion in completion(true) }
+                onReply: { _ in }
             )
             Divider()
         }

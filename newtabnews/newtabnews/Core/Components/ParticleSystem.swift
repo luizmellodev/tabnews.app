@@ -323,13 +323,25 @@ public struct ParticleEmitterModifier: ViewModifier {
             )
             .onPreferenceChange(ButtonPositionPreferenceKey.self) { position in
                 emitterOrigin = position
+                print("🎯 [ParticleEmitter] Origin atualizado: \(position)")
             }
             .overlay(
-                isEmitting ? ParticleSystemView(
-                    configuration: configuration,
-                    origin: emitterOrigin
-                ) : nil
+                Group {
+                    if isEmitting {
+                        ParticleSystemView(
+                            configuration: configuration,
+                            origin: emitterOrigin
+                        )
+                        .allowsHitTesting(false)
+                        .onAppear {
+                            print("✨ [ParticleEmitter] Confete APARECEU!")
+                        }
+                    }
+                }
             )
+            .onChange(of: isEmitting) { oldValue, newValue in
+                print("🔄 [ParticleEmitter] isEmitting mudou: \(oldValue) -> \(newValue)")
+            }
     }
 }
 
