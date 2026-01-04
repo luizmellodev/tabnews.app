@@ -26,6 +26,7 @@ struct SettingsView: View {
     @StateObject private var authService = AuthService.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
     @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
+    @AppStorage("isBetaTester") private var isBetaTester = false
     
     var body: some View {
         NavigationStack {
@@ -300,13 +301,47 @@ struct SettingsView: View {
                     // Beta Tester Debug
                     Button {
                         withAnimation {
-                            BetaTesterService.shared.forceBetaTesterStatus(!BetaTesterService.shared.isBetaTester)
+                            isBetaTester.toggle()
+                            // Também atualizar no service para manter sincronizado
+                            BetaTesterService.shared.forceBetaTesterStatus(isBetaTester)
                         }
                     } label: {
-                        Label(
-                            BetaTesterService.shared.isBetaTester ? "⭐ Remover Badge Beta" : "⭐ Ativar Badge Beta",
-                            systemImage: "star.circle"
-                        )
+                        HStack {
+                            HStack(spacing: 8) {
+                                Image(systemName: "trophy.fill")
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.purple, .blue],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                Text(isBetaTester ? "Remover Badge Beta" : "Ativar Badge Beta")
+                            }
+                            
+                            Spacer()
+                            
+                            if isBetaTester {
+                                HStack(spacing: 3) {
+                                    Image(systemName: "trophy.fill")
+                                        .font(.system(size: 9))
+                                    Text("BETA")
+                                        .font(.system(size: 8, weight: .bold))
+                                        .tracking(0.5)
+                                }
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 3)
+                                .background(
+                                    LinearGradient(
+                                        colors: [.purple, .blue],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(6)
+                            }
+                        }
                     }
                 } header: {
                     Label("Debug", systemImage: "hammer.fill")
@@ -392,31 +427,56 @@ struct SettingsView: View {
                                             .foregroundColor(.primary)
                                     )
                                 
-                                // Badge Beta Tester
-                                if BetaTesterService.shared.isBetaTester {
-                                    Circle()
-                                        .fill(Color.primary)
-                                        .frame(width: 16, height: 16)
-                                        .overlay(
-                                            Image(systemName: "star.fill")
-                                                .font(.system(size: 8))
-                                                .foregroundColor(Color("Background"))
-                                        )
-                                        .offset(x: 2, y: 2)
+                                // Badge Beta Tester no avatar - gradiente roxo/azul
+                                if isBetaTester {
+                                    ZStack {
+                                        Circle()
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [.purple, .blue],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .frame(width: 18, height: 18)
+                                            .shadow(color: .purple.opacity(0.4), radius: 2, x: 0, y: 1)
+                                        
+                                        Image(systemName: "trophy.fill")
+                                            .font(.system(size: 9))
+                                            .foregroundColor(.white)
+                                    }
+                                    .offset(x: 2, y: 2)
                                 }
                             }
                             
                             // Username e badge
                             VStack(alignment: .leading, spacing: 2) {
-                                HStack(spacing: 4) {
+                                HStack(spacing: 6) {
                                     Text("@\(user.username)")
                                         .font(.headline)
                                         .fontWeight(.semibold)
                                     
-                                    if BetaTesterService.shared.isBetaTester {
-                                        Image(systemName: "checkmark.seal.fill")
-                                            .font(.caption)
-                                            .foregroundColor(.primary)
+                                    // Badge Beta Tester - design de troféu
+                                    if isBetaTester {
+                                        HStack(spacing: 3) {
+                                            Image(systemName: "trophy.fill")
+                                                .font(.system(size: 10))
+                                            Text("BETA")
+                                                .font(.system(size: 9, weight: .bold))
+                                                .tracking(0.5)
+                                        }
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 3)
+                                        .background(
+                                            LinearGradient(
+                                                colors: [.purple, .blue],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                        .cornerRadius(6)
+                                        .shadow(color: .purple.opacity(0.3), radius: 3, x: 0, y: 1)
                                     }
                                 }
                                 

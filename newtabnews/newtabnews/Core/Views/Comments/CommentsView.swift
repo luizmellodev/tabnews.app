@@ -21,8 +21,7 @@ struct CommentsView: View {
     private let previewCount = 2
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Conteúdo principal
+        ScrollView {
             Group {
                 switch viewModel.state {
                 case .loading:
@@ -45,7 +44,8 @@ struct CommentsView: View {
             .task {
                 await viewModel.fetchComments(user: user, slug: slug)
             }
-            
+        }
+        .safeAreaInset(edge: .bottom) {
             // Floating Comment Input - sempre visível no bottom
             FloatingCommentInput(
                 parentId: replyingToComment?.id ?? postId,
@@ -242,10 +242,6 @@ struct CommentsView: View {
                     .padding(.top, 8)
                 }
             }
-            
-            // Padding no final para não ficar escondido atrás do floating input
-            Color.clear
-                .frame(height: 100)
         }
         .sheet(isPresented: $showAuthSheet) {
             AuthSheet()
