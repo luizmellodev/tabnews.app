@@ -50,6 +50,11 @@ class DigestViewModel: ObservableObject {
                 digests[index].body = "Erro ao carregar conteúdo"
             }
         }
+        
+        // Sincronizar o digest mais recente com os widgets
+        if let latestDigest = digests.first {
+            WidgetSyncManager.shared.syncWeekDigest(latestDigest)
+        }
     }
 }
 

@@ -26,6 +26,8 @@ struct ListDetailView: View {
     @State private var showAudioControls = false
     @Query private var highlights: [Highlight]
     
+    @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
+    
     private var postHighlights: [Highlight] {
         highlights.filter { $0.postId == post.id }
     }
@@ -52,7 +54,9 @@ struct ListDetailView: View {
                     .presentationDragIndicator(.hidden)
             }
             
-            readOnTabNewsButton
+            if showReadOnTabNewsButton {
+                readOnTabNewsButton
+            }
         }
         .onDisappear {
             ttsManager.stop()

@@ -35,23 +35,6 @@ struct DigestDetailsView: View {
                         .foregroundStyle(.secondary)
                 }
                 
-                // Botão "Ler no TabNews"
-                if let content = digest {
-                    Link(destination: URL(string: "https://www.tabnews.com.br/\(content.ownerUsername ?? "")/\(content.slug ?? "")")!) {
-                        HStack {
-                            Image(systemName: "safari")
-                            Text("Ler no TabNews")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(Color.blue)
-                        .cornerRadius(12)
-                    }
-                    .padding(.horizontal)
-                }
-                
                 // Botão de CTA (Curtir/Salvar)
                 if let content = digest {
                     PostCTAView(post: content)

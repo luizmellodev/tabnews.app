@@ -116,6 +116,9 @@ struct ContentView: View {
                 }
             }
         }
+        .onOpenURL { url in
+            handleDeepLink(url: url)
+        }
     }
     
     // MARK: - Views
@@ -297,6 +300,53 @@ struct ContentView: View {
     }
     
     // MARK: - Deep Link
+    
+    /// Handler para URLs do tipo tabnews://
+    private func handleDeepLink(url: URL) {
+        print("🔗 Deep link recebido: \(url)")
+        
+        guard url.scheme == "tabnews" else {
+            print("⚠️ Scheme inválido: \(url.scheme ?? "nil")")
+            return
+        }
+        
+        let host = url.host ?? ""
+        let pathComponents = url.pathComponents.filter { $0 != "/" }
+        
+        print("📍 Host: \(host), Path: \(pathComponents)")
+        
+        switch host {
+        case "home":
+            selectedTab = .home
+            
+        case "newsletter":
+            selectedTab = .newsletter
+            
+        case "digest":
+            showDigestSheet = true
+            
+        case "post":
+            // URL: tabnews://post/username/slug
+            guard pathComponents.count >= 2 else {
+                print("⚠️ URL de post inválida: faltam parâmetros")
+                return
+            }
+            
+            let owner = pathComponents[0]
+            let slug = pathComponents[1]
+            
+            print("📰 Abrindo post: \(owner)/\(slug)")
+            
+            selectedTab = .home
+            Task {
+                await openPost(owner: owner, slug: slug)
+            }
+            
+        default:
+            print("⚠️ Host desconhecido: \(host)")
+        }
+    }
+    
     @MainActor
     private func openPost(owner: String, slug: String) async {
         isLoadingPost = true

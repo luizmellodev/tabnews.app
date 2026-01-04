@@ -420,5 +420,3 @@ struct HighlightableTextView: UIViewRepresentable {
         }
     }
 }
-
-

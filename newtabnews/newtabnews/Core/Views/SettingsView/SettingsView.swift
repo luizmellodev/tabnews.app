@@ -22,6 +22,7 @@ struct SettingsView: View {
     @State private var showingClearCache = false
     @State private var showingClearLibrary = false
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
+    @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
     
     var body: some View {
         NavigationStack {
@@ -58,8 +59,19 @@ struct SettingsView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        
+                        Toggle(isOn: $showReadOnTabNewsButton) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Botão 'Ler no TabNews'")
+                                Text("Mostra botão flutuante para abrir no Safari")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     } header: {
                         Label("Leitura", systemImage: "book")
+                    } footer: {
+                        Text("O botão flutuante permite abrir o post no navegador. Desativado por padrão para melhor experiência nativa.")
                     }
                 
                 // Estatísticas
