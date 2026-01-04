@@ -60,7 +60,7 @@ struct DigestView: View {
     
     private var headerView: some View {
         VStack(spacing: 8) {
-            Text("🔥 Resumo Semanal")
+            Text("Resumo Semanal")
                 .font(.largeTitle)
                 .fontWeight(.bold)
             

@@ -132,19 +132,14 @@ struct CommentsView: View {
     
     private var commentsListView: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Header com contador
-            HStack(spacing: 8) {
-                Image(systemName: "bubble.left.and.bubble.right.fill")
-                    .font(.title3)
-                    .foregroundStyle(.blue)
-                
+            // Header minimalista
+            HStack(spacing: 6) {
                 Text("\(viewModel.totalCommentsCount())")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.primary)
-                
-                Text(viewModel.totalCommentsCount() == 1 ? "Comentário" : "Comentários")
                     .font(.title3)
+                    .fontWeight(.semibold)
+                
+                Text(viewModel.totalCommentsCount() == 1 ? "comentário" : "comentários")
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
                 
                 Spacer()
@@ -155,7 +150,7 @@ struct CommentsView: View {
                     }
                 } label: {
                     Image(systemName: "arrow.clockwise")
-                        .font(.body)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
             }

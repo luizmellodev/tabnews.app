@@ -36,11 +36,25 @@ struct ListDetailView: View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    postHeader
-                    PostMetadataView(post: post)
-                    Divider()
+                    // Header unificado e minimalista
+                    PostHeader(
+                        post: post,
+                        postHighlights: postHighlights,
+                        isHighlightMode: $isHighlightMode,
+                        showingAddNote: $showingAddNote,
+                        showAudioControls: $showAudioControls
+                    )
                     
-                                    if isHighlightMode {
+                    // Controles de áudio (aparecem quando ativado)
+                    if showAudioControls {
+                        AudioControlsView(ttsManager: ttsManager, post: post)
+                            .padding(.top, 8)
+                    }
+                    
+                    Divider()
+                        .padding(.vertical, 8)
+                    
+                    if isHighlightMode {
                         HighlightModeIndicator()
                     }
                     
@@ -70,24 +84,6 @@ struct ListDetailView: View {
     }
     
     // MARK: - View Builders
-    
-    private var postHeader: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            PostHeaderView(post: post)
-            
-            PostActionsBar(
-                post: post,
-                postHighlights: postHighlights,
-                isHighlightMode: $isHighlightMode,
-                showingAddNote: $showingAddNote,
-                showAudioControls: $showAudioControls
-            )
-            
-            if showAudioControls {
-                AudioControlsView(ttsManager: ttsManager, post: post)
-                                        }
-                                    }
-                                }
     
     private var postContent: some View {
         VStack(alignment: .leading, spacing: 0) {
