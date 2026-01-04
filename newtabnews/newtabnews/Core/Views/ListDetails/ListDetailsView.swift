@@ -106,6 +106,14 @@ struct ListDetailView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             
             PostCTAView(post: post)
+            
+            // Seção de Comentários
+            if let username = post.ownerUsername, let slug = post.slug, let postId = post.id {
+                Divider()
+                    .padding(.vertical, 16)
+                
+                CommentsView(user: username, slug: slug, postId: postId)
+            }
         }
                     .padding(.bottom, 80)
                 }

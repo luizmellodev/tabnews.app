@@ -72,6 +72,18 @@
 		796D06312F0ADCA40064A2BC /* WidgetPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06302F0ADCA40064A2BC /* WidgetPost.swift */; };
 		796D06322F0ADCA40064A2BC /* WidgetPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06302F0ADCA40064A2BC /* WidgetPost.swift */; };
 		796D06332F0ADCA40064A2BC /* WidgetPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06302F0ADCA40064A2BC /* WidgetPost.swift */; };
+		796D06382F0AE4390064A2BC /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06372F0AE4390064A2BC /* Comment.swift */; };
+		796D06392F0AE4760064A2BC /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06372F0AE4390064A2BC /* Comment.swift */; };
+		796D063E2F0AE4C50064A2BC /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063B2F0AE4C50064A2BC /* CommentsView.swift */; };
+		796D063F2F0AE4C50064A2BC /* CommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */; };
+		796D06402F0AE4C50064A2BC /* CommentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063A2F0AE4C50064A2BC /* CommentRow.swift */; };
+		796D06432F0AE5960064A2BC /* AuthSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06412F0AE5960064A2BC /* AuthSheet.swift */; };
+		796D06462F0AE5B10064A2BC /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06452F0AE5B10064A2BC /* KeychainManager.swift */; };
+		796D06472F0AE5B10064A2BC /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06442F0AE5B10064A2BC /* AuthService.swift */; };
+		796D06492F0AE5F30064A2BC /* CommentComposeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */; };
+		796D064B2F0AE61C0064A2BC /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D064A2F0AE61C0064A2BC /* User.swift */; };
+		796D064D2F0AE8920064A2BC /* FloatingCommentInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D064C2F0AE8920064A2BC /* FloatingCommentInput.swift */; };
+		796D064F2F0AF3960064A2BC /* ParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D064E2F0AF3960064A2BC /* ParticleSystem.swift */; };
 		7982B7512F00B3CA00666726 /* DigestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74B2F00B3CA00666726 /* DigestCard.swift */; };
 		7982B7522F00B3CA00666726 /* DigestBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74A2F00B3CA00666726 /* DigestBannerView.swift */; };
 		7982B7532F00B3CA00666726 /* DigestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74F2F00B3CA00666726 /* DigestViewModel.swift */; };
@@ -223,6 +235,17 @@
 		796D05D82F0AC5610064A2BC /* WidgetSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSyncManager.swift; sourceTree = "<group>"; };
 		796D06122F0AC8830064A2BC /* TabNewsWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TabNewsWidgetsExtension.entitlements; sourceTree = "<group>"; };
 		796D06302F0ADCA40064A2BC /* WidgetPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPost.swift; sourceTree = "<group>"; };
+		796D06372F0AE4390064A2BC /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		796D063A2F0AE4C50064A2BC /* CommentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentRow.swift; sourceTree = "<group>"; };
+		796D063B2F0AE4C50064A2BC /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
+		796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewModel.swift; sourceTree = "<group>"; };
+		796D06412F0AE5960064A2BC /* AuthSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSheet.swift; sourceTree = "<group>"; };
+		796D06442F0AE5B10064A2BC /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		796D06452F0AE5B10064A2BC /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentComposeSheet.swift; sourceTree = "<group>"; };
+		796D064A2F0AE61C0064A2BC /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		796D064C2F0AE8920064A2BC /* FloatingCommentInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingCommentInput.swift; sourceTree = "<group>"; };
+		796D064E2F0AF3960064A2BC /* ParticleSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleSystem.swift; sourceTree = "<group>"; };
 		7982B74A2F00B3CA00666726 /* DigestBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestBannerView.swift; sourceTree = "<group>"; };
 		7982B74B2F00B3CA00666726 /* DigestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestCard.swift; sourceTree = "<group>"; };
 		7982B74C2F00B3CA00666726 /* DigestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestDetailsView.swift; sourceTree = "<group>"; };
@@ -477,6 +500,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		796D063D2F0AE4C50064A2BC /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */,
+				796D064C2F0AE8920064A2BC /* FloatingCommentInput.swift */,
+				796D063A2F0AE4C50064A2BC /* CommentRow.swift */,
+				796D063B2F0AE4C50064A2BC /* CommentsView.swift */,
+				796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */,
+			);
+			path = Comments;
+			sourceTree = "<group>";
+		};
+		796D06422F0AE5960064A2BC /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				796D06412F0AE5960064A2BC /* AuthSheet.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 		7982B7502F00B3CA00666726 /* Digest */ = {
 			isa = PBXGroup;
 			children = (
@@ -514,6 +557,7 @@
 				799049E92A6C94050050240C /* SearchBar.swift */,
 				799049F52A6C990E0050240C /* CardList.swift */,
 				79E727F02EFB9CE3007BF27A /* LoadingOverlayView.swift */,
+				796D064E2F0AF3960064A2BC /* ParticleSystem.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -532,6 +576,8 @@
 				799049F22A6C96130050240C /* ListView */,
 				799049E42A6C93C60050240C /* MainView */,
 				7982B7502F00B3CA00666726 /* Digest */,
+				796D063D2F0AE4C50064A2BC /* Comments */,
+				796D06422F0AE5960064A2BC /* Auth */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -613,6 +659,8 @@
 				79E728002EFB9FCC007BF27A /* NotificationHandler.swift */,
 				79E727F82EFB9E27007BF27A /* MockContentService.swift */,
 				79259D2E2EFB81FE004BC057 /* FirebasePushNotificationService.swift */,
+				796D06442F0AE5B10064A2BC /* AuthService.swift */,
+				796D06452F0AE5B10064A2BC /* KeychainManager.swift */,
 				796D05D82F0AC5610064A2BC /* WidgetSyncManager.swift */,
 				790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */,
 				790AB0D42ECEBE3A00E443E6 /* AppUsageTracker.swift */,
@@ -628,12 +676,14 @@
 			isa = PBXGroup;
 			children = (
 				79E727F32EFB9D25007BF27A /* AppTab.swift */,
+				796D06372F0AE4390064A2BC /* Comment.swift */,
 				796D06302F0ADCA40064A2BC /* WidgetPost.swift */,
 				790AB0CE2ECEAF2B00E443E6 /* Note.swift */,
 				790AB0CC2ECEAF1300E443E6 /* Highlight.swift */,
 				790AB0CA2ECEAF0500E443E6 /* Folder.swift */,
 				79C706392D95E766005C26A7 /* PostRequest.swift */,
 				7915848C2EFC903C00C69745 /* SavedPost.swift */,
+				796D064A2F0AE61C0064A2BC /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -829,6 +879,7 @@
 				790AB0EC2ECF673E00E443E6 /* Highlight.swift in Sources */,
 				7915848E2EFC903C00C69745 /* SavedPost.swift in Sources */,
 				790AB1172ECF69A800E443E6 /* TextToSpeechManager.swift in Sources */,
+				796D06392F0AE4760064A2BC /* Comment.swift in Sources */,
 				790AB1092ECF68D600E443E6 /* NetworkManagerProtocol.swift in Sources */,
 				790AB10A2ECF68E100E443E6 /* NetworkError.swift in Sources */,
 				790AB0EB2ECF673B00E443E6 /* Note.swift in Sources */,
@@ -845,14 +896,18 @@
 				790AB0D32ECEB9BE00E443E6 /* HighlightableTextView.swift in Sources */,
 				79C706402D9ADD26005C26A7 /* EmptyLikedListView.swift in Sources */,
 				796D06312F0ADCA40064A2BC /* WidgetPost.swift in Sources */,
+				796D06462F0AE5B10064A2BC /* KeychainManager.swift in Sources */,
+				796D06472F0AE5B10064A2BC /* AuthService.swift in Sources */,
 				7915847C2EFC86FC00C69745 /* AddNoteSheet.swift in Sources */,
 				79D7E37C2D81280100391C82 /* NewsletterDetailsView.swift in Sources */,
 				79904A082A731F910050240C /* HTMLView.swift in Sources */,
 				790AB0C42ECEAEB100E443E6 /* AddFolderSheet.swift in Sources */,
 				79C706282D95E528005C26A7 /* RequestBuilder.swift in Sources */,
+				796D064B2F0AE61C0064A2BC /* User.swift in Sources */,
 				79C706482D9AE477005C26A7 /* SocialView.swift in Sources */,
 				791584862EFC89F200C69745 /* UserFolderRow.swift in Sources */,
 				791584872EFC89F200C69745 /* EmptyLibraryView.swift in Sources */,
+				796D06432F0AE5960064A2BC /* AuthSheet.swift in Sources */,
 				791584882EFC89F200C69745 /* SpecialFolderRow.swift in Sources */,
 				791584892EFC89F200C69745 /* PostFileRow.swift in Sources */,
 				7915848A2EFC89F200C69745 /* ColorExtension.swift in Sources */,
@@ -881,7 +936,9 @@
 				790AB0D52ECEBE3A00E443E6 /* AppUsageTracker.swift in Sources */,
 				79C706122D95E485005C26A7 /* NetworkManager.swift in Sources */,
 				79C706462D9AE157005C26A7 /* NewsletterCard.swift in Sources */,
+				796D06382F0AE4390064A2BC /* Comment.swift in Sources */,
 				791E87D82A4FD99B00C2F0B4 /* newtabnewsApp.swift in Sources */,
+				796D064F2F0AF3960064A2BC /* ParticleSystem.swift in Sources */,
 				79E727F72EFB9DA2007BF27A /* MainTabView.swift in Sources */,
 				790AB0C82ECEAED600E443E6 /* FoldersView.swift in Sources */,
 				79C7064B2D9AFCE5005C26A7 /* OnboardingView.swift in Sources */,
@@ -902,11 +959,16 @@
 				79259D302EFB81FE004BC057 /* FirebasePushNotificationService.swift in Sources */,
 				79E727F22EFB9CE3007BF27A /* LoadingOverlayView.swift in Sources */,
 				799049E62A6C93D30050240C /* MainView.swift in Sources */,
+				796D06492F0AE5F30064A2BC /* CommentComposeSheet.swift in Sources */,
+				796D064D2F0AE8920064A2BC /* FloatingCommentInput.swift in Sources */,
 				79C7062F2D95E5E6005C26A7 /* ContentService.swift in Sources */,
 				799049E82A6C93D90050240C /* MainViewModel.swift in Sources */,
 				790AB0CB2ECEAF0500E443E6 /* Folder.swift in Sources */,
 				791584772EFC86BE00C69745 /* PostMetadataView.swift in Sources */,
 				791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */,
+				796D063E2F0AE4C50064A2BC /* CommentsView.swift in Sources */,
+				796D063F2F0AE4C50064A2BC /* CommentsViewModel.swift in Sources */,
+				796D06402F0AE4C50064A2BC /* CommentRow.swift in Sources */,
 				7915846F2EFC869B00C69745 /* AudioControlsView.swift in Sources */,
 				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
 				7982B7512F00B3CA00666726 /* DigestCard.swift in Sources */,

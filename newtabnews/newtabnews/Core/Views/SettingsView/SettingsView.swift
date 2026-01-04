@@ -21,21 +21,22 @@ struct SettingsView: View {
     
     @State private var showingClearCache = false
     @State private var showingClearLibrary = false
+    @State private var showAuthSheet = false
+    @State private var showLogoutAlert = false
+    @StateObject private var authService = AuthService.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
     @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
     
     var body: some View {
         NavigationStack {
             List {
-                // Badge Beta Tester - Seção especial no topo
-                if BetaTesterService.shared.isBetaTester {
-                    Section {
-                        betaTesterBadgeCard
-                    }
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
-                    .listRowSeparator(.hidden)
+                // Seção de Perfil/Conta
+                Section {
+                    profileSection
                 }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
+                .listRowSeparator(.hidden)
                 
                 // Aparência
                     Section {
@@ -290,7 +291,7 @@ struct SettingsView: View {
                     Toggle(isOn: $debugShowDigestBanner) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("🔥 Mostrar Banner de Digest")
-                            Text("Simula sábado para testar o banner")
+                            Text("Simula fim de semana para testar o banner")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -310,7 +311,7 @@ struct SettingsView: View {
                 } header: {
                     Label("Debug", systemImage: "hammer.fill")
                 } footer: {
-                    Text("Ferramentas de desenvolvimento para testes. O banner de Digest normalmente só aparece aos sábados.")
+                    Text("Ferramentas de desenvolvimento para testes. O banner de Digest normalmente só aparece nos fins de semana (sábado e domingo).")
                 }
                 #endif
                 
@@ -354,10 +355,203 @@ struct SettingsView: View {
             } message: {
                 Text("Isso irá remover PERMANENTEMENTE todos os seus dados: curtidas (\(viewModel.likedList.count)), destaques (\(highlights.count)), anotações (\(notes.count)) e pastas (\(folders.count)). Esta ação não pode ser desfeita!")
             }
+            .sheet(isPresented: $showAuthSheet) {
+                AuthSheet()
+            }
+            .alert("Sair da Conta", isPresented: $showLogoutAlert) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Sair", role: .destructive) {
+                    authService.logout()
+                }
+            } message: {
+                Text("Tem certeza que deseja sair da sua conta?")
+            }
         }
     }
     
     // MARK: - Views
+    
+    private var profileSection: some View {
+        Group {
+            if authService.isAuthenticated, let user = authService.currentUser {
+                // Usuário logado - Design minimalista estilo Uber/BeReal
+                VStack(spacing: 12) {
+                    // Card do perfil (não clicável!)
+                    VStack(spacing: 16) {
+                        // Avatar e username
+                        HStack(spacing: 12) {
+                            // Avatar com badge Beta se aplicável
+                            ZStack(alignment: .bottomTrailing) {
+                                Circle()
+                                    .fill(Color.primary.opacity(0.1))
+                                    .frame(width: 48, height: 48)
+                                    .overlay(
+                                        Text(String(user.username.prefix(1).uppercased()))
+                                            .font(.title3)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.primary)
+                                    )
+                                
+                                // Badge Beta Tester
+                                if BetaTesterService.shared.isBetaTester {
+                                    Circle()
+                                        .fill(Color.primary)
+                                        .frame(width: 16, height: 16)
+                                        .overlay(
+                                            Image(systemName: "star.fill")
+                                                .font(.system(size: 8))
+                                                .foregroundColor(Color("Background"))
+                                        )
+                                        .offset(x: 2, y: 2)
+                                }
+                            }
+                            
+                            // Username e badge
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack(spacing: 4) {
+                                    Text("@\(user.username)")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                    
+                                    if BetaTesterService.shared.isBetaTester {
+                                        Image(systemName: "checkmark.seal.fill")
+                                            .font(.caption)
+                                            .foregroundColor(.primary)
+                                    }
+                                }
+                                
+                                Text("TabNews")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        // Stats (TabCoins e TabCash) - horizontal compacto
+                        HStack(spacing: 24) {
+                            if let tabcoins = user.tabcoins {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "star.fill")
+                                        .font(.caption)
+                                        .foregroundStyle(.orange)
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        Text("\(tabcoins)")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                        Text("TabCoins")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            
+                            if let tabcash = user.tabcash {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "dollarsign.circle.fill")
+                                        .font(.caption)
+                                        .foregroundStyle(.green)
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        Text("\(tabcash)")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                        Text("TabCash")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .padding(16)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .allowsHitTesting(false) // Desabilita toques no card do perfil
+                    
+                    // Botão de Logout separado - minimalista
+                    Button {
+                        showLogoutAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                                .font(.subheadline)
+                            Text("Sair")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Spacer()
+                        }
+                        .foregroundStyle(.red)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                    }
+                }
+            } else {
+                // Usuário não logado - Design minimalista estilo Uber/BeReal
+                VStack(spacing: 12) {
+                    // Card de login - super minimalista
+                    VStack(spacing: 12) {
+                        Circle()
+                            .fill(Color.primary.opacity(0.1))
+                            .frame(width: 48, height: 48)
+                            .overlay(
+                                Image(systemName: "person.fill")
+                                    .font(.title3)
+                                    .foregroundStyle(.primary)
+                            )
+                        
+                        VStack(spacing: 4) {
+                            Text("Faça login")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            
+                            Text("Entre ou crie uma conta para comentar")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                    }
+                    .padding(.vertical, 20)
+                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    
+                    // Botões de ação - estilo Uber/BeReal
+                    VStack(spacing: 8) {
+                        Button {
+                            showAuthSheet = true
+                        } label: {
+                            Text("Criar Conta")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color.primary)
+                                .foregroundStyle(Color("Background"))
+                                .cornerRadius(8)
+                        }
+                        
+                        Button {
+                            showAuthSheet = true
+                        } label: {
+                            Text("Entrar")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color(.systemGray6))
+                                .foregroundStyle(.primary)
+                                .cornerRadius(8)
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     private var betaTesterBadgeCard: some View {
         HStack(spacing: 16) {
