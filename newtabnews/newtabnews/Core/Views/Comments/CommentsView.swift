@@ -11,7 +11,7 @@ struct CommentsView: View {
     let user: String
     let slug: String
     let postId: String
-    
+
     @State private var viewModel = CommentsViewModel()
     @State private var isExpanded: Bool = false
     @State private var replyingToComment: Comment?
@@ -20,33 +20,38 @@ struct CommentsView: View {
     
     private let previewCount = 2
     
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
     var body: some View {
         ScrollView {
-            Group {
+            VStack {
                 switch viewModel.state {
                 case .loading:
                     loadingView
-                    
+
                 case .requestSucceeded:
                     if viewModel.comments.isEmpty {
                         emptyStateView
                     } else {
                         commentsListView
                     }
-                    
+
                 case .requestFailed:
                     errorView
-                    
+
                 default:
                     Color.clear
                 }
             }
-            .task {
-                await viewModel.fetchComments(user: user, slug: slug)
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .scrollDismissesKeyboard(.interactively)
+        .task {
+            await viewModel.fetchComments(user: user, slug: slug)
         }
         .safeAreaInset(edge: .bottom) {
-            // Floating Comment Input - sempre visível no bottom
             FloatingCommentInput(
                 parentId: replyingToComment?.id ?? postId,
                 replyingTo: replyingToComment?.ownerUsername,

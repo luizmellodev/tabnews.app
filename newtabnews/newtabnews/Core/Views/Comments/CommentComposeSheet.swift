@@ -18,6 +18,7 @@ struct CommentComposeSheet: View {
     @State private var isPosting: Bool = false
     @State private var errorMessage: String?
     @State private var showAuthSheet: Bool = false
+    @State private var isPreviewMode: Bool = false
     
     @FocusState private var isTextFieldFocused: Bool
     
@@ -28,29 +29,58 @@ struct CommentComposeSheet: View {
                     userInfoView(user: user)
                 }
                 
-                TextEditor(text: $commentText)
-                    .focused($isTextFieldFocused)
-                    .padding()
-                    .frame(minHeight: 150)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                            Button("Fechar") {
-                                isTextFieldFocused = false
-                            }
+                Picker("", selection: $isPreviewMode) {
+                    Text("Escrever").tag(false)
+                    Text("Visualizar").tag(true)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                
+                if isPreviewMode {
+                    ScrollView {
+                        if commentText.isEmpty {
+                            Text("Nada para visualizar")
+                                .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                        } else {
+                            Text(.init(commentText))
+                                .textSelection(.enabled)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
                         }
                     }
-                    .overlay(
-                        Group {
-                            if commentText.isEmpty {
-                                Text("Escreva seu comentário...")
-                                    .foregroundStyle(.secondary)
-                                    .padding()
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                                    .allowsHitTesting(false)
+                    .frame(minHeight: 150, maxHeight: 300)
+                } else {
+                    VStack(spacing: 0) {
+                        markdownToolbar
+                        
+                        TextEditor(text: $commentText)
+                            .focused($isTextFieldFocused)
+                            .padding()
+                            .frame(minHeight: 150, maxHeight: 300)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Fechar") {
+                                        isTextFieldFocused = false
+                                    }
+                                }
                             }
-                        }
-                    )
+                            .overlay(
+                                Group {
+                                    if commentText.isEmpty {
+                                        Text("Escreva seu comentário em Markdown...")
+                                            .foregroundStyle(.secondary)
+                                            .padding()
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                            .allowsHitTesting(false)
+                                    }
+                                }
+                            )
+                    }
+                }
                 
                 Divider()
                 
@@ -69,8 +99,15 @@ struct CommentComposeSheet: View {
                 }
                 
                 // Character Count
-                HStack {
+                HStack(spacing: 12) {
                     Text("\(commentText.count) caracteres")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    
+                    Text("•")
+                        .foregroundStyle(.secondary)
+                    
+                    Text("\(commentText.components(separatedBy: "\n").count) linhas")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     
@@ -122,6 +159,39 @@ struct CommentComposeSheet: View {
     }
     
     // MARK: - Subviews
+    
+    private var markdownToolbar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                MarkdownButton(icon: "bold", label: "Bold") {
+                    insertMarkdown(prefix: "**", suffix: "**", placeholder: "texto")
+                }
+                
+                MarkdownButton(icon: "italic", label: "Italic") {
+                    insertMarkdown(prefix: "*", suffix: "*", placeholder: "texto")
+                }
+                
+                MarkdownButton(icon: "link", label: "Link") {
+                    insertMarkdown(prefix: "[", suffix: "](url)", placeholder: "texto")
+                }
+                
+                MarkdownButton(icon: "chevron.left.forwardslash.chevron.right", label: "Code") {
+                    insertMarkdown(prefix: "`", suffix: "`", placeholder: "código")
+                }
+                
+                MarkdownButton(icon: "text.quote", label: "Quote") {
+                    insertMarkdown(prefix: "> ", suffix: "", placeholder: "citação")
+                }
+                
+                MarkdownButton(icon: "list.bullet", label: "Lista") {
+                    insertMarkdown(prefix: "- ", suffix: "", placeholder: "item")
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+        }
+        .background(Color(.systemGray6))
+    }
     
     private func userInfoView(user: User) -> some View {
         HStack(spacing: 12) {
@@ -191,6 +261,44 @@ struct CommentComposeSheet: View {
                 let impact = UINotificationFeedbackGenerator()
                 impact.notificationOccurred(.error)
             }
+        }
+    }
+    
+    // MARK: - Markdown Helpers
+    
+    private func insertMarkdown(prefix: String, suffix: String, placeholder: String) {
+        let selectedRange = commentText.isEmpty ? commentText.startIndex..<commentText.endIndex : commentText.startIndex..<commentText.endIndex
+        let newText = prefix + placeholder + suffix
+        
+        if commentText.isEmpty {
+            commentText = newText
+        } else {
+            commentText += "\n" + newText
+        }
+        
+        isTextFieldFocused = true
+    }
+}
+
+// MARK: - Markdown Button
+
+struct MarkdownButton: View {
+    let icon: String
+    let label: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 16))
+                Text(label)
+                    .font(.system(size: 10))
+            }
+            .foregroundStyle(.primary)
+            .frame(width: 60, height: 50)
+            .background(Color(.systemBackground))
+            .cornerRadius(8)
         }
     }
 }
