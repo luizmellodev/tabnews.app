@@ -90,4 +90,20 @@ class ContentService: ContentServiceProtocol {
             throw error
         }
     }
+    
+    func getComments(user: String, slug: String) async throws -> [Comment] {
+        do {
+            return try await networkManager.sendRequest(
+                "/contents/\(user)/\(slug)/children",
+                method: "GET",
+                parameters: nil,
+                authentication: nil,
+                token: nil,
+                body: nil
+            ) as [Comment]
+        } catch {
+            Logger.error("Comments fetch error: \(error.localizedDescription)")
+            throw error
+        }
+    }
 }

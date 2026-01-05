@@ -26,6 +26,8 @@ struct ListDetailView: View {
     @State private var showAudioControls = false
     @Query private var highlights: [Highlight]
     
+    @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
+    
     private var postHighlights: [Highlight] {
         highlights.filter { $0.postId == post.id }
     }
@@ -34,11 +36,25 @@ struct ListDetailView: View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    postHeader
-                    PostMetadataView(post: post)
-                    Divider()
+                    // Header unificado e minimalista
+                    PostHeader(
+                        post: post,
+                        postHighlights: postHighlights,
+                        isHighlightMode: $isHighlightMode,
+                        showingAddNote: $showingAddNote,
+                        showAudioControls: $showAudioControls
+                    )
                     
-                                    if isHighlightMode {
+                    // Controles de áudio (aparecem quando ativado)
+                    if showAudioControls {
+                        AudioControlsView(ttsManager: ttsManager, post: post)
+                            .padding(.top, 8)
+                    }
+                    
+                    Divider()
+                        .padding(.vertical, 8)
+                    
+                    if isHighlightMode {
                         HighlightModeIndicator()
                     }
                     
@@ -52,7 +68,9 @@ struct ListDetailView: View {
                     .presentationDragIndicator(.hidden)
             }
             
-            readOnTabNewsButton
+            if showReadOnTabNewsButton {
+                readOnTabNewsButton
+            }
         }
         .onDisappear {
             ttsManager.stop()
@@ -66,24 +84,6 @@ struct ListDetailView: View {
     }
     
     // MARK: - View Builders
-    
-    private var postHeader: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            PostHeaderView(post: post)
-            
-            PostActionsBar(
-                post: post,
-                postHighlights: postHighlights,
-                isHighlightMode: $isHighlightMode,
-                showingAddNote: $showingAddNote,
-                showAudioControls: $showAudioControls
-            )
-            
-            if showAudioControls {
-                AudioControlsView(ttsManager: ttsManager, post: post)
-                                        }
-                                    }
-                                }
     
     private var postContent: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -102,6 +102,14 @@ struct ListDetailView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             
             PostCTAView(post: post)
+            
+            // Seção de Comentários
+            if let username = post.ownerUsername, let slug = post.slug, let postId = post.id {
+                Divider()
+                    .padding(.vertical, 16)
+                
+                CommentsView(user: username, slug: slug, postId: postId)
+            }
         }
                     .padding(.bottom, 80)
                 }

@@ -19,7 +19,6 @@ class FirebasePushNotificationService {
     
     private init() {}
     
-    /// Salva o device token no Firestore
     func saveDeviceToken(_ token: String) {
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
         
@@ -32,39 +31,29 @@ class FirebasePushNotificationService {
             "updatedAt": FieldValue.serverTimestamp()
         ]
         
-        // Usar o token como document ID para evitar duplicatas
         db.collection(collectionName)
             .document(token)
             .setData(tokenData, merge: true) { error in
                 if let error = error {
-                    print("❌ Erro ao salvar token no Firestore: \(error.localizedDescription)")
-                } else {
-                    print("✅ Token salvo no Firestore com sucesso!")
+                    print("❌ Erro ao salvar token: \(error.localizedDescription)")
                 }
             }
     }
     
-    /// Remove o device token do Firestore (quando o usuário desinstala ou desabilita notificações)
     func removeDeviceToken() {
         Messaging.messaging().token { token, error in
-            guard let token = token, error == nil else {
-                print("❌ Erro ao obter token para remoção: \(error?.localizedDescription ?? "unknown")")
-                return
-            }
+            guard let token = token, error == nil else { return }
             
             self.db.collection(self.collectionName)
                 .document(token)
                 .delete { error in
                     if let error = error {
-                        print("❌ Erro ao remover token do Firestore: \(error.localizedDescription)")
-                    } else {
-                        print("✅ Token removido do Firestore com sucesso!")
+                        print("❌ Erro ao remover token: \(error.localizedDescription)")
                     }
                 }
         }
     }
     
-    /// Verifica se o usuário tem permissão para notificações
     func checkNotificationPermission(completion: @escaping (Bool) -> Void) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             DispatchQueue.main.async {

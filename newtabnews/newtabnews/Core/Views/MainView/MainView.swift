@@ -23,7 +23,7 @@ struct MainView: View {
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
     @State private var showDigestSheet = false
     
-    // Verifica se é sábado (ou modo debug ativado)
+    // Verifica se é fim de semana - sábado ou domingo (ou modo debug ativado)
     private var shouldShowDigestBanner: Bool {
         #if DEBUG
         if debugShowDigestBanner {
@@ -33,7 +33,7 @@ struct MainView: View {
         
         let calendar = Calendar.current
         let weekday = calendar.component(.weekday, from: Date())
-        return weekday == 7 // 7 = Sábado
+        return weekday == 7 || weekday == 1 // 7 = Sábado, 1 = Domingo
     }
     
     var body: some View {

@@ -24,6 +24,14 @@ struct RequestBuilder {
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
+        if let token = token {
+            if let authentication = authentication {
+                request.setValue(token, forHTTPHeaderField: authentication)
+            } else {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+        }
+        
         if let body {
             request.httpBody = body
         } else if let parameters = parameters, httpMethod != "GET" {

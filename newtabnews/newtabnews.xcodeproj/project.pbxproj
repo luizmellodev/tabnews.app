@@ -52,6 +52,8 @@
 		791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */; };
 		791B1EBB2ED4CC9400B9143D /* SkeletonListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */; };
 		791B1F172ED4D10400B9143D /* HybridMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */; };
+		791CC1A92F0B134E00C8B38D /* VoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791CC1A82F0B134E00C8B38D /* VoteManager.swift */; };
+		791CC1AB2F0B141000C8B38D /* PostHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791CC1AA2F0B141000C8B38D /* PostHeader.swift */; };
 		791E87D82A4FD99B00C2F0B4 /* newtabnewsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791E87D72A4FD99B00C2F0B4 /* newtabnewsApp.swift */; };
 		791E87DA2A4FD99B00C2F0B4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791E87D92A4FD99B00C2F0B4 /* ContentView.swift */; };
 		791E87DC2A4FD99B00C2F0B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 791E87DB2A4FD99B00C2F0B4 /* Assets.xcassets */; };
@@ -63,6 +65,27 @@
 		79259E8D2EFB83BD004BC057 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 79259E8B2EFB82FB004BC057 /* GoogleService-Info.plist */; };
 		794863862B5B55ED009AA720 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794863852B5B55ED009AA720 /* GameController.swift */; };
 		795261722A7B0B6D001FD010 /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795261712A7B0B6D001FD010 /* NewsletterView.swift */; };
+		796D05B22F0AC28C0064A2BC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 796D05B12F0AC28C0064A2BC /* WidgetKit.framework */; };
+		796D05B42F0AC28C0064A2BC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 796D05B32F0AC28C0064A2BC /* SwiftUI.framework */; };
+		796D05D92F0AC5610064A2BC /* WidgetSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D05D82F0AC5610064A2BC /* WidgetSyncManager.swift */; };
+		796D05DB2F0AC5610064A2BC /* WidgetSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D05D82F0AC5610064A2BC /* WidgetSyncManager.swift */; };
+		796D060F2F0AC72D0064A2BC /* PostRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C706392D95E766005C26A7 /* PostRequest.swift */; };
+		796D06272F0AD7760064A2BC /* TabNewsWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 796D05AF2F0AC28C0064A2BC /* TabNewsWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		796D06312F0ADCA40064A2BC /* WidgetPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06302F0ADCA40064A2BC /* WidgetPost.swift */; };
+		796D06322F0ADCA40064A2BC /* WidgetPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06302F0ADCA40064A2BC /* WidgetPost.swift */; };
+		796D06332F0ADCA40064A2BC /* WidgetPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06302F0ADCA40064A2BC /* WidgetPost.swift */; };
+		796D06382F0AE4390064A2BC /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06372F0AE4390064A2BC /* Comment.swift */; };
+		796D06392F0AE4760064A2BC /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06372F0AE4390064A2BC /* Comment.swift */; };
+		796D063E2F0AE4C50064A2BC /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063B2F0AE4C50064A2BC /* CommentsView.swift */; };
+		796D063F2F0AE4C50064A2BC /* CommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */; };
+		796D06402F0AE4C50064A2BC /* CommentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063A2F0AE4C50064A2BC /* CommentRow.swift */; };
+		796D06432F0AE5960064A2BC /* AuthSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06412F0AE5960064A2BC /* AuthSheet.swift */; };
+		796D06462F0AE5B10064A2BC /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06452F0AE5B10064A2BC /* KeychainManager.swift */; };
+		796D06472F0AE5B10064A2BC /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06442F0AE5B10064A2BC /* AuthService.swift */; };
+		796D06492F0AE5F30064A2BC /* CommentComposeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */; };
+		796D064B2F0AE61C0064A2BC /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D064A2F0AE61C0064A2BC /* User.swift */; };
+		796D064D2F0AE8920064A2BC /* FloatingCommentInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D064C2F0AE8920064A2BC /* FloatingCommentInput.swift */; };
+		796D064F2F0AF3960064A2BC /* ParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D064E2F0AF3960064A2BC /* ParticleSystem.swift */; };
 		7982B7512F00B3CA00666726 /* DigestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74B2F00B3CA00666726 /* DigestCard.swift */; };
 		7982B7522F00B3CA00666726 /* DigestBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74A2F00B3CA00666726 /* DigestBannerView.swift */; };
 		7982B7532F00B3CA00666726 /* DigestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B74F2F00B3CA00666726 /* DigestViewModel.swift */; };
@@ -125,6 +148,20 @@
 			remoteGlobalIDString = 790AB0DB2ECF66FF00E443E6;
 			remoteInfo = "TabNews Watch Watch App";
 		};
+		796D06282F0AD7760064A2BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 791E87CC2A4FD99B00C2F0B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 796D05AE2F0AC28C0064A2BC;
+			remoteInfo = TabNewsWidgetsExtension;
+		};
+		796D062B2F0AD77D0064A2BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 791E87CC2A4FD99B00C2F0B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 796D05AE2F0AC28C0064A2BC;
+			remoteInfo = TabNewsWidgetsExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -137,6 +174,17 @@
 				790AB0E62ECF670100E443E6 /* TabNews Watch Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		796D062A2F0AD7760064A2BC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				796D06272F0AD7760064A2BC /* TabNewsWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -173,6 +221,8 @@
 		791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonCard.swift; sourceTree = "<group>"; };
 		791B1EBA2ED4CC9400B9143D /* SkeletonListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonListView.swift; sourceTree = "<group>"; };
 		791B1F162ED4D10400B9143D /* HybridMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridMarkdownView.swift; sourceTree = "<group>"; };
+		791CC1A82F0B134E00C8B38D /* VoteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteManager.swift; sourceTree = "<group>"; };
+		791CC1AA2F0B141000C8B38D /* PostHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHeader.swift; sourceTree = "<group>"; };
 		791E87D42A4FD99B00C2F0B4 /* newtabnews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = newtabnews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		791E87D72A4FD99B00C2F0B4 /* newtabnewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newtabnewsApp.swift; sourceTree = "<group>"; };
 		791E87D92A4FD99B00C2F0B4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -183,6 +233,23 @@
 		79259E8B2EFB82FB004BC057 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		794863852B5B55ED009AA720 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		795261712A7B0B6D001FD010 /* NewsletterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterView.swift; sourceTree = "<group>"; };
+		796D05AF2F0AC28C0064A2BC /* TabNewsWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TabNewsWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		796D05B12F0AC28C0064A2BC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		796D05B32F0AC28C0064A2BC /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		796D05D82F0AC5610064A2BC /* WidgetSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSyncManager.swift; sourceTree = "<group>"; };
+		796D06122F0AC8830064A2BC /* TabNewsWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TabNewsWidgetsExtension.entitlements; sourceTree = "<group>"; };
+		796D06302F0ADCA40064A2BC /* WidgetPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPost.swift; sourceTree = "<group>"; };
+		796D06372F0AE4390064A2BC /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		796D063A2F0AE4C50064A2BC /* CommentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentRow.swift; sourceTree = "<group>"; };
+		796D063B2F0AE4C50064A2BC /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
+		796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewModel.swift; sourceTree = "<group>"; };
+		796D06412F0AE5960064A2BC /* AuthSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSheet.swift; sourceTree = "<group>"; };
+		796D06442F0AE5B10064A2BC /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		796D06452F0AE5B10064A2BC /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentComposeSheet.swift; sourceTree = "<group>"; };
+		796D064A2F0AE61C0064A2BC /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		796D064C2F0AE8920064A2BC /* FloatingCommentInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingCommentInput.swift; sourceTree = "<group>"; };
+		796D064E2F0AF3960064A2BC /* ParticleSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleSystem.swift; sourceTree = "<group>"; };
 		7982B74A2F00B3CA00666726 /* DigestBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestBannerView.swift; sourceTree = "<group>"; };
 		7982B74B2F00B3CA00666726 /* DigestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestCard.swift; sourceTree = "<group>"; };
 		7982B74C2F00B3CA00666726 /* DigestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestDetailsView.swift; sourceTree = "<group>"; };
@@ -240,6 +307,13 @@
 			);
 			target = 791E87D32A4FD99B00C2F0B4 /* newtabnews */;
 		};
+		796D06362F0ADF1A0064A2BC /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 796D05AE2F0AC28C0064A2BC /* TabNewsWidgetsExtension */;
+		};
 		79E728042EFBA133007BF27A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -251,6 +325,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		790AB0DD2ECF66FF00E443E6 /* TabNews Watch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (790AB1062ECF67FD00E443E6 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "TabNews Watch Watch App"; sourceTree = "<group>"; };
+		796D05B52F0AC28C0064A2BC /* TabNewsWidgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (796D06362F0ADF1A0064A2BC /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TabNewsWidgets; sourceTree = "<group>"; };
 		79C706412D9ADF07005C26A7 /* Notifications */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (79E728042EFBA133007BF27A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Notifications; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -268,6 +343,15 @@
 			files = (
 				79259D2B2EFB7D0F004BC057 /* FirebaseMessaging in Frameworks */,
 				79259D292EFB7D0F004BC057 /* FirebaseFirestore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		796D05AC2F0AC28C0064A2BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				796D05B42F0AC28C0064A2BC /* SwiftUI.framework in Frameworks */,
+				796D05B22F0AC28C0064A2BC /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +378,7 @@
 				791584722EFC86AE00C69745 /* PostActionsBar.swift */,
 				791584702EFC86A700C69745 /* HighlightModeIndicator.swift */,
 				7915846E2EFC869B00C69745 /* AudioControlsView.swift */,
+				791CC1AA2F0B141000C8B38D /* PostHeader.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -323,8 +408,11 @@
 		791E87CB2A4FD99B00C2F0B4 = {
 			isa = PBXGroup;
 			children = (
+				796D06122F0AC8830064A2BC /* TabNewsWidgetsExtension.entitlements */,
 				791E87D62A4FD99B00C2F0B4 /* newtabnews */,
 				790AB0DD2ECF66FF00E443E6 /* TabNews Watch Watch App */,
+				796D05B52F0AC28C0064A2BC /* TabNewsWidgets */,
+				796D05B02F0AC28C0064A2BC /* Frameworks */,
 				791E87D52A4FD99B00C2F0B4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -334,6 +422,7 @@
 			children = (
 				791E87D42A4FD99B00C2F0B4 /* newtabnews.app */,
 				790AB0DC2ECF66FF00E443E6 /* TabNews Watch Watch App.app */,
+				796D05AF2F0AC28C0064A2BC /* TabNewsWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -407,6 +496,35 @@
 			path = Newsletter;
 			sourceTree = "<group>";
 		};
+		796D05B02F0AC28C0064A2BC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				796D05B12F0AC28C0064A2BC /* WidgetKit.framework */,
+				796D05B32F0AC28C0064A2BC /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		796D063D2F0AE4C50064A2BC /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */,
+				796D064C2F0AE8920064A2BC /* FloatingCommentInput.swift */,
+				796D063A2F0AE4C50064A2BC /* CommentRow.swift */,
+				796D063B2F0AE4C50064A2BC /* CommentsView.swift */,
+				796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */,
+			);
+			path = Comments;
+			sourceTree = "<group>";
+		};
+		796D06422F0AE5960064A2BC /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				796D06412F0AE5960064A2BC /* AuthSheet.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 		7982B7502F00B3CA00666726 /* Digest */ = {
 			isa = PBXGroup;
 			children = (
@@ -444,6 +562,7 @@
 				799049E92A6C94050050240C /* SearchBar.swift */,
 				799049F52A6C990E0050240C /* CardList.swift */,
 				79E727F02EFB9CE3007BF27A /* LoadingOverlayView.swift */,
+				796D064E2F0AF3960064A2BC /* ParticleSystem.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -462,6 +581,8 @@
 				799049F22A6C96130050240C /* ListView */,
 				799049E42A6C93C60050240C /* MainView */,
 				7982B7502F00B3CA00666726 /* Digest */,
+				796D063D2F0AE4C50064A2BC /* Comments */,
+				796D06422F0AE5960064A2BC /* Auth */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -543,12 +664,16 @@
 				79E728002EFB9FCC007BF27A /* NotificationHandler.swift */,
 				79E727F82EFB9E27007BF27A /* MockContentService.swift */,
 				79259D2E2EFB81FE004BC057 /* FirebasePushNotificationService.swift */,
+				796D06442F0AE5B10064A2BC /* AuthService.swift */,
+				796D06452F0AE5B10064A2BC /* KeychainManager.swift */,
+				796D05D82F0AC5610064A2BC /* WidgetSyncManager.swift */,
 				790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */,
 				790AB0D42ECEBE3A00E443E6 /* AppUsageTracker.swift */,
 				790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */,
 				79C7062E2D95E5E6005C26A7 /* ContentService.swift */,
 				79C7062C2D95E5E2005C26A7 /* ContentServiceProtocol.swift */,
 				7982B7742F01778100666726 /* BetaTesterService.swift */,
+				791CC1A82F0B134E00C8B38D /* VoteManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -557,11 +682,14 @@
 			isa = PBXGroup;
 			children = (
 				79E727F32EFB9D25007BF27A /* AppTab.swift */,
+				796D06372F0AE4390064A2BC /* Comment.swift */,
+				796D06302F0ADCA40064A2BC /* WidgetPost.swift */,
 				790AB0CE2ECEAF2B00E443E6 /* Note.swift */,
 				790AB0CC2ECEAF1300E443E6 /* Highlight.swift */,
 				790AB0CA2ECEAF0500E443E6 /* Folder.swift */,
 				79C706392D95E766005C26A7 /* PostRequest.swift */,
 				7915848C2EFC903C00C69745 /* SavedPost.swift */,
+				796D064A2F0AE61C0064A2BC /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -619,11 +747,14 @@
 				791E87D12A4FD99B00C2F0B4 /* Frameworks */,
 				791E87D22A4FD99B00C2F0B4 /* Resources */,
 				790AB0E72ECF670100E443E6 /* Embed Watch Content */,
+				796D062A2F0AD7760064A2BC /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				790AB0E52ECF670100E443E6 /* PBXTargetDependency */,
+				796D06292F0AD7760064A2BC /* PBXTargetDependency */,
+				796D062C2F0AD77D0064A2BC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				79C706412D9ADF07005C26A7 /* Notifications */,
@@ -633,6 +764,28 @@
 			productReference = 791E87D42A4FD99B00C2F0B4 /* newtabnews.app */;
 			productType = "com.apple.product-type.application";
 		};
+		796D05AE2F0AC28C0064A2BC /* TabNewsWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 796D05C22F0AC28E0064A2BC /* Build configuration list for PBXNativeTarget "TabNewsWidgetsExtension" */;
+			buildPhases = (
+				796D05AB2F0AC28C0064A2BC /* Sources */,
+				796D05AC2F0AC28C0064A2BC /* Frameworks */,
+				796D05AD2F0AC28C0064A2BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				796D05B52F0AC28C0064A2BC /* TabNewsWidgets */,
+			);
+			name = TabNewsWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = TabNewsWidgetsExtension;
+			productReference = 796D05AF2F0AC28C0064A2BC /* TabNewsWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -640,7 +793,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2610;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					790AB0DB2ECF66FF00E443E6 = {
@@ -648,6 +801,9 @@
 					};
 					791E87D32A4FD99B00C2F0B4 = {
 						CreatedOnToolsVersion = 14.3.1;
+					};
+					796D05AE2F0AC28C0064A2BC = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -669,6 +825,7 @@
 			targets = (
 				791E87D32A4FD99B00C2F0B4 /* newtabnews */,
 				790AB0DB2ECF66FF00E443E6 /* TabNews Watch Watch App */,
+				796D05AE2F0AC28C0064A2BC /* TabNewsWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -696,6 +853,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		796D05AD2F0AC28C0064A2BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -714,12 +878,14 @@
 				79E727F52EFB9D25007BF27A /* AppTab.swift in Sources */,
 				790AB10B2ECF68E800E443E6 /* APIError.swift in Sources */,
 				790AB11C2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */,
+				796D06332F0ADCA40064A2BC /* WidgetPost.swift in Sources */,
 				790AB1072ECF68C200E443E6 /* NetworkManager.swift in Sources */,
 				790AB10F2ECF691A00E443E6 /* ContentService.swift in Sources */,
 				79E727F12EFB9CE3007BF27A /* LoadingOverlayView.swift in Sources */,
 				790AB0EC2ECF673E00E443E6 /* Highlight.swift in Sources */,
 				7915848E2EFC903C00C69745 /* SavedPost.swift in Sources */,
 				790AB1172ECF69A800E443E6 /* TextToSpeechManager.swift in Sources */,
+				796D06392F0AE4760064A2BC /* Comment.swift in Sources */,
 				790AB1092ECF68D600E443E6 /* NetworkManagerProtocol.swift in Sources */,
 				790AB10A2ECF68E100E443E6 /* NetworkError.swift in Sources */,
 				790AB0EB2ECF673B00E443E6 /* Note.swift in Sources */,
@@ -735,14 +901,19 @@
 				79C7062A2D95E534005C26A7 /* NetworkError.swift in Sources */,
 				790AB0D32ECEB9BE00E443E6 /* HighlightableTextView.swift in Sources */,
 				79C706402D9ADD26005C26A7 /* EmptyLikedListView.swift in Sources */,
+				796D06312F0ADCA40064A2BC /* WidgetPost.swift in Sources */,
+				796D06462F0AE5B10064A2BC /* KeychainManager.swift in Sources */,
+				796D06472F0AE5B10064A2BC /* AuthService.swift in Sources */,
 				7915847C2EFC86FC00C69745 /* AddNoteSheet.swift in Sources */,
 				79D7E37C2D81280100391C82 /* NewsletterDetailsView.swift in Sources */,
 				79904A082A731F910050240C /* HTMLView.swift in Sources */,
 				790AB0C42ECEAEB100E443E6 /* AddFolderSheet.swift in Sources */,
 				79C706282D95E528005C26A7 /* RequestBuilder.swift in Sources */,
+				796D064B2F0AE61C0064A2BC /* User.swift in Sources */,
 				79C706482D9AE477005C26A7 /* SocialView.swift in Sources */,
 				791584862EFC89F200C69745 /* UserFolderRow.swift in Sources */,
 				791584872EFC89F200C69745 /* EmptyLibraryView.swift in Sources */,
+				796D06432F0AE5960064A2BC /* AuthSheet.swift in Sources */,
 				791584882EFC89F200C69745 /* SpecialFolderRow.swift in Sources */,
 				791584892EFC89F200C69745 /* PostFileRow.swift in Sources */,
 				7915848A2EFC89F200C69745 /* ColorExtension.swift in Sources */,
@@ -758,6 +929,7 @@
 				791584712EFC86A700C69745 /* HighlightModeIndicator.swift in Sources */,
 				79E727F92EFB9E27007BF27A /* MockContentService.swift in Sources */,
 				790AB11D2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */,
+				796D05DB2F0AC5610064A2BC /* WidgetSyncManager.swift in Sources */,
 				79904A062A731F6F0050240C /* WebContentView.swift in Sources */,
 				790AB0CD2ECEAF1300E443E6 /* Highlight.swift in Sources */,
 				79904A0B2A732E3F0050240C /* LikedList.swift in Sources */,
@@ -770,7 +942,9 @@
 				790AB0D52ECEBE3A00E443E6 /* AppUsageTracker.swift in Sources */,
 				79C706122D95E485005C26A7 /* NetworkManager.swift in Sources */,
 				79C706462D9AE157005C26A7 /* NewsletterCard.swift in Sources */,
+				796D06382F0AE4390064A2BC /* Comment.swift in Sources */,
 				791E87D82A4FD99B00C2F0B4 /* newtabnewsApp.swift in Sources */,
+				796D064F2F0AF3960064A2BC /* ParticleSystem.swift in Sources */,
 				79E727F72EFB9DA2007BF27A /* MainTabView.swift in Sources */,
 				790AB0C82ECEAED600E443E6 /* FoldersView.swift in Sources */,
 				79C7064B2D9AFCE5005C26A7 /* OnboardingView.swift in Sources */,
@@ -791,22 +965,39 @@
 				79259D302EFB81FE004BC057 /* FirebasePushNotificationService.swift in Sources */,
 				79E727F22EFB9CE3007BF27A /* LoadingOverlayView.swift in Sources */,
 				799049E62A6C93D30050240C /* MainView.swift in Sources */,
+				796D06492F0AE5F30064A2BC /* CommentComposeSheet.swift in Sources */,
+				796D064D2F0AE8920064A2BC /* FloatingCommentInput.swift in Sources */,
 				79C7062F2D95E5E6005C26A7 /* ContentService.swift in Sources */,
 				799049E82A6C93D90050240C /* MainViewModel.swift in Sources */,
 				790AB0CB2ECEAF0500E443E6 /* Folder.swift in Sources */,
+				791CC1A92F0B134E00C8B38D /* VoteManager.swift in Sources */,
 				791584772EFC86BE00C69745 /* PostMetadataView.swift in Sources */,
 				791B1EB92ED4CC7E00B9143D /* SkeletonCard.swift in Sources */,
+				796D063E2F0AE4C50064A2BC /* CommentsView.swift in Sources */,
+				796D063F2F0AE4C50064A2BC /* CommentsViewModel.swift in Sources */,
+				796D06402F0AE4C50064A2BC /* CommentRow.swift in Sources */,
 				7915846F2EFC869B00C69745 /* AudioControlsView.swift in Sources */,
 				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
 				7982B7512F00B3CA00666726 /* DigestCard.swift in Sources */,
 				7982B7522F00B3CA00666726 /* DigestBannerView.swift in Sources */,
 				7982B7532F00B3CA00666726 /* DigestViewModel.swift in Sources */,
 				7982B7542F00B3CA00666726 /* DigestListView.swift in Sources */,
+				791CC1AB2F0B141000C8B38D /* PostHeader.swift in Sources */,
 				7982B7552F00B3CA00666726 /* DigestDetailsView.swift in Sources */,
 				7982B7562F00B3CA00666726 /* DigestView.swift in Sources */,
 				79C706262D95E51F005C26A7 /* NetworkManagerProtocol.swift in Sources */,
 				79E728012EFB9FCC007BF27A /* NotificationHandler.swift in Sources */,
 				794863862B5B55ED009AA720 /* GameController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		796D05AB2F0AC28C0064A2BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				796D05D92F0AC5610064A2BC /* WidgetSyncManager.swift in Sources */,
+				796D060F2F0AC72D0064A2BC /* PostRequest.swift in Sources */,
+				796D06322F0ADCA40064A2BC /* WidgetPost.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -817,6 +1008,16 @@
 			isa = PBXTargetDependency;
 			target = 790AB0DB2ECF66FF00E443E6 /* TabNews Watch Watch App */;
 			targetProxy = 790AB0E42ECF670100E443E6 /* PBXContainerItemProxy */;
+		};
+		796D06292F0AD7760064A2BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 796D05AE2F0AC28C0064A2BC /* TabNewsWidgetsExtension */;
+			targetProxy = 796D06282F0AD7760064A2BC /* PBXContainerItemProxy */;
+		};
+		796D062C2F0AD77D0064A2BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 796D05AE2F0AC28C0064A2BC /* TabNewsWidgetsExtension */;
+			targetProxy = 796D062B2F0AD77D0064A2BC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1096,6 +1297,90 @@
 			};
 			name = Release;
 		};
+		796D05BF2F0AC28E0064A2BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TabNewsWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YM283LC5H4;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TabNewsWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TabNewsWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.luizmello.newtabnews.TabNewsWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,4";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		796D05C02F0AC28E0064A2BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TabNewsWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YM283LC5H4;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TabNewsWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TabNewsWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.luizmello.newtabnews.TabNewsWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,4";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1122,6 +1407,15 @@
 			buildConfigurations = (
 				791E87E42A4FD99B00C2F0B4 /* Debug */,
 				791E87E52A4FD99B00C2F0B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		796D05C22F0AC28E0064A2BC /* Build configuration list for PBXNativeTarget "TabNewsWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				796D05BF2F0AC28E0064A2BC /* Debug */,
+				796D05C02F0AC28E0064A2BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

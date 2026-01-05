@@ -21,39 +21,51 @@ struct PostCTAView: View {
     }
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 16) {
             Divider()
-                .padding(.vertical, 10)
+                .padding(.vertical, 8)
             
-            VStack(spacing: 12) {
+            // Texto minimalista
+            HStack(spacing: 6) {
                 Text("Gostou do post?")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Text("Salve em uma pasta ou curta para ir à sua biblioteca")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                
+                Text("•")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                
+                Link(destination: URL(string: "https://www.tabnews.com.br/\(post.ownerUsername ?? "")/\(post.slug ?? "")")!) {
+                    HStack(spacing: 4) {
+                        Text("Dê upvote no TabNews")
+                            .font(.subheadline)
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption)
+                    }
+                    .foregroundStyle(.blue)
+                }
             }
             
+            // Botões minimalistas (inline)
             HStack(spacing: 12) {
+                // Salvar
                 Button {
                     showingFolderPicker = true
                 } label: {
-                    HStack(spacing: 8) {
+                    HStack(spacing: 6) {
                         Image(systemName: "folder.badge.plus")
+                            .font(.subheadline)
                         Text("Salvar")
+                            .font(.subheadline)
                     }
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Color.blue)
-                    .cornerRadius(12)
+                    .foregroundStyle(.primary)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color(uiColor: .secondarySystemBackground))
+                    .cornerRadius(8)
                 }
                 
+                // Curtir
                 Button {
                     let impact = UIImpactFeedbackGenerator(style: .medium)
                     impact.impactOccurred()
@@ -64,40 +76,21 @@ struct PostCTAView: View {
                         viewModel.likeContentList(content: post)
                     }
                 } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: isLiked ? "heart.fill" : "heart")
-                        Text(isLiked ? "Curtido" : "Curtir")
-                    }
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(isLiked ? Color.pink : Color.red)
-                    .cornerRadius(12)
-                }
-            }
-            .padding(.horizontal)
-            
-            VStack(spacing: 8) {
-                Text("Não se esqueça de abrir no TabNews e dar upvote!")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                
-                Link(destination: URL(string: "https://www.tabnews.com.br/\(post.ownerUsername ?? "")/\(post.slug ?? "")")!) {
                     HStack(spacing: 6) {
-                        Image(systemName: "arrow.up.circle.fill")
-                        Text("Abrir no TabNews")
+                        Image(systemName: isLiked ? "heart.fill" : "heart")
+                            .font(.subheadline)
+                        Text(isLiked ? "Curtido" : "Curtir")
+                            .font(.subheadline)
                     }
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.blue)
+                    .foregroundStyle(isLiked ? .red : .primary)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color(uiColor: .secondarySystemBackground))
+                    .cornerRadius(8)
                 }
             }
-            .padding(.top, 4)
         }
-        .padding(.vertical, 20)
+        .padding(.vertical, 12)
         .sheet(isPresented: $showingFolderPicker) {
             FolderPickerSheet(post: post, folders: folders, modelContext: modelContext)
                 .id(post.id ?? UUID().uuidString)

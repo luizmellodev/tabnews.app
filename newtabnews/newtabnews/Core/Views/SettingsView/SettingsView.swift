@@ -21,20 +21,23 @@ struct SettingsView: View {
     
     @State private var showingClearCache = false
     @State private var showingClearLibrary = false
+    @State private var showAuthSheet = false
+    @State private var showLogoutAlert = false
+    @StateObject private var authService = AuthService.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
+    @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
+    @AppStorage("isBetaTester") private var isBetaTester = false
     
     var body: some View {
         NavigationStack {
             List {
-                // Badge Beta Tester - Seção especial no topo
-                if BetaTesterService.shared.isBetaTester {
-                    Section {
-                        betaTesterBadgeCard
-                    }
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
-                    .listRowSeparator(.hidden)
+                // Seção de Perfil/Conta
+                Section {
+                    profileSection
                 }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
+                .listRowSeparator(.hidden)
                 
                 // Aparência
                     Section {
@@ -58,8 +61,19 @@ struct SettingsView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        
+                        Toggle(isOn: $showReadOnTabNewsButton) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Botão 'Ler no TabNews'")
+                                Text("Mostra botão flutuante para abrir no Safari")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     } header: {
                         Label("Leitura", systemImage: "book")
+                    } footer: {
+                        Text("O botão flutuante permite abrir o post no navegador. Desativado por padrão para melhor experiência nativa.")
                     }
                 
                 // Estatísticas
@@ -278,7 +292,7 @@ struct SettingsView: View {
                     Toggle(isOn: $debugShowDigestBanner) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("🔥 Mostrar Banner de Digest")
-                            Text("Simula sábado para testar o banner")
+                            Text("Simula fim de semana para testar o banner")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -287,18 +301,52 @@ struct SettingsView: View {
                     // Beta Tester Debug
                     Button {
                         withAnimation {
-                            BetaTesterService.shared.forceBetaTesterStatus(!BetaTesterService.shared.isBetaTester)
+                            isBetaTester.toggle()
+                            // Também atualizar no service para manter sincronizado
+                            BetaTesterService.shared.forceBetaTesterStatus(isBetaTester)
                         }
                     } label: {
-                        Label(
-                            BetaTesterService.shared.isBetaTester ? "⭐ Remover Badge Beta" : "⭐ Ativar Badge Beta",
-                            systemImage: "star.circle"
-                        )
+                        HStack {
+                            HStack(spacing: 8) {
+                                Image(systemName: "trophy.fill")
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.purple, .blue],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                Text(isBetaTester ? "Remover Badge Beta" : "Ativar Badge Beta")
+                            }
+                            
+                            Spacer()
+                            
+                            if isBetaTester {
+                                HStack(spacing: 3) {
+                                    Image(systemName: "trophy.fill")
+                                        .font(.system(size: 9))
+                                    Text("BETA")
+                                        .font(.system(size: 8, weight: .bold))
+                                        .tracking(0.5)
+                                }
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 3)
+                                .background(
+                                    LinearGradient(
+                                        colors: [.purple, .blue],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(6)
+                            }
+                        }
                     }
                 } header: {
                     Label("Debug", systemImage: "hammer.fill")
                 } footer: {
-                    Text("Ferramentas de desenvolvimento para testes. O banner de Digest normalmente só aparece aos sábados.")
+                    Text("Ferramentas de desenvolvimento para testes. O banner de Digest normalmente só aparece nos fins de semana (sábado e domingo).")
                 }
                 #endif
                 
@@ -342,10 +390,227 @@ struct SettingsView: View {
             } message: {
                 Text("Isso irá remover PERMANENTEMENTE todos os seus dados: curtidas (\(viewModel.likedList.count)), destaques (\(highlights.count)), anotações (\(notes.count)) e pastas (\(folders.count)). Esta ação não pode ser desfeita!")
             }
+            .sheet(isPresented: $showAuthSheet) {
+                AuthSheet()
+            }
+            .alert("Sair da Conta", isPresented: $showLogoutAlert) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Sair", role: .destructive) {
+                    authService.logout()
+                }
+            } message: {
+                Text("Tem certeza que deseja sair da sua conta?")
+            }
         }
     }
     
     // MARK: - Views
+    
+    private var profileSection: some View {
+        Group {
+            if authService.isAuthenticated, let user = authService.currentUser {
+                // Usuário logado - Design minimalista estilo Uber/BeReal
+                VStack(spacing: 12) {
+                    // Card do perfil (não clicável!)
+                    VStack(spacing: 16) {
+                        // Avatar e username
+                        HStack(spacing: 12) {
+                            // Avatar com badge Beta se aplicável
+                            ZStack(alignment: .bottomTrailing) {
+                                Circle()
+                                    .fill(Color.primary.opacity(0.1))
+                                    .frame(width: 48, height: 48)
+                                    .overlay(
+                                        Text(String(user.username.prefix(1).uppercased()))
+                                            .font(.title3)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.primary)
+                                    )
+                                
+                                // Badge Beta Tester no avatar - gradiente roxo/azul
+                                if isBetaTester {
+                                    ZStack {
+                                        Circle()
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [.purple, .blue],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .frame(width: 18, height: 18)
+                                            .shadow(color: .purple.opacity(0.4), radius: 2, x: 0, y: 1)
+                                        
+                                        Image(systemName: "trophy.fill")
+                                            .font(.system(size: 9))
+                                            .foregroundColor(.white)
+                                    }
+                                    .offset(x: 2, y: 2)
+                                }
+                            }
+                            
+                            // Username e badge
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack(spacing: 6) {
+                                    Text("@\(user.username)")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                    
+                                    // Badge Beta Tester - design de troféu
+                                    if isBetaTester {
+                                        HStack(spacing: 3) {
+                                            Image(systemName: "trophy.fill")
+                                                .font(.system(size: 10))
+                                            Text("BETA")
+                                                .font(.system(size: 9, weight: .bold))
+                                                .tracking(0.5)
+                                        }
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 3)
+                                        .background(
+                                            LinearGradient(
+                                                colors: [.purple, .blue],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                        .cornerRadius(6)
+                                        .shadow(color: .purple.opacity(0.3), radius: 3, x: 0, y: 1)
+                                    }
+                                }
+                                
+                                Text("TabNews")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        // Stats (TabCoins e TabCash) - horizontal compacto
+                        HStack(spacing: 24) {
+                            if let tabcoins = user.tabcoins {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "star.fill")
+                                        .font(.caption)
+                                        .foregroundStyle(.orange)
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        Text("\(tabcoins)")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                        Text("TabCoins")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            
+                            if let tabcash = user.tabcash {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "dollarsign.circle.fill")
+                                        .font(.caption)
+                                        .foregroundStyle(.green)
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        Text("\(tabcash)")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                        Text("TabCash")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .padding(16)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .allowsHitTesting(false) // Desabilita toques no card do perfil
+                    
+                    // Botão de Logout separado - minimalista
+                    Button {
+                        showLogoutAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                                .font(.subheadline)
+                            Text("Sair")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Spacer()
+                        }
+                        .foregroundStyle(.red)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                    }
+                }
+            } else {
+                // Usuário não logado - Design minimalista e discreto
+                VStack(spacing: 10) {
+                    // Icon minúsculo e info compacta
+                    HStack(spacing: 10) {
+                        Circle()
+                            .fill(Color.primary.opacity(0.1))
+                            .frame(width: 32, height: 32)
+                            .overlay(
+                                Image(systemName: "person.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            )
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Não conectado")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            
+                            Text("Entre para comentar ou votar")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(12)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    
+                    // Botões compactos lado a lado
+                    HStack(spacing: 8) {
+                        Button {
+                            showAuthSheet = true
+                        } label: {
+                            Text("Entrar")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .background(Color(.systemGray5))
+                                .foregroundStyle(.primary)
+                                .cornerRadius(6)
+                        }
+                        
+                        Button {
+                            showAuthSheet = true
+                        } label: {
+                            Text("Criar Conta")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .background(Color.primary)
+                                .foregroundStyle(Color("Background"))
+                                .cornerRadius(6)
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     private var betaTesterBadgeCard: some View {
         HStack(spacing: 16) {

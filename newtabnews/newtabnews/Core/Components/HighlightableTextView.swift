@@ -85,19 +85,26 @@ struct HighlightableTextView: UIViewRepresentable {
             
             // Estilo base
             let baseParagraphStyle = NSMutableParagraphStyle()
-            baseParagraphStyle.lineSpacing = 4
+            baseParagraphStyle.lineSpacing = 6
+            baseParagraphStyle.alignment = .justified
+            baseParagraphStyle.lineBreakMode = .byWordWrapping
             
             // Headers (# ## ### etc)
             if let headerMatch = line.range(of: "^(#{1,6})\\s+(.+)$", options: .regularExpression) {
                 let headerLevel = line[headerMatch].prefix(while: { $0 == "#" }).count
                 let headerText = String(line.dropFirst(headerLevel).trimmingCharacters(in: .whitespaces))
-                let fontSize: CGFloat = max(20, 28 - CGFloat(headerLevel * 2))
+                let fontSize: CGFloat = max(18, 26 - CGFloat(headerLevel * 2))
+                let fontWeight: UIFont.Weight = headerLevel <= 2 ? .semibold : .medium
                 
                 lineAttributedString = NSMutableAttributedString(string: headerText)
+                let headerParagraph = NSMutableParagraphStyle()
+                headerParagraph.lineSpacing = 4
+                headerParagraph.alignment = .left
+                
                 lineAttributedString.addAttributes([
-                    .font: UIFont.boldSystemFont(ofSize: fontSize),
+                    .font: UIFont.systemFont(ofSize: fontSize, weight: fontWeight),
                     .foregroundColor: UIColor.label,
-                    .paragraphStyle: baseParagraphStyle
+                    .paragraphStyle: headerParagraph
                 ], range: NSRange(location: 0, length: lineAttributedString.length))
             }
             // Divider (--- ou ***)
@@ -120,10 +127,11 @@ struct HighlightableTextView: UIViewRepresentable {
                     let listParagraph = NSMutableParagraphStyle()
                     listParagraph.firstLineHeadIndent = 0
                     listParagraph.headIndent = 20
-                    listParagraph.lineSpacing = 4
+                    listParagraph.lineSpacing = 6
+                    listParagraph.alignment = .left
                     
                     lineAttributedString.addAttributes([
-                        .font: UIFont.systemFont(ofSize: 16),
+                        .font: UIFont.systemFont(ofSize: 17, weight: .light),
                         .foregroundColor: UIColor.label,
                         .paragraphStyle: listParagraph
                     ], range: NSRange(location: 0, length: lineAttributedString.length))
@@ -132,7 +140,7 @@ struct HighlightableTextView: UIViewRepresentable {
                     let itemText = String(line.dropFirst(2))
                     lineAttributedString = NSMutableAttributedString(string: "• \(itemText)")
                     lineAttributedString.addAttributes([
-                        .font: UIFont.systemFont(ofSize: 16),
+                        .font: UIFont.systemFont(ofSize: 17, weight: .light),
                         .foregroundColor: UIColor.label
                     ], range: NSRange(location: 0, length: lineAttributedString.length))
                 }
@@ -156,17 +164,21 @@ struct HighlightableTextView: UIViewRepresentable {
             else if line.trimmingCharacters(in: .whitespaces).hasPrefix(">") {
                 let quoteText = String(line.dropFirst().trimmingCharacters(in: .whitespaces))
                 lineAttributedString = NSMutableAttributedString(string: "│ \(quoteText)")
+                let quoteParagraph = NSMutableParagraphStyle()
+                quoteParagraph.lineSpacing = 6
+                quoteParagraph.alignment = .left
+                
                 lineAttributedString.addAttributes([
-                    .font: UIFont.systemFont(ofSize: 16),
+                    .font: UIFont.systemFont(ofSize: 17, weight: .light),
                     .foregroundColor: UIColor.secondaryLabel,
-                    .paragraphStyle: baseParagraphStyle
+                    .paragraphStyle: quoteParagraph
                 ], range: NSRange(location: 0, length: lineAttributedString.length))
             }
             // Linha normal
             else {
                 lineAttributedString = NSMutableAttributedString(string: currentLine)
                 lineAttributedString.addAttributes([
-                    .font: UIFont.systemFont(ofSize: 16),
+                    .font: UIFont.systemFont(ofSize: 17, weight: .light),
                     .foregroundColor: UIColor.label,
                     .paragraphStyle: baseParagraphStyle
                 ], range: NSRange(location: 0, length: lineAttributedString.length))
@@ -200,7 +212,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 let content = (text as NSString).substring(with: contentRange)
                 
                 let boldText = NSAttributedString(string: content, attributes: [
-                    .font: UIFont.boldSystemFont(ofSize: 16),
+                    .font: UIFont.systemFont(ofSize: 17, weight: .semibold),
                     .foregroundColor: UIColor.label
                 ])
                 attributedString.replaceCharacters(in: fullMatch, with: boldText)
@@ -216,8 +228,13 @@ struct HighlightableTextView: UIViewRepresentable {
                 let contentRange = match.range(at: 1).location != NSNotFound ? match.range(at: 1) : match.range(at: 2)
                 let content = (attributedString.string as NSString).substring(with: contentRange)
                 
+                // Criar fonte italic light manualmente
+                let baseFont = UIFont.systemFont(ofSize: 17, weight: .light)
+                let italicDescriptor = baseFont.fontDescriptor.withSymbolicTraits(.traitItalic)
+                let italicFont = italicDescriptor.flatMap { UIFont(descriptor: $0, size: 17) } ?? UIFont.italicSystemFont(ofSize: 17)
+                
                 let italicText = NSAttributedString(string: content, attributes: [
-                    .font: UIFont.italicSystemFont(ofSize: 16),
+                    .font: italicFont,
                     .foregroundColor: UIColor.label
                 ])
                 attributedString.replaceCharacters(in: fullMatch, with: italicText)
@@ -234,7 +251,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 let content = (attributedString.string as NSString).substring(with: contentRange)
                 
                 let codeText = NSAttributedString(string: content, attributes: [
-                    .font: UIFont.monospacedSystemFont(ofSize: 15, weight: .regular),
+                    .font: UIFont.monospacedSystemFont(ofSize: 16, weight: .regular),
                     .backgroundColor: UIColor.systemGray5,
                     .foregroundColor: UIColor.systemPink
                 ])
@@ -253,7 +270,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 
                 if let url = URL(string: urlString) {
                     let linkedText = NSAttributedString(string: urlString, attributes: [
-                        .font: UIFont.systemFont(ofSize: 16),
+                        .font: UIFont.systemFont(ofSize: 17, weight: .light),
                         .link: url,
                         .foregroundColor: UIColor.systemBlue,
                         .underlineStyle: NSUnderlineStyle.single.rawValue
@@ -273,7 +290,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 
                 if let url = URL(string: urlString) {
                     let linkedText = NSAttributedString(string: urlString, attributes: [
-                        .font: UIFont.systemFont(ofSize: 16),
+                        .font: UIFont.systemFont(ofSize: 17, weight: .light),
                         .link: url,
                         .foregroundColor: UIColor.systemBlue,
                         .underlineStyle: NSUnderlineStyle.single.rawValue
@@ -300,7 +317,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 
                 if let url = URL(string: urlString) {
                     let imageText = NSMutableAttributedString(string: imageDisplayText, attributes: [
-                        .font: UIFont.systemFont(ofSize: 16),
+                        .font: UIFont.systemFont(ofSize: 17, weight: .light),
                         .link: url,
                         .foregroundColor: UIColor.systemIndigo,
                         .backgroundColor: UIColor.systemGray6
@@ -309,7 +326,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 } else {
                     // Se não tiver URL válida, só mostra o texto
                     let imageText = NSAttributedString(string: imageDisplayText, attributes: [
-                        .font: UIFont.systemFont(ofSize: 16),
+                        .font: UIFont.systemFont(ofSize: 17, weight: .light),
                         .foregroundColor: UIColor.systemGray
                     ])
                     attributedString.replaceCharacters(in: fullMatch, with: imageText)
@@ -331,7 +348,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 
                 if let url = URL(string: urlString) {
                     let linkedText = NSAttributedString(string: linkText, attributes: [
-                        .font: UIFont.systemFont(ofSize: 16),
+                        .font: UIFont.systemFont(ofSize: 17, weight: .light),
                         .link: url,
                         .foregroundColor: UIColor.systemBlue,
                         .underlineStyle: NSUnderlineStyle.single.rawValue
@@ -420,5 +437,3 @@ struct HighlightableTextView: UIViewRepresentable {
         }
     }
 }
-
-

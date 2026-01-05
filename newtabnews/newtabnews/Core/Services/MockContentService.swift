@@ -49,6 +49,14 @@ class MockContentService: ContentServiceProtocol {
         return mockPosts.isEmpty ? createMockDigests() : mockPosts
     }
     
+    func getComments(user: String, slug: String) async throws -> [Comment] {
+        if shouldFail {
+            throw NSError(domain: "MockError", code: 500, userInfo: [NSLocalizedDescriptionKey: "Mock error"])
+        }
+        
+        return Comment.mockComments
+    }
+    
     // MARK: - Mock Helpers
     
     private func createMockPosts() -> [PostRequest] {

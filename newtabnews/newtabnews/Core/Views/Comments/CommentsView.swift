@@ -1,0 +1,343 @@
+//
+//  CommentsView.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 04/01/26.
+//
+
+import SwiftUI
+
+struct CommentsView: View {
+    let user: String
+    let slug: String
+    let postId: String
+    
+    @State private var viewModel = CommentsViewModel()
+    @State private var isExpanded: Bool = false
+    @State private var replyingToComment: Comment?
+    @State private var showAuthSheet = false
+    @StateObject private var authService = AuthService.shared
+    
+    private let previewCount = 2
+    
+    var body: some View {
+        ScrollView {
+            Group {
+                switch viewModel.state {
+                case .loading:
+                    loadingView
+                    
+                case .requestSucceeded:
+                    if viewModel.comments.isEmpty {
+                        emptyStateView
+                    } else {
+                        commentsListView
+                    }
+                    
+                case .requestFailed:
+                    errorView
+                    
+                default:
+                    Color.clear
+                }
+            }
+            .task {
+                await viewModel.fetchComments(user: user, slug: slug)
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            // Floating Comment Input - sempre visível no bottom
+            FloatingCommentInput(
+                parentId: replyingToComment?.id ?? postId,
+                replyingTo: replyingToComment?.ownerUsername,
+                onCommentPosted: {
+                    Task {
+                        await viewModel.refresh(user: user, slug: slug)
+                    }
+                    replyingToComment = nil
+                },
+                onCancel: {
+                    replyingToComment = nil
+                }
+            )
+        }
+    }
+    
+    // MARK: - Subviews
+    
+    private var loadingView: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .scaleEffect(1.2)
+            Text("Carregando comentários...")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "bubble.left.and.bubble.right")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary.opacity(0.5))
+            
+            Text("Nenhum comentário ainda")
+                .font(.headline)
+                .foregroundStyle(.primary)
+            
+            Text("Seja o primeiro a comentar!")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 60)
+    }
+    
+    private var errorView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 48))
+                .foregroundStyle(.orange)
+            
+            Text("Erro ao carregar comentários")
+                .font(.headline)
+                .foregroundStyle(.primary)
+            
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            
+            Button {
+                Task {
+                    await viewModel.refresh(user: user, slug: slug)
+                }
+            } label: {
+                Label("Tentar novamente", systemImage: "arrow.clockwise")
+                    .font(.subheadline)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .cornerRadius(8)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+    }
+    
+    private var commentsListView: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Header minimalista
+            HStack(spacing: 6) {
+                Text("\(viewModel.totalCommentsCount())")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                
+                Text(viewModel.totalCommentsCount() == 1 ? "comentário" : "comentários")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                
+                Spacer()
+                
+                Button {
+                    Task {
+                        await viewModel.refresh(user: user, slug: slug)
+                    }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            
+            // Lista de comentários (colapsada ou expandida)
+            VStack(spacing: 0) {
+                let displayedComments = isExpanded ? viewModel.comments : Array(viewModel.comments.prefix(previewCount))
+                
+                ForEach(displayedComments) { comment in
+                    VStack(spacing: 0) {
+                        CommentRow(
+                            comment: comment,
+                            depth: 0,
+                            onReply: { replyComment in
+                                withAnimation {
+                                    replyingToComment = replyComment
+                                }
+                            },
+                            onVote: { comment, transactionType, completion in
+                                handleVote(comment: comment, transactionType: transactionType, completion: completion)
+                            }
+                        )
+                        
+                        if comment.id != displayedComments.last?.id {
+                            Divider()
+                                .padding(.leading, 16)
+                        }
+                    }
+                }
+                
+                // Botão "Ver todos" com gradiente
+                if !isExpanded && viewModel.comments.count > previewCount {
+                    VStack(spacing: 0) {
+                        // Gradiente fade
+                        LinearGradient(
+                            colors: [
+                                Color(.systemBackground).opacity(0),
+                                Color(.systemBackground).opacity(0.8),
+                                Color(.systemBackground)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .frame(height: 40)
+                        
+                        // Botão
+                        Button {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                isExpanded = true
+                            }
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text("Ver todos os \(viewModel.totalCommentsCount()) comentários")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                Image(systemName: "chevron.down")
+                                    .font(.caption)
+                            }
+                            .foregroundStyle(.blue)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                        }
+                    }
+                    .padding(.top, -20) // Sobrepor um pouco o último comentário
+                }
+                
+                // Botão "Recolher"
+                if isExpanded && viewModel.comments.count > previewCount {
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            isExpanded = false
+                        }
+                    } label: {
+                        HStack(spacing: 8) {
+                            Text("Recolher comentários")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Image(systemName: "chevron.up")
+                                .font(.caption)
+                        }
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                    }
+                    .padding(.top, 8)
+                }
+            }
+        }
+        .sheet(isPresented: $showAuthSheet) {
+            AuthSheet()
+        }
+    }
+    
+    // MARK: - Actions
+    
+    private func handleVote(comment: Comment, transactionType: String, completion: @escaping (Bool) -> Void) {
+        guard let commentUsername = comment.ownerUsername,
+              let commentSlug = comment.slug else {
+            print("❌ [CommentsView] Comentário sem username ou slug")
+            completion(false)
+            return
+        }
+        
+        // Verificar se está autenticado
+        guard authService.isAuthenticated else {
+            showAuthSheet = true
+            completion(false)
+            return
+        }
+        
+        // Fazer o voto
+        Task {
+            do {
+                try await authService.voteOnContent(
+                    username: commentUsername,
+                    slug: commentSlug,
+                    transactionType: transactionType
+                )
+                print("✅ [CommentsView] Voto registrado com sucesso")
+                
+                // Notificar sucesso PRIMEIRO (para disparar o confete)
+                await MainActor.run {
+                    completion(true)
+                }
+                
+                // Aguardar 2 segundos para o confete aparecer
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                
+                // DEPOIS recarregar comentários
+                await viewModel.refresh(user: user, slug: slug)
+            } catch {
+                print("❌ [CommentsView] Erro ao votar: \(error)")
+                
+                // Notificar falha
+                await MainActor.run {
+                    completion(false)
+                }
+            }
+        }
+    }
+}
+
+#Preview("Loading") {
+    CommentsView(user: "test", slug: "test-post", postId: "test-id")
+        .environment(CommentsViewModel(service: MockContentService.success))
+}
+
+#Preview("With Comments") {
+    CommentsView(user: "test", slug: "test-post", postId: "test-id")
+        .environment(CommentsViewModel(service: MockContentService.success))
+}
+
+#Preview("Empty") {
+    struct EmptyMockService: ContentServiceProtocol {
+        func getContent(page: String, perPage: String, strategy: String) async throws -> [PostRequest] { [] }
+        func getPost(user: String, slug: String) async throws -> PostRequest {
+            PostRequest(
+                id: "test",
+                ownerId: nil,
+                parentId: nil,
+                slug: "test",
+                title: "Test",
+                body: nil,
+                status: nil,
+                type: nil,
+                sourceUrl: nil,
+                createdAt: nil,
+                updatedAt: nil,
+                publishedAt: nil,
+                deletedAt: nil,
+                ownerUsername: "test",
+                tabcoins: nil,
+                tabcoinsCredit: nil,
+                tabcoinsDebit: nil,
+                childrenDeepCount: nil
+            )
+        }
+        func getNewsletter(page: String, perPage: String, strategy: String) async throws -> [PostRequest] { [] }
+        func getDigest(page: String, perPage: String, strategy: String) async throws -> [PostRequest] { [] }
+        func getComments(user: String, slug: String) async throws -> [Comment] { [] }
+    }
+    
+    return CommentsView(user: "test", slug: "test-post", postId: "test-id")
+        .environment(CommentsViewModel(service: EmptyMockService()))
+}
+

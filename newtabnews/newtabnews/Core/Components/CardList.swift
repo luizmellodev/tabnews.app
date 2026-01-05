@@ -16,9 +16,10 @@ struct CardList: View {
                 Text(post.title ?? "Ops")
                     .multilineTextAlignment(.leading)
                     .font(.title3)
-                    .fontWeight(.semibold)
+                    .fontWeight(.medium)
+                    .lineSpacing(2)
                     .foregroundColor(.primary)
-                    .padding(.bottom, 5)
+                    .padding(.bottom, 8)
                     .padding(.top, 20)
                 HStack {
                     Text(post.ownerUsername ?? "luizmellodev")
@@ -47,7 +48,9 @@ struct CardList: View {
                 
                 if let body = post.body {
                     Text(String(body.prefix(200)))
-                        .fontWeight(.light)
+                        .fontWeight(.regular)
+                        .font(.subheadline)
+                        .lineSpacing(4)
                         .multilineTextAlignment(.leading)
                         .foregroundColor(.primary)
                         .padding(.bottom, 20)

@@ -86,7 +86,42 @@ extension MainViewModel {
         }
         
         saveCachedContent(page: currentPage)
+        
+        // Sincronizar com widgets
+        WidgetSyncManager.shared.syncRecentPosts(content)
+        
+        // Sincronizar digest em background
+        Task.detached(priority: .background) {
+            await self.syncDigestForWidget()
+        }
+        
         NotificationCenter.default.post(name: .postsLoaded, object: nil)
+    }
+    
+    @MainActor
+    func syncDigestForWidget() async {
+        do {
+            // Buscar o digest mais recente
+            let digests = try await service.getDigest(page: "1", perPage: "1", strategy: "new")
+            
+            guard let latestDigest = digests.first else {
+                print("⚠️ [MainViewModel] Nenhum digest encontrado")
+                return
+            }
+            
+            // Buscar o conteúdo completo do digest
+            let fullDigest = try await service.getPost(
+                user: latestDigest.ownerUsername ?? "",
+                slug: latestDigest.slug ?? ""
+            )
+            
+            // Sincronizar com widgets
+            WidgetSyncManager.shared.syncWeekDigest(fullDigest)
+            print("✅ [MainViewModel] Digest sincronizado automaticamente para widgets")
+            
+        } catch {
+            print("⚠️ [MainViewModel] Erro ao sincronizar digest: \(error)")
+        }
     }
     
     @MainActor
