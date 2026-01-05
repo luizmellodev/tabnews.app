@@ -63,7 +63,6 @@ class KeychainManager {
     // MARK: - Private Keychain Operations
     
     private func save(key: String, data: Data) -> Bool {
-        // Delete old value if exists
         delete(key: key)
         
         let query: [String: Any] = [
@@ -75,14 +74,7 @@ class KeychainManager {
         ]
         
         let status = SecItemAdd(query as CFDictionary, nil)
-        
-        if status == errSecSuccess {
-            print("✅ [KeychainManager] Saved \(key)")
-            return true
-        } else {
-            print("❌ [KeychainManager] Error saving \(key): \(status)")
-            return false
-        }
+        return status == errSecSuccess
     }
     
     private func load(key: String) -> Data? {
@@ -97,16 +89,7 @@ class KeychainManager {
         var result: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         
-        if status == errSecSuccess {
-            print("✅ [KeychainManager] Loaded \(key)")
-            return result as? Data
-        } else if status == errSecItemNotFound {
-            print("⚠️ [KeychainManager] \(key) not found")
-            return nil
-        } else {
-            print("❌ [KeychainManager] Error loading \(key): \(status)")
-            return nil
-        }
+        return status == errSecSuccess ? result as? Data : nil
     }
     
     private func delete(key: String) -> Bool {
@@ -117,14 +100,7 @@ class KeychainManager {
         ]
         
         let status = SecItemDelete(query as CFDictionary)
-        
-        if status == errSecSuccess || status == errSecItemNotFound {
-            print("✅ [KeychainManager] Deleted \(key)")
-            return true
-        } else {
-            print("❌ [KeychainManager] Error deleting \(key): \(status)")
-            return false
-        }
+        return status == errSecSuccess || status == errSecItemNotFound
     }
 }
 

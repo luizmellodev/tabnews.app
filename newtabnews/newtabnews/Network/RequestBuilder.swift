@@ -24,16 +24,11 @@ struct RequestBuilder {
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        // Adicionar autenticação se fornecida
         if let token = token {
             if let authentication = authentication {
-                // Usar o header especificado (ex: "Cookie")
                 request.setValue(token, forHTTPHeaderField: authentication)
-                print("🔐 [RequestBuilder] Adicionando header \(authentication): \(token)")
             } else {
-                // Se não especificar o tipo, usar Authorization Bearer por padrão
                 request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-                print("🔐 [RequestBuilder] Adicionando Authorization Bearer")
             }
         }
         

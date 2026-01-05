@@ -14,13 +14,11 @@ class VoteManager {
     
     private init() {}
     
-    // Verifica se o usuário já votou neste conteúdo
     func hasVoted(contentId: String) -> Bool {
         let votedIds = getVotedIds()
         return votedIds.contains(contentId)
     }
     
-    // Marca um conteúdo como votado
     func markAsVoted(contentId: String) {
         var votedIds = getVotedIds()
         if !votedIds.contains(contentId) {
@@ -29,14 +27,12 @@ class VoteManager {
         }
     }
     
-    // Remove um voto (caso queira permitir desfazer)
     func removeVote(contentId: String) {
         var votedIds = getVotedIds()
         votedIds.removeAll { $0 == contentId }
         saveVotedIds(votedIds)
     }
     
-    // Limpa todos os votos (útil ao fazer logout)
     func clearAllVotes() {
         UserDefaults.standard.removeObject(forKey: votedContentKey)
     }
