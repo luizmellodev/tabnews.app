@@ -24,16 +24,22 @@ struct CommentComposeSheet: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // User Info
                 if let user = authService.currentUser {
                     userInfoView(user: user)
                 }
                 
-                // Text Editor
                 TextEditor(text: $commentText)
                     .focused($isTextFieldFocused)
                     .padding()
                     .frame(minHeight: 150)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button("Fechar") {
+                                isTextFieldFocused = false
+                            }
+                        }
+                    }
                     .overlay(
                         Group {
                             if commentText.isEmpty {
@@ -166,12 +172,15 @@ struct CommentComposeSheet: View {
             
             await MainActor.run {
                 isPosting = false
+                isTextFieldFocused = false
                 onCommentPosted?()
-                dismiss()
                 
-                // Feedback háptico
                 let impact = UINotificationFeedbackGenerator()
                 impact.notificationOccurred(.success)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    dismiss()
+                }
             }
         } catch {
             await MainActor.run {

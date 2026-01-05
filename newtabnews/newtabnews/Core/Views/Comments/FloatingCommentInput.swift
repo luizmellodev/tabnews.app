@@ -24,7 +24,6 @@ struct FloatingCommentInput: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Erro (se houver)
             if let errorMessage = errorMessage {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
@@ -107,8 +106,15 @@ struct FloatingCommentInput: View {
                             .scrollContentBackground(.hidden)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 6)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Fechar") {
+                                        isTextFieldFocused = false
+                                    }
+                                }
+                            }
                             .onChange(of: commentText) { _, newValue in
-                                // Auto-expandir se tiver mais de 2 linhas
                                 let lineCount = newValue.components(separatedBy: "\n").count
                                 withAnimation(.easeInOut(duration: 0.2)) {
                                     isExpanded = lineCount > 2 || newValue.count > 50
@@ -187,8 +193,8 @@ struct FloatingCommentInput: View {
                 isPosting = false
                 commentText = ""
                 isExpanded = false
+                isTextFieldFocused = false
                 
-                // Feedback háptico
                 let impact = UINotificationFeedbackGenerator()
                 impact.notificationOccurred(.success)
                 
