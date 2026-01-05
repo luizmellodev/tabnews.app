@@ -124,16 +124,25 @@ struct TabNewsWidgetView: View {
     @Environment(\.widgetFamily) var family
     
     var body: some View {
-        switch entry.configuration.contentType {
-        case .recent:
-            RecentPostsView(posts: entry.posts, family: family)
-        case .relevant:
-            RelevantPostsView(posts: entry.posts, family: family)
-        case .digest:
-            if let digest = entry.digest {
-                DigestView(digest: digest, family: family)
-            } else {
-                EmptyDigestView(family: family)
+        switch family {
+        case .accessoryCircular:
+            LockScreenCircularView(posts: entry.posts)
+        case .accessoryRectangular:
+            LockScreenRectangularView(posts: entry.posts)
+        case .accessoryInline:
+            LockScreenInlineView(posts: entry.posts)
+        default:
+            switch entry.configuration.contentType {
+            case .recent:
+                RecentPostsView(posts: entry.posts, family: family)
+            case .relevant:
+                RelevantPostsView(posts: entry.posts, family: family)
+            case .digest:
+                if let digest = entry.digest {
+                    DigestView(digest: digest, family: family)
+                } else {
+                    EmptyDigestView(family: family)
+                }
             }
         }
     }
@@ -334,13 +343,11 @@ struct PostRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             VStack(alignment: .leading, spacing: family == .systemSmall ? 2 : 4) {
-                // Título
                 Text(post.title)
                     .font(family == .systemSmall ? .system(size: 11, weight: .semibold) : .caption)
                     .fontWeight(.semibold)
                     .lineLimit(family == .systemSmall ? 3 : 2)
                 
-                // Metadados compactos
                 HStack(spacing: 4) {
                     Text("@\(post.ownerUsername)")
                         .font(family == .systemSmall ? .system(size: 9) : .caption2)
@@ -367,6 +374,95 @@ struct PostRow: View {
     }
 }
 
+// MARK: - Lock Screen Widgets
+
+struct LockScreenCircularView: View {
+    let posts: [WidgetPost]
+    
+    var body: some View {
+        ZStack {
+            AccessoryWidgetBackground()
+            
+            VStack(spacing: 2) {
+                Image(systemName: "newspaper.fill")
+                    .font(.system(size: 16))
+                
+                if let topPost = posts.first, let tabcoins = topPost.tabcoins {
+                    Text("\(tabcoins)")
+                        .font(.system(size: 14, weight: .bold))
+                } else {
+                    Text("—")
+                        .font(.system(size: 14))
+                }
+            }
+        }
+        .widgetURL(posts.first?.url ?? URL(string: "tabnews://home")!)
+    }
+}
+
+struct LockScreenRectangularView: View {
+    let posts: [WidgetPost]
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 4) {
+                Image(systemName: "flame.fill")
+                    .font(.caption2)
+                Text("TabNews")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+            }
+            
+            if let post = posts.first {
+                Text(post.title)
+                    .font(.caption2)
+                    .lineLimit(2)
+                
+                HStack(spacing: 4) {
+                    Text("@\(post.ownerUsername)")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.secondary)
+                    
+                    if let tabcoins = post.tabcoins {
+                        Text("•")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.secondary)
+                        HStack(spacing: 2) {
+                            Image(systemName: "star.fill")
+                            Text("\(tabcoins)")
+                        }
+                        .font(.system(size: 10))
+                    }
+                }
+            } else {
+                Text("Nenhum post disponível")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .widgetURL(posts.first?.url ?? URL(string: "tabnews://home")!)
+    }
+}
+
+struct LockScreenInlineView: View {
+    let posts: [WidgetPost]
+    
+    var body: some View {
+        Group {
+            if let post = posts.first {
+                HStack(spacing: 4) {
+                    Image(systemName: "newspaper.fill")
+                    Text(post.title)
+                        .lineLimit(1)
+                }
+            } else {
+                Text("TabNews")
+            }
+        }
+        .widgetURL(posts.first?.url ?? URL(string: "tabnews://home")!)
+    }
+}
+
 // MARK: - Widget Configuration
 
 struct TabNewsWidget: Widget {
@@ -382,6 +478,13 @@ struct TabNewsWidget: Widget {
         }
         .configurationDisplayName("TabNews")
         .description("Acompanhe o TabNews direto da tela inicial")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+            .systemLarge,
+            .accessoryCircular,
+            .accessoryRectangular,
+            .accessoryInline
+        ])
     }
 }
