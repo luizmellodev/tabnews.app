@@ -17,7 +17,8 @@ struct CommentComposeSheet: View {
     @State private var commentText: String = ""
     @State private var isPosting: Bool = false
     @State private var errorMessage: String?
-    @State private var showAuthSheet: Bool = false
+    @State private var showLoginSheet: Bool = false
+    @State private var showSignupSheet: Bool = false
     @State private var isPreviewMode: Bool = false
     
     @FocusState private var isTextFieldFocused: Bool
@@ -142,17 +143,30 @@ struct CommentComposeSheet: View {
                 }
             }
             .onAppear {
-                // Se não estiver autenticado, mostrar auth sheet
-                if !authService.isAuthenticated {
-                    showAuthSheet = true
-                } else {
+                // Se não estiver autenticado, não fazer nada (vai mostrar a view de login)
+                if authService.isAuthenticated {
                     isTextFieldFocused = true
                 }
             }
-            .sheet(isPresented: $showAuthSheet) {
-                AuthSheet {
-                    // Após login bem-sucedido, focar no campo de texto
-                    isTextFieldFocused = true
+            .sheet(isPresented: $showLoginSheet) {
+                LoginSheet(
+                    onSuccess: {
+                        isTextFieldFocused = true
+                    },
+                    onSignupTapped: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showSignupSheet = true
+                        }
+                    }
+                )
+            }
+            .sheet(isPresented: $showSignupSheet) {
+                SignupWebView()
+            }
+            .overlay {
+                // Overlay de "não autenticado"
+                if !authService.isAuthenticated {
+                    unauthenticatedView
                 }
             }
         }
@@ -260,6 +274,67 @@ struct CommentComposeSheet: View {
                 // Feedback háptico de erro
                 let impact = UINotificationFeedbackGenerator()
                 impact.notificationOccurred(.error)
+            }
+        }
+    }
+    
+    private var unauthenticatedView: some View {
+        ZStack {
+            Color(.systemBackground)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 20) {
+                VStack(spacing: 12) {
+                    Circle()
+                        .fill(Color.primary.opacity(0.1))
+                        .frame(width: 60, height: 60)
+                        .overlay(
+                            Image(systemName: "person.fill.questionmark")
+                                .font(.title2)
+                                .foregroundStyle(.primary)
+                        )
+                    
+                    Text("Faça login para comentar")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    
+                    Text("Entre ou crie uma conta para participar das discussões")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                }
+                
+                VStack(spacing: 12) {
+                    Button {
+                        showLoginSheet = true
+                    } label: {
+                        Text("Entrar")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color.primary)
+                            .foregroundStyle(Color("Background"))
+                            .cornerRadius(10)
+                    }
+                    .buttonStyle(.borderless)
+                    
+                    Button {
+                        showSignupSheet = true
+                    } label: {
+                        Text("Criar Conta")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color(.systemGray5))
+                            .foregroundStyle(.primary)
+                            .cornerRadius(10)
+                    }
+                    .buttonStyle(.borderless)
+                }
+                .padding(.horizontal, 40)
             }
         }
     }

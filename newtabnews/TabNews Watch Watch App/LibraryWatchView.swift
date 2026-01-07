@@ -14,22 +14,15 @@ struct LibraryWatchView: View {
     var body: some View {
         NavigationStack {
             List {
-                // Estatísticas (clicáveis)
                 Section {
-                    // Curtidos
                     NavigationLink {
                         LikedPostsListWatch(posts: likedPosts)
                     } label: {
                         StatsRowWatch(icon: "heart.fill", label: "Curtidos", value: stats.liked, color: .red)
                     }
                     
-                    // Destaques (não implementado)
                     StatsRowWatch(icon: "highlighter", label: "Destaques", value: stats.highlights, color: .yellow)
-                    
-                    // Anotações (não implementado)
                     StatsRowWatch(icon: "note.text", label: "Anotações", value: stats.notes, color: .blue)
-                    
-                    // Pastas (não implementado)
                     StatsRowWatch(icon: "folder.fill", label: "Pastas", value: stats.folders, color: .purple)
                 } header: {
                     Text("Biblioteca")
@@ -62,7 +55,6 @@ struct LibraryWatchView: View {
     }
     
     private func loadLibrary() {
-        // Carregar posts curtidos
         if let data = UserDefaults.standard.data(forKey: "WatchLikedPosts") {
             print("⌚ [LibraryWatchView] Data encontrado para WatchLikedPosts: \(data.count) bytes")
             
@@ -81,7 +73,6 @@ struct LibraryWatchView: View {
             print("⌚ [LibraryWatchView] ⚠️ Nenhum dado para WatchLikedPosts no UserDefaults")
         }
         
-        // Carregar stats (usar contagem local de curtidos)
         stats = (
             liked: likedPosts.count,
             highlights: UserDefaults.standard.integer(forKey: "WatchHighlights"),

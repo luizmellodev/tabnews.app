@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		790886192F0EC17F0068804C /* LoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790886172F0EC17F0068804C /* LoginSheet.swift */; };
+		7908861A2F0EC17F0068804C /* SignupWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790886182F0EC17F0068804C /* SignupWebView.swift */; };
 		790AB0C12ECEAE9500E443E6 /* TextToSpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */; };
 		790AB0C42ECEAEB100E443E6 /* AddFolderSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB0C32ECEAEB100E443E6 /* AddFolderSheet.swift */; };
 		790AB0C82ECEAED600E443E6 /* FoldersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB0C72ECEAED600E443E6 /* FoldersView.swift */; };
@@ -96,7 +98,6 @@
 		7982B7762F01778100666726 /* BetaTesterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7982B7742F01778100666726 /* BetaTesterService.swift */; };
 		799049E62A6C93D30050240C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E52A6C93D30050240C /* MainView.swift */; };
 		799049E82A6C93D90050240C /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E72A6C93D90050240C /* MainViewModel.swift */; };
-		799049EA2A6C94050050240C /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049E92A6C94050050240C /* SearchBar.swift */; };
 		799049F42A6C961C0050240C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F32A6C961C0050240C /* ListView.swift */; };
 		799049F62A6C990E0050240C /* CardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F52A6C990E0050240C /* CardList.swift */; };
 		799049F82A72F4BC0050240C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799049F72A72F4BC0050240C /* Extensions.swift */; };
@@ -191,6 +192,8 @@
 
 /* Begin PBXFileReference section */
 		0578C34654A4634FDF1FABC9 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		790886172F0EC17F0068804C /* LoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSheet.swift; sourceTree = "<group>"; };
+		790886182F0EC17F0068804C /* SignupWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupWebView.swift; sourceTree = "<group>"; };
 		790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToSpeechManager.swift; sourceTree = "<group>"; };
 		790AB0C32ECEAEB100E443E6 /* AddFolderSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFolderSheet.swift; sourceTree = "<group>"; };
 		790AB0C72ECEAED600E443E6 /* FoldersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersView.swift; sourceTree = "<group>"; };
@@ -259,7 +262,6 @@
 		7982B7742F01778100666726 /* BetaTesterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetaTesterService.swift; sourceTree = "<group>"; };
 		799049E52A6C93D30050240C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		799049E72A6C93D90050240C /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
-		799049E92A6C94050050240C /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		799049F32A6C961C0050240C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		799049F52A6C990E0050240C /* CardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardList.swift; sourceTree = "<group>"; };
 		799049F72A72F4BC0050240C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -520,6 +522,8 @@
 		796D06422F0AE5960064A2BC /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				790886172F0EC17F0068804C /* LoginSheet.swift */,
+				790886182F0EC17F0068804C /* SignupWebView.swift */,
 				796D06412F0AE5960064A2BC /* AuthSheet.swift */,
 			);
 			path = Auth;
@@ -559,7 +563,6 @@
 				791B1EB82ED4CC7E00B9143D /* SkeletonCard.swift */,
 				790AB0D22ECEB9BE00E443E6 /* HighlightableTextView.swift */,
 				79C7063D2D9ADBFA005C26A7 /* PostRow.swift */,
-				799049E92A6C94050050240C /* SearchBar.swift */,
 				799049F52A6C990E0050240C /* CardList.swift */,
 				79E727F02EFB9CE3007BF27A /* LoadingOverlayView.swift */,
 				796D064E2F0AF3960064A2BC /* ParticleSystem.swift */,
@@ -922,6 +925,8 @@
 				79C706352D95E643005C26A7 /* Logger.swift in Sources */,
 				799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */,
 				79E727F42EFB9D25007BF27A /* AppTab.swift in Sources */,
+				790886192F0EC17F0068804C /* LoginSheet.swift in Sources */,
+				7908861A2F0EC17F0068804C /* SignupWebView.swift in Sources */,
 				7982B7752F01778100666726 /* BetaTesterService.swift in Sources */,
 				79C7063A2D95E766005C26A7 /* PostRequest.swift in Sources */,
 				79D7E37A2D81266A00391C82 /* NewsletterViewModel.swift in Sources */,
@@ -954,7 +959,6 @@
 				791584902EFC929C00C69745 /* PostCTAView.swift in Sources */,
 				791584732EFC86AE00C69745 /* PostActionsBar.swift in Sources */,
 				799049F42A6C961C0050240C /* ListView.swift in Sources */,
-				799049EA2A6C94050050240C /* SearchBar.swift in Sources */,
 				79C7062D2D95E5E2005C26A7 /* ContentServiceProtocol.swift in Sources */,
 				791B1EBB2ED4CC9400B9143D /* SkeletonListView.swift in Sources */,
 				799049F62A6C990E0050240C /* CardList.swift in Sources */,
@@ -1218,7 +1222,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1261,7 +1265,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;

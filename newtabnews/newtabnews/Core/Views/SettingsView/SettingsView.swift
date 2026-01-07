@@ -21,7 +21,8 @@ struct SettingsView: View {
     
     @State private var showingClearCache = false
     @State private var showingClearLibrary = false
-    @State private var showAuthSheet = false
+    @State private var showLoginSheet = false
+    @State private var showSignupSheet = false
     @State private var showLogoutAlert = false
     @StateObject private var authService = AuthService.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
@@ -218,7 +219,7 @@ struct SettingsView: View {
                         SocialView(
                             github: "luizmellodev",
                             linkedin: "luizmellodev",
-                            youtube: "",
+                            youtube: "euluizmello",
                             instagram: "luizmello.dev"
                         )
                     } label: {
@@ -374,6 +375,18 @@ struct SettingsView: View {
                         .ignoresSafeArea()
                 }
             }
+            .sheet(isPresented: $showLoginSheet) {
+                LoginSheet(
+                    onSignupTapped: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showSignupSheet = true
+                        }
+                    }
+                )
+            }
+            .sheet(isPresented: $showSignupSheet) {
+                SignupWebView()
+            }
             .alert("Limpar Cache da API", isPresented: $showingClearCache) {
                 Button("Cancelar", role: .cancel) { }
                 Button("Limpar", role: .destructive) {
@@ -389,9 +402,6 @@ struct SettingsView: View {
                 }
             } message: {
                 Text("Isso irá remover PERMANENTEMENTE todos os seus dados: curtidas (\(viewModel.likedList.count)), destaques (\(highlights.count)), anotações (\(notes.count)) e pastas (\(folders.count)). Esta ação não pode ser desfeita!")
-            }
-            .sheet(isPresented: $showAuthSheet) {
-                AuthSheet()
             }
             .alert("Sair da Conta", isPresented: $showLogoutAlert) {
                 Button("Cancelar", role: .cancel) { }
@@ -409,13 +419,9 @@ struct SettingsView: View {
     private var profileSection: some View {
         Group {
             if authService.isAuthenticated, let user = authService.currentUser {
-                // Usuário logado - Design minimalista estilo Uber/BeReal
                 VStack(spacing: 12) {
-                    // Card do perfil (não clicável!)
                     VStack(spacing: 16) {
-                        // Avatar e username
                         HStack(spacing: 12) {
-                            // Avatar com badge Beta se aplicável
                             ZStack(alignment: .bottomTrailing) {
                                 Circle()
                                     .fill(Color.primary.opacity(0.1))
@@ -427,7 +433,6 @@ struct SettingsView: View {
                                             .foregroundColor(.primary)
                                     )
                                 
-                                // Badge Beta Tester no avatar - gradiente roxo/azul
                                 if isBetaTester {
                                     ZStack {
                                         Circle()
@@ -550,9 +555,7 @@ struct SettingsView: View {
                     }
                 }
             } else {
-                // Usuário não logado - Design minimalista e discreto
                 VStack(spacing: 10) {
-                    // Icon minúsculo e info compacta
                     HStack(spacing: 10) {
                         Circle()
                             .fill(Color.primary.opacity(0.1))
@@ -572,6 +575,7 @@ struct SettingsView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
+                        .allowsHitTesting(false)
                         
                         Spacer()
                     }
@@ -582,7 +586,7 @@ struct SettingsView: View {
                     // Botões compactos lado a lado
                     HStack(spacing: 8) {
                         Button {
-                            showAuthSheet = true
+                            showLoginSheet = true
                         } label: {
                             Text("Entrar")
                                 .font(.caption)
@@ -593,9 +597,10 @@ struct SettingsView: View {
                                 .foregroundStyle(.primary)
                                 .cornerRadius(6)
                         }
+                        .buttonStyle(.borderless)
                         
                         Button {
-                            showAuthSheet = true
+                            showSignupSheet = true
                         } label: {
                             Text("Criar Conta")
                                 .font(.caption)
@@ -606,6 +611,7 @@ struct SettingsView: View {
                                 .foregroundStyle(Color("Background"))
                                 .cornerRadius(6)
                         }
+                        .buttonStyle(.borderless)
                     }
                 }
             }

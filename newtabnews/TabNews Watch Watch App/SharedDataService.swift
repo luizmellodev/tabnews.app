@@ -5,19 +5,10 @@
 //  Created by Luiz Mello on 20/11/25.
 //
 
-
-//
-//  SharedDataService.swift
-//  newtabnews
-//
-//  Created by Luiz Mello
-//
-
 import Foundation
 import SwiftUI
 
 struct SharedDataService {
-    // IMPORTANTE: Usar o mesmo suiteName em iOS e watchOS
     private static let suiteName = "group.luizmello.tabnews"
     private static var sharedDefaults: UserDefaults {
         guard let defaults = UserDefaults(suiteName: suiteName) else {
@@ -32,7 +23,6 @@ struct SharedDataService {
             print("   Platform: watchOS")
             #endif
             
-            // Retornar UserDefaults padrão como fallback (apenas para debug)
             print("   ⚠️ USANDO UserDefaults.standard COMO FALLBACK")
             return UserDefaults.standard
         }
@@ -45,7 +35,7 @@ struct SharedDataService {
     static func saveLikedPosts(_ posts: [PostRequest]) {
         if let encoded = try? JSONEncoder().encode(posts) {
             sharedDefaults.set(encoded, forKey: "LikedContent")
-            sharedDefaults.synchronize() // Força sincronização
+            sharedDefaults.synchronize()
         }
     }
     
@@ -62,7 +52,6 @@ struct SharedDataService {
         print("📤 [SharedDataService] Tentando salvar \(posts.count) posts")
         print("   Suite Name: \(suiteName)")
         
-        // Teste: salvar valores simples também
         sharedDefaults.set("TESTE-\(Date())", forKey: "TestSync")
         sharedDefaults.set(posts.count, forKey: "PostCount")
         sharedDefaults.synchronize()
@@ -74,14 +63,12 @@ struct SharedDataService {
             
             print("   ✅ Posts salvos! Tamanho: \(encoded.count) bytes")
             
-            // Verificar se realmente salvou
             if let verificacao = sharedDefaults.data(forKey: "RecentPosts") {
                 print("   ✅ Verificação: Dados encontrados (\(verificacao.count) bytes)")
             } else {
                 print("   ❌ ERRO: Dados não foram salvos!")
             }
             
-            // Mostrar chaves relevantes
             let allKeys = sharedDefaults.dictionaryRepresentation().keys
             let relevantKeys = allKeys.filter { $0.contains("Recent") || $0.contains("Post") || $0.contains("Test") }
             print("   📋 Chaves relevantes: \(relevantKeys)")
@@ -94,7 +81,6 @@ struct SharedDataService {
         print("📥 [SharedDataService] Tentando carregar posts...")
         print("   Suite Name: \(suiteName)")
         
-        // Verificar valores de teste
         if let testValue = sharedDefaults.string(forKey: "TestSync") {
             print("   ✅ TestSync encontrado: \(testValue)")
         } else {
@@ -107,7 +93,6 @@ struct SharedDataService {
             print("   ❌ PostCount NÃO encontrado")
         }
         
-        // Verificar se UserDefaults está funcionando
         let allKeys = sharedDefaults.dictionaryRepresentation().keys
         let relevantKeys = allKeys.filter { $0.contains("Recent") || $0.contains("Post") || $0.contains("Test") || $0.contains("Liked") }
         print("   📋 Chaves relevantes: \(relevantKeys)")

@@ -3,7 +3,6 @@
 //  TabNews Watch Watch App
 //
 //  Created by Luiz Mello on 20/11/25.
-//  VERSÃO SIMPLIFICADA
 //
 
 import SwiftUI
@@ -43,7 +42,6 @@ struct WatchListView: View {
             .navigationTitle("TabNews")
             .navigationBarTitleDisplayMode(.inline)
             .refreshable {
-                // Pull to refresh
                 await refreshPosts()
             }
         }
@@ -53,7 +51,6 @@ struct WatchListView: View {
     }
     
     private func loadPosts() {
-        // Ler posts salvos localmente
         if let data = UserDefaults.standard.data(forKey: "WatchPosts"),
            let decoded = try? JSONDecoder().decode([PostRequest].self, from: data) {
             posts = decoded
@@ -65,7 +62,6 @@ struct WatchListView: View {
     }
     
     private func refreshPosts() async {
-        // Pequeno delay para feedback visual
         try? await Task.sleep(nanoseconds: 300_000_000)
         loadPosts()
     }
@@ -77,21 +73,17 @@ struct PostRowWatch: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            // Título
             Text(post.title ?? "Sem título")
                 .font(.headline)
                 .lineLimit(3)
             
-            // Info
             HStack(spacing: 8) {
-                // Autor
                 Text(post.ownerUsername ?? "")
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 
                 Spacer()
                 
-                // Tabcoins
                 if let tabcoins = post.tabcoins {
                     Label("\(tabcoins)", systemImage: "star.fill")
                         .font(.caption2)
@@ -99,7 +91,6 @@ struct PostRowWatch: View {
                 }
             }
             
-            // Data
             if let publishedAt = post.publishedAt {
                 Text(formatDate(publishedAt))
                     .font(.caption2)

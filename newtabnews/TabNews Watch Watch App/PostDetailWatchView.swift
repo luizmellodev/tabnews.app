@@ -18,7 +18,6 @@ struct PostDetailWatchView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                // Título e Like
                 HStack(alignment: .top) {
                 Text(post.title ?? "Sem título")
                     .font(.headline)
@@ -36,7 +35,6 @@ struct PostDetailWatchView: View {
                     .buttonStyle(.plain)
                 }
                 
-                // Informações do post
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         if let owner = post.ownerUsername {
@@ -64,7 +62,6 @@ struct PostDetailWatchView: View {
                 
                 Divider()
                 
-                // Conteúdo do post
                 if let body = post.body, !body.isEmpty {
                     Text(cleanMarkdown(body))
                         .font(.caption)
@@ -76,7 +73,6 @@ struct PostDetailWatchView: View {
                         .italic()
                 }
                 
-                // CTA no final do post
                 VStack(alignment: .leading, spacing: 8) {
                     Divider()
                         .padding(.vertical, 8)
@@ -100,13 +96,11 @@ struct PostDetailWatchView: View {
                 Divider()
                     .padding(.top, 8)
                 
-                // Controles de Áudio
                 VStack(spacing: 12) {
                     Text("Ouvir Notícia")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     
-                    // Botão Play/Pause principal
                     Button {
                         if let body = post.body {
                             ttsManager.togglePlayPause(
@@ -122,7 +116,6 @@ struct PostDetailWatchView: View {
                     .buttonStyle(.plain)
                     .disabled(post.body?.isEmpty ?? true)
                     
-                    // Controles de velocidade
                     VStack(spacing: 6) {
                         Text("Velocidade")
                             .font(.caption2)
@@ -150,7 +143,6 @@ struct PostDetailWatchView: View {
                         }
                     }
                     
-                    // Botão Stop (só aparece se estiver tocando)
                     if ttsManager.isPlaying || ttsManager.isPaused {
                         Button {
                             ttsManager.stop()

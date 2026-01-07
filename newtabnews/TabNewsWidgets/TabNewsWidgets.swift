@@ -195,7 +195,6 @@ struct RelevantPostsView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: family == .systemSmall ? 6 : 8) {
-            // Header compacto para small
             if family == .systemSmall {
                 HStack(spacing: 4) {
                     Image(systemName: "flame.fill")
@@ -232,7 +231,6 @@ struct DigestView: View {
     let digest: WidgetPost
     let family: WidgetFamily
     
-    // Extrair data da semana do título ou usar data atual
     private var weekInfo: String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "pt_BR")
@@ -241,7 +239,6 @@ struct DigestView: View {
         let calendar = Calendar.current
         let today = Date()
         
-        // Pegar início e fim da semana
         guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)),
               let weekEnd = calendar.date(byAdding: .day, value: 6, to: weekStart) else {
             return "Esta semana"
@@ -254,7 +251,6 @@ struct DigestView: View {
         ZStack {
             Link(destination: digest.url ?? URL(string: "tabnews://digest")!) {
                 VStack(alignment: .leading, spacing: family == .systemSmall ? 10 : 14) {
-                    // Header com semana
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 6) {
                             Image(systemName: "star.fill")
@@ -266,7 +262,6 @@ struct DigestView: View {
                                 .foregroundStyle(.primary)
                         }
                         
-                        // Mostrar semana apenas em medium/large
                         if family != .systemSmall {
                             Text(weekInfo)
                                 .font(.caption2)
@@ -274,7 +269,6 @@ struct DigestView: View {
                         }
                     }
                     
-                    // Título do digest (mais espaço)
                     Text(digest.title)
                         .font(family == .systemSmall ? .caption : .body)
                         .fontWeight(family == .systemSmall ? .semibold : .medium)
@@ -284,7 +278,6 @@ struct DigestView: View {
                     
                     Spacer()
                     
-                    // Footer com info
                     HStack {
                         Text("@\(digest.ownerUsername)")
                             .font(.caption2)

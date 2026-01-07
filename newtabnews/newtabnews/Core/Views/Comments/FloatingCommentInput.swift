@@ -17,7 +17,8 @@ struct FloatingCommentInput: View {
     @State private var commentText: String = ""
     @State private var isPosting: Bool = false
     @State private var errorMessage: String?
-    @State private var showAuthSheet: Bool = false
+    @State private var showLoginSheet: Bool = false
+    @State private var showSignupSheet: Bool = false
     @State private var isExpanded: Bool = false
     @State private var showMarkdownToolbar: Bool = false
     
@@ -155,10 +156,20 @@ struct FloatingCommentInput: View {
                 }
             }
         }
-        .sheet(isPresented: $showAuthSheet) {
-            AuthSheet {
-                isTextFieldFocused = true
-            }
+        .sheet(isPresented: $showLoginSheet) {
+            LoginSheet(
+                onSuccess: {
+                    isTextFieldFocused = true
+                },
+                onSignupTapped: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showSignupSheet = true
+                    }
+                }
+            )
+        }
+        .sheet(isPresented: $showSignupSheet) {
+            SignupWebView()
         }
     }
     
@@ -226,7 +237,7 @@ struct FloatingCommentInput: View {
         
         guard authService.isAuthenticated else {
             await MainActor.run {
-                showAuthSheet = true
+                showLoginSheet = true
             }
             return
         }
