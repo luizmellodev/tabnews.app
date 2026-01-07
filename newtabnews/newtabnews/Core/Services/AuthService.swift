@@ -125,7 +125,7 @@ class AuthService: ObservableObject {
         checkAuthStatus()
     }
     
-    // MARK: - Auth Status
+    // MARK: - Auth
     
     func checkAuthStatus() {
         if let token = keychainManager.getSessionToken(),
@@ -137,8 +137,6 @@ class AuthService: ObservableObject {
             self.currentUser = nil
         }
     }
-    
-    // MARK: - Login
     
     func login(email: String, password: String) async throws {
         let loginRequest = LoginRequest(email: email, password: password)
@@ -168,8 +166,6 @@ class AuthService: ObservableObject {
         }
     }
     
-    // MARK: - Signup
-    
     func signup(username: String, email: String, password: String) async throws {
         let signupRequest = SignupRequest(username: username, email: email, password: password)
         
@@ -191,8 +187,6 @@ class AuthService: ObservableObject {
         }
     }
     
-    // MARK: - Logout
-    
     func logout() {
         _ = keychainManager.clearAll()
         VoteManager.shared.clearAllVotes()
@@ -202,8 +196,6 @@ class AuthService: ObservableObject {
             self.currentUser = nil
         }
     }
-    
-    // MARK: - Get Current User
     
     private func fetchCurrentUser(token: String) async throws {
         let user: User = try await networkManager.sendRequest(
@@ -222,7 +214,34 @@ class AuthService: ObservableObject {
         }
     }
     
-    // MARK: - Post Comment
+    // MARK: - User Data
+    
+    func refreshUserData() async throws {
+        guard let token = keychainManager.getSessionToken() else {
+            throw AuthError.unauthorized
+        }
+        
+        try await fetchCurrentUser(token: token)
+    }
+    
+    func getUserPublications(username: String, page: Int = 1, perPage: Int = 30) async throws -> [PostRequest] {
+        let posts: [PostRequest] = try await networkManager.sendRequest(
+            "/contents/\(username)",
+            method: "GET",
+            parameters: [
+                "page": page,
+                "per_page": perPage,
+                "strategy": "new"
+            ],
+            authentication: nil,
+            token: nil,
+            body: nil
+        )
+        
+        return posts
+    }
+    
+    // MARK: - Content Actions
     
     func postComment(parentId: String, body: String) async throws -> Comment {
         guard let token = keychainManager.getSessionToken() else {
@@ -250,8 +269,6 @@ class AuthService: ObservableObject {
         
         return comment
     }
-    
-    // MARK: - Vote on Content (Upvote/Downvote)
     
     func voteOnContent(username: String, slug: String, transactionType: String) async throws {
         guard let token = keychainManager.getSessionToken() else {

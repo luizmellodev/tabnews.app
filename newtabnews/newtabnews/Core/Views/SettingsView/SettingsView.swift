@@ -28,11 +28,12 @@ struct SettingsView: View {
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
     @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
     @AppStorage("isBetaTester") private var isBetaTester = false
+    @State private var isRefreshing = false
+    @State private var userPublicationsCount: Int?
     
     var body: some View {
         NavigationStack {
             List {
-                // Seção de Perfil/Conta
                 Section {
                     profileSection
                 }
@@ -40,8 +41,7 @@ struct SettingsView: View {
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
                 .listRowSeparator(.hidden)
                 
-                // Aparência
-                    Section {
+                Section {
                         Picker("Tema", selection: $currentTheme) {
                             Label("Sistema", systemImage: "iphone").tag(Theme.system)
                             Label("Claro", systemImage: "sun.max").tag(Theme.light)
@@ -52,8 +52,7 @@ struct SettingsView: View {
                         Label("Aparência", systemImage: "paintbrush")
                     }
                     
-                    // Leitura
-                    Section {
+                Section {
                         Toggle(isOn: $isViewInApp) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Visualizar no App")
@@ -77,7 +76,6 @@ struct SettingsView: View {
                         Text("O botão flutuante permite abrir o post no navegador. Desativado por padrão para melhor experiência nativa.")
                     }
                 
-                // Estatísticas
                 Section {
                     HStack {
                         Label("Posts Curtidos", systemImage: "heart")
@@ -110,7 +108,6 @@ struct SettingsView: View {
                     Label("Sua Biblioteca", systemImage: "chart.bar")
                 }
                 
-                // Ajuda
                 Section {
                     Button {
                         UserDefaults.standard.set(false, forKey: "hasSeenTipsOnboarding")
@@ -133,7 +130,6 @@ struct SettingsView: View {
                     Text("Ver dicas: mostra apenas as dicas contextuais. Resetar completo: reinicia o app e mostra todo o onboarding inicial + dicas.")
                 }
                 
-                // Notificações
                 Section {
                     HStack {
                         Label("Status das Notificações", systemImage: "bell.badge")
@@ -158,7 +154,6 @@ struct SettingsView: View {
                     Text("Receba notificações de novas newsletters e resumos semanais do TabNews")
                 }
                 
-                // Dados
                 Section {
                     Button(role: .destructive) {
                         showingClearCache = true
@@ -177,7 +172,6 @@ struct SettingsView: View {
                     Text("O cache força atualização dos posts. Limpar a biblioteca remove TUDO (curtidas, destaques, anotações e pastas)")
                 }
                 
-                // Sobre
                 Section {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Sobre o App")
@@ -190,7 +184,6 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 }
                 
-                // Criadores
                 Section {
                     NavigationLink {
                         SocialView(
@@ -241,10 +234,8 @@ struct SettingsView: View {
                     Label("Criadores", systemImage: "person.2")
                 }
                 
-                // Debug (só aparece em desenvolvimento)
                 #if DEBUG
                 Section {
-                    // Info sobre tempo
                     HStack {
                         Text("Tempo no app")
                             .font(.caption)
@@ -254,7 +245,6 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
                     
-                    // Botões de jogo
                     Button {
                         AppUsageTracker.shared.shouldShowGameButton = true
                         UserDefaults.standard.set(true, forKey: "hasShownGameButton")
@@ -269,14 +259,12 @@ struct SettingsView: View {
                         Label("🎮 Forçar Pasta 'Descanse'", systemImage: "bed.double")
                     }
                     
-                    // Botão de reset
                     Button(role: .destructive) {
                         AppUsageTracker.shared.resetUsageForTesting()
                     } label: {
                         Label("Resetar Tempo", systemImage: "arrow.counterclockwise")
                     }
                     
-                    // Watch sync
                     Button {
                         syncWithWatchManually()
                     } label: {
@@ -289,7 +277,6 @@ struct SettingsView: View {
                         }
                     }
                     
-                    // Toggle do banner de Digest
                     Toggle(isOn: $debugShowDigestBanner) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("🔥 Mostrar Banner de Digest")
@@ -299,11 +286,9 @@ struct SettingsView: View {
                         }
                     }
                     
-                    // Beta Tester Debug
                     Button {
                         withAnimation {
                             isBetaTester.toggle()
-                            // Também atualizar no service para manter sincronizado
                             BetaTesterService.shared.forceBetaTesterStatus(isBetaTester)
                         }
                     } label: {
@@ -351,7 +336,6 @@ struct SettingsView: View {
                 }
                 #endif
                 
-                // Versão
                 Section {
                     HStack {
                         Text("Versão")
@@ -364,6 +348,27 @@ struct SettingsView: View {
             .padding(.top, 50)
             .scrollContentBackground(.hidden)
             .navigationTitle("Ajustes")
+            .refreshable {
+                await refreshUserData()
+            }
+            .overlay(alignment: .top) {
+                if isRefreshing {
+                    HStack(spacing: 8) {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                        Text("Atualizando...")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(8)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(20)
+                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                    .padding(.top, 8)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+            }
+            .animation(.spring(), value: isRefreshing)
             .background {
                 ZStack {
                     Color("Background")
@@ -411,10 +416,15 @@ struct SettingsView: View {
             } message: {
                 Text("Tem certeza que deseja sair da sua conta?")
             }
+            .task {
+                if authService.isAuthenticated, let username = authService.currentUser?.username {
+                    await loadPublicationsCount(username: username)
+                }
+            }
         }
     }
     
-    // MARK: - Views
+    // MARK: - Profile Section
     
     private var profileSection: some View {
         Group {
@@ -493,8 +503,8 @@ struct SettingsView: View {
                             Spacer()
                         }
                         
-                        // Stats (TabCoins e TabCash) - horizontal compacto
-                        HStack(spacing: 24) {
+                        // Stats (TabCoins, TabCash e Publicações) - horizontal compacto
+                        HStack(spacing: 20) {
                             if let tabcoins = user.tabcoins {
                                 HStack(spacing: 6) {
                                     Image(systemName: "star.fill")
@@ -529,11 +539,45 @@ struct SettingsView: View {
                             
                             Spacer()
                         }
+                        
+                        // Botão de Publicações
+                        NavigationLink {
+                            UserPublicationsView(username: user.username)
+                        } label: {
+                            HStack {
+                                Image(systemName: "doc.text.fill")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.primary)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    if let count = userPublicationsCount {
+                                        Text("\(count) \(count == 1 ? "Publicação" : "Publicações")")
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundStyle(.primary)
+                                    } else {
+                                        Text("Minhas Publicações")
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundStyle(.primary)
+                                    }
+                                    Text("Ver todas")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                                Spacer()
+                            }
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 16)
+                            .background(Color(.systemGray5).opacity(0.5))
+                            .cornerRadius(10)
+                        }
+                        .buttonStyle(.borderless)
                     }
                     .padding(16)
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
-                    .allowsHitTesting(false) // Desabilita toques no card do perfil
                     
                     // Botão de Logout separado - minimalista
                     Button {
@@ -553,6 +597,7 @@ struct SettingsView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                     }
+                    .buttonStyle(.borderless)
                 }
             } else {
                 VStack(spacing: 10) {
@@ -683,12 +728,46 @@ struct SettingsView: View {
         )
     }
     
-    // MARK: - Functions
-    private func clearAPICache() {
-        // Limpar todas as respostas HTTP em cache (posts, newsletters, etc)
-        URLCache.shared.removeAllCachedResponses()
+    // MARK: - Data Management
+    
+    private func refreshUserData() async {
+        guard authService.isAuthenticated else { return }
         
-        // Opcional: Limpar cookies de sessão (se houver)
+        isRefreshing = true
+        
+        do {
+            try await authService.refreshUserData()
+            
+            if let username = authService.currentUser?.username {
+                await loadPublicationsCount(username: username)
+            }
+        } catch {
+            print("Erro ao atualizar dados do usuário: \(error)")
+        }
+        
+        isRefreshing = false
+    }
+    
+    private func loadPublicationsCount(username: String) async {
+        do {
+            let publications = try await authService.getUserPublications(
+                username: username,
+                page: 1,
+                perPage: 1
+            )
+            
+            // A API do TabNews não retorna o total, então vamos buscar a primeira página
+            // e fazer uma estimativa baseada no retorno
+            await MainActor.run {
+                self.userPublicationsCount = publications.isEmpty ? 0 : nil
+            }
+        } catch {
+            print("Erro ao carregar contagem de publicações: \(error)")
+        }
+    }
+    
+    private func clearAPICache() {
+        URLCache.shared.removeAllCachedResponses()
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
     }
     
@@ -713,25 +792,20 @@ struct SettingsView: View {
     #endif
     
     private func clearCompleteLibrary() {
-        // 1. Limpar curtidas
         viewModel.clearAllLikedContent()
         
-        // 2. Limpar todos os destaques
         for highlight in highlights {
             modelContext.delete(highlight)
         }
         
-        // 3. Limpar todas as anotações
         for note in notes {
             modelContext.delete(note)
         }
         
-        // 4. Limpar todas as pastas
         for folder in folders {
             modelContext.delete(folder)
         }
         
-        // Salvar alterações
         try? modelContext.save()
     }
 }
