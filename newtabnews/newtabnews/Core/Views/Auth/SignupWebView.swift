@@ -112,20 +112,38 @@ struct WebViewContainer: UIViewRepresentable {
         var parent: WebViewContainer
         private var hasDetectedCookie = false
         private var lastDetectedToken: String?
+        private weak var webView: WKWebView?
         
         init(_ parent: WebViewContainer) {
             self.parent = parent
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            // Guardar referência ao webView
+            self.webView = webView
+            
+            // Parar de verificar se já detectou cookie
+            guard !hasDetectedCookie else {
+                return
+            }
+            
             // Verificar se há cookie de sessão após cada navegação
             checkForSessionCookie(webView: webView)
         }
         
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            // Se já detectou cookie, bloquear todas as navegações subsequentes
+            if hasDetectedCookie {
+                decisionHandler(.cancel)
+                return
+            }
+            
+            decisionHandler(.allow)
+        }
+        
         private func checkForSessionCookie(webView: WKWebView) {
             // Evitar múltiplas detecções
-                guard !hasDetectedCookie else {
-                print("⚠️ [WebView] Cookie já foi detectado nesta sessão, ignorando...")
+            guard !hasDetectedCookie else {
                 return
             }
             
@@ -151,8 +169,9 @@ struct WebViewContainer: UIViewRepresentable {
                     self.hasDetectedCookie = true
                     self.lastDetectedToken = sessionCookie.value
                     
-                    // Notificar que o login foi detectado
+                    // Parar qualquer navegação em progresso
                     DispatchQueue.main.async {
+                        self.webView?.stopLoading()
                         self.parent.onLoginDetected?(sessionCookie.value)
                     }
                 }
