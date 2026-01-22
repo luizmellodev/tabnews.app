@@ -249,7 +249,7 @@ struct CommentsView: View {
             }
         }
         .sheet(isPresented: $showAuthSheet) {
-            AuthSheet()
+            LoginWebView()
         }
     }
     

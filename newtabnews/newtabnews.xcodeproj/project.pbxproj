@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		790886192F0EC17F0068804C /* LoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790886172F0EC17F0068804C /* LoginSheet.swift */; };
 		7908861A2F0EC17F0068804C /* SignupWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790886182F0EC17F0068804C /* SignupWebView.swift */; };
 		790887282F0F16AD0068804C /* UserPublicationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790887272F0F16AD0068804C /* UserPublicationsView.swift */; };
 		790AB0C12ECEAE9500E443E6 /* TextToSpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */; };
@@ -82,7 +81,6 @@
 		796D063E2F0AE4C50064A2BC /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063B2F0AE4C50064A2BC /* CommentsView.swift */; };
 		796D063F2F0AE4C50064A2BC /* CommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */; };
 		796D06402F0AE4C50064A2BC /* CommentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D063A2F0AE4C50064A2BC /* CommentRow.swift */; };
-		796D06432F0AE5960064A2BC /* AuthSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06412F0AE5960064A2BC /* AuthSheet.swift */; };
 		796D06462F0AE5B10064A2BC /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06452F0AE5B10064A2BC /* KeychainManager.swift */; };
 		796D06472F0AE5B10064A2BC /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06442F0AE5B10064A2BC /* AuthService.swift */; };
 		796D06492F0AE5F30064A2BC /* CommentComposeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */; };
@@ -140,6 +138,7 @@
 		79E727FC2EFB9E76007BF27A /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E727FB2EFB9E76007BF27A /* AppDependencies.swift */; };
 		79E728012EFB9FCC007BF27A /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E728002EFB9FCC007BF27A /* NotificationHandler.swift */; };
 		79E728022EFB9FCC007BF27A /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E728002EFB9FCC007BF27A /* NotificationHandler.swift */; };
+		79F468822F21286F00EFF64F /* LoginWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F468812F21286F00EFF64F /* LoginWebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,7 +192,6 @@
 
 /* Begin PBXFileReference section */
 		0578C34654A4634FDF1FABC9 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		790886172F0EC17F0068804C /* LoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSheet.swift; sourceTree = "<group>"; };
 		790886182F0EC17F0068804C /* SignupWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupWebView.swift; sourceTree = "<group>"; };
 		790887272F0F16AD0068804C /* UserPublicationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPublicationsView.swift; sourceTree = "<group>"; };
 		790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToSpeechManager.swift; sourceTree = "<group>"; };
@@ -248,7 +246,6 @@
 		796D063A2F0AE4C50064A2BC /* CommentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentRow.swift; sourceTree = "<group>"; };
 		796D063B2F0AE4C50064A2BC /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		796D063C2F0AE4C50064A2BC /* CommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewModel.swift; sourceTree = "<group>"; };
-		796D06412F0AE5960064A2BC /* AuthSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSheet.swift; sourceTree = "<group>"; };
 		796D06442F0AE5B10064A2BC /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		796D06452F0AE5B10064A2BC /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		796D06482F0AE5F30064A2BC /* CommentComposeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentComposeSheet.swift; sourceTree = "<group>"; };
@@ -301,6 +298,7 @@
 		79E727F82EFB9E27007BF27A /* MockContentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContentService.swift; sourceTree = "<group>"; };
 		79E727FB2EFB9E76007BF27A /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 		79E728002EFB9FCC007BF27A /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandler.swift; sourceTree = "<group>"; };
+		79F468812F21286F00EFF64F /* LoginWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -524,9 +522,8 @@
 		796D06422F0AE5960064A2BC /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				790886172F0EC17F0068804C /* LoginSheet.swift */,
+				79F468812F21286F00EFF64F /* LoginWebView.swift */,
 				790886182F0EC17F0068804C /* SignupWebView.swift */,
-				796D06412F0AE5960064A2BC /* AuthSheet.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -919,7 +916,6 @@
 				79C706482D9AE477005C26A7 /* SocialView.swift in Sources */,
 				791584862EFC89F200C69745 /* UserFolderRow.swift in Sources */,
 				791584872EFC89F200C69745 /* EmptyLibraryView.swift in Sources */,
-				796D06432F0AE5960064A2BC /* AuthSheet.swift in Sources */,
 				791584882EFC89F200C69745 /* SpecialFolderRow.swift in Sources */,
 				791584892EFC89F200C69745 /* PostFileRow.swift in Sources */,
 				7915848A2EFC89F200C69745 /* ColorExtension.swift in Sources */,
@@ -928,7 +924,6 @@
 				79C706352D95E643005C26A7 /* Logger.swift in Sources */,
 				799049FD2A72F7BE0050240C /* ListDetailsView.swift in Sources */,
 				79E727F42EFB9D25007BF27A /* AppTab.swift in Sources */,
-				790886192F0EC17F0068804C /* LoginSheet.swift in Sources */,
 				7908861A2F0EC17F0068804C /* SignupWebView.swift in Sources */,
 				7982B7752F01778100666726 /* BetaTesterService.swift in Sources */,
 				79C7063A2D95E766005C26A7 /* PostRequest.swift in Sources */,
@@ -945,6 +940,7 @@
 				7915848D2EFC903C00C69745 /* SavedPost.swift in Sources */,
 				790AB0D12ECEB21C00E443E6 /* PostWithHighlightsView.swift in Sources */,
 				79904A0E2A732FC90050240C /* SettingsView.swift in Sources */,
+				79F468822F21286F00EFF64F /* LoginWebView.swift in Sources */,
 				79904A102A732FE30050240C /* DuckView.swift in Sources */,
 				7915847A2EFC86E800C69745 /* AddHighlightSheet.swift in Sources */,
 				790AB0D52ECEBE3A00E443E6 /* AppUsageTracker.swift in Sources */,
@@ -1226,7 +1222,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1269,7 +1265,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;

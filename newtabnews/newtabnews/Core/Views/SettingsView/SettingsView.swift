@@ -25,6 +25,7 @@ struct SettingsView: View {
     @State private var showSignupSheet = false
     @State private var showLogoutAlert = false
     @StateObject private var authService = AuthService.shared
+    @StateObject private var appUsageTracker = AppUsageTracker.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
     @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
     @AppStorage("isBetaTester") private var isBetaTester = false
@@ -240,27 +241,27 @@ struct SettingsView: View {
                         Text("Tempo no app")
                             .font(.caption)
                         Spacer()
-                        Text(AppUsageTracker.shared.formattedTime)
+                        Text(appUsageTracker.formattedTime)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                     
                     Button {
-                        AppUsageTracker.shared.shouldShowGameButton = true
+                        appUsageTracker.shouldShowGameButton = true
                         UserDefaults.standard.set(true, forKey: "hasShownGameButton")
                     } label: {
                         Label("🕹️ Forçar Botão de Jogo", systemImage: "gamecontroller")
                     }
                     
                     Button {
-                        AppUsageTracker.shared.shouldShowRestFolder = true
+                        appUsageTracker.shouldShowRestFolder = true
                         UserDefaults.standard.set(true, forKey: "hasShownRestFolder")
                     } label: {
                         Label("🎮 Forçar Pasta 'Descanse'", systemImage: "bed.double")
                     }
                     
                     Button(role: .destructive) {
-                        AppUsageTracker.shared.resetUsageForTesting()
+                        appUsageTracker.resetUsageForTesting()
                     } label: {
                         Label("Resetar Tempo", systemImage: "arrow.counterclockwise")
                     }
@@ -381,8 +382,9 @@ struct SettingsView: View {
                 }
             }
             .sheet(isPresented: $showLoginSheet) {
-                LoginSheet(
+                LoginWebView(
                     onSignupTapped: {
+                        showLoginSheet = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             showSignupSheet = true
                         }

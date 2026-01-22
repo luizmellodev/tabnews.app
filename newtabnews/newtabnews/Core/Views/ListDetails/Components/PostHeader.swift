@@ -212,7 +212,7 @@ struct PostHeader: View {
             }
         }
         .sheet(isPresented: $showAuthSheet) {
-            AuthSheet()
+            LoginWebView()
         }
     }
     

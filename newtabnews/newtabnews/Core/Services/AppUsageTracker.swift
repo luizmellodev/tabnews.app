@@ -17,8 +17,8 @@ class AppUsageTracker: ObservableObject {
     @Published var shouldShowGameButton: Bool = false
     
     private var timer: Timer?
-    private let gameButtonThreshold = 600 // 10 minutos
-    private let restFolderThreshold = 1800 // 30 minutos
+    private let gameButtonThreshold = 3600 // 1 hora (60 minutos)
+    private let restFolderThreshold = 7200 // 2 horas (120 minutos)
     
     private init() {
         loadUsageData()
@@ -40,13 +40,13 @@ class AppUsageTracker: ObservableObject {
     }
     
     private func checkThresholds() {
-        // Mostrar botão de jogo após 10 minutos
+        // Mostrar botão de jogo após 1 hora (easter egg raro)
         if totalSecondsInApp >= gameButtonThreshold && !shouldShowGameButton {
             shouldShowGameButton = true
             UserDefaults.standard.set(true, forKey: "hasShownGameButton")
         }
         
-        // Mostrar pasta "Descanse" após 30 minutos
+        // Mostrar pasta "Descanse" após 2 horas (easter egg muito raro)
         if totalSecondsInApp >= restFolderThreshold && !shouldShowRestFolder {
             shouldShowRestFolder = true
             UserDefaults.standard.set(true, forKey: "hasShownRestFolder")

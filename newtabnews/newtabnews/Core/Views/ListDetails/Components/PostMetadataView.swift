@@ -119,7 +119,7 @@ struct PostMetadataView: View {
             }
         }
         .sheet(isPresented: $showAuthSheet) {
-            AuthSheet()
+            LoginWebView()
         }
     }
     

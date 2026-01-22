@@ -149,16 +149,19 @@ struct CommentComposeSheet: View {
                 }
             }
             .sheet(isPresented: $showLoginSheet) {
-                LoginSheet(
-                    onSuccess: {
-                        isTextFieldFocused = true
-                    },
+                LoginWebView(
                     onSignupTapped: {
+                        showLoginSheet = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             showSignupSheet = true
                         }
                     }
                 )
+                .onDisappear {
+                    if authService.isAuthenticated {
+                        isTextFieldFocused = true
+                    }
+                }
             }
             .sheet(isPresented: $showSignupSheet) {
                 SignupWebView()

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import WebKit
 
 // MARK: - Auth Error
 
@@ -128,11 +129,28 @@ class AuthService: ObservableObject {
     // MARK: - Auth
     
     func checkAuthStatus() {
-        if let token = keychainManager.getSessionToken(),
-           let user = keychainManager.getUser() {
-            self.isAuthenticated = true
-            self.currentUser = user
+        if let token = keychainManager.getSessionToken() {
+            if let user = keychainManager.getUser() {
+                // Tem token e usuário, está autenticado
+                self.isAuthenticated = true
+                self.currentUser = user
+                print("✅ [AuthService] Usuário autenticado: @\(user.username)")
+            } else {
+                // Tem token mas não tem usuário, buscar da API
+                print("⚠️ [AuthService] Token encontrado mas usuário ausente, buscando da API...")
+                Task {
+                    do {
+                        try await fetchCurrentUser(token: token)
+                        print("✅ [AuthService] Usuário recuperado da API")
+                    } catch {
+                        print("❌ [AuthService] Erro ao recuperar usuário, limpando token: \(error)")
+                        // Token inválido, limpar tudo
+                        logout()
+                    }
+                }
+            }
         } else {
+            // Sem token, deslogado
             self.isAuthenticated = false
             self.currentUser = nil
         }
@@ -191,9 +209,26 @@ class AuthService: ObservableObject {
         _ = keychainManager.clearAll()
         VoteManager.shared.clearAllVotes()
         
+        // Limpar cookies da WebView
+        clearWebViewCookies()
+        
         DispatchQueue.main.async {
             self.isAuthenticated = false
             self.currentUser = nil
+        }
+    }
+    
+    private func clearWebViewCookies() {
+        let dataStore = WKWebsiteDataStore.default()
+        let dataTypes = Set([WKWebsiteDataTypeCookies])
+        
+        dataStore.fetchDataRecords(ofTypes: dataTypes) { records in
+            // Filtrar apenas cookies do TabNews
+            let tabnewsRecords = records.filter { $0.displayName.contains("tabnews.com.br") }
+            
+            dataStore.removeData(ofTypes: dataTypes, for: tabnewsRecords) {
+                print("🍪 [AuthService] Cookies da WebView limpos")
+            }
         }
     }
     
@@ -202,8 +237,8 @@ class AuthService: ObservableObject {
             "/user",
             method: "GET",
             parameters: nil,
-            authentication: nil,
-            token: token,
+            authentication: "Cookie",
+            token: "session_id=\(token)",
             body: nil
         )
         
@@ -211,6 +246,7 @@ class AuthService: ObservableObject {
         
         await MainActor.run {
             self.currentUser = user
+            self.isAuthenticated = true
         }
     }
     
