@@ -108,6 +108,7 @@
 		79904A0B2A732E3F0050240C /* LikedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0A2A732E3F0050240C /* LikedList.swift */; };
 		79904A0E2A732FC90050240C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0D2A732FC90050240C /* SettingsView.swift */; };
 		79904A102A732FE30050240C /* DuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0F2A732FE30050240C /* DuckView.swift */; };
+		79BB0EE22F23E83B005D981E /* DeleteAccountContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BB0EE12F23E83B005D981E /* DeleteAccountContactView.swift */; };
 		79C706122D95E485005C26A7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578C34654A4634FDF1FABC9 /* NetworkManager.swift */; };
 		79C706262D95E51F005C26A7 /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C706252D95E51F005C26A7 /* NetworkManagerProtocol.swift */; };
 		79C706282D95E528005C26A7 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C706272D95E528005C26A7 /* RequestBuilder.swift */; };
@@ -272,6 +273,7 @@
 		79904A0A2A732E3F0050240C /* LikedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedList.swift; sourceTree = "<group>"; };
 		79904A0D2A732FC90050240C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		79904A0F2A732FE30050240C /* DuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckView.swift; sourceTree = "<group>"; };
+		79BB0EE12F23E83B005D981E /* DeleteAccountContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountContactView.swift; sourceTree = "<group>"; };
 		79C706252D95E51F005C26A7 /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
 		79C706272D95E528005C26A7 /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		79C706292D95E534005C26A7 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
@@ -655,6 +657,7 @@
 			isa = PBXGroup;
 			children = (
 				79C706472D9AE477005C26A7 /* SocialView.swift */,
+				79BB0EE12F23E83B005D981E /* DeleteAccountContactView.swift */,
 				79904A0D2A732FC90050240C /* SettingsView.swift */,
 				790887272F0F16AD0068804C /* UserPublicationsView.swift */,
 			);
@@ -984,6 +987,7 @@
 				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
 				7982B7512F00B3CA00666726 /* DigestCard.swift in Sources */,
 				7982B7522F00B3CA00666726 /* DigestBannerView.swift in Sources */,
+				79BB0EE22F23E83B005D981E /* DeleteAccountContactView.swift in Sources */,
 				7982B7532F00B3CA00666726 /* DigestViewModel.swift in Sources */,
 				7982B7542F00B3CA00666726 /* DigestListView.swift in Sources */,
 				791CC1AB2F0B141000C8B38D /* PostHeader.swift in Sources */,
@@ -1222,7 +1226,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1265,7 +1269,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;

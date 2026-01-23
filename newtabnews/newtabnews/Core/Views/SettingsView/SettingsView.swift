@@ -24,6 +24,9 @@ struct SettingsView: View {
     @State private var showLoginSheet = false
     @State private var showSignupSheet = false
     @State private var showLogoutAlert = false
+    @State private var showDeleteAccountAlert = false
+    @State private var showDeleteAccountContact = false
+    @State private var deletedAccountInfo: (username: String, email: String)?
     @StateObject private var authService = AuthService.shared
     @StateObject private var appUsageTracker = AppUsageTracker.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
@@ -418,6 +421,19 @@ struct SettingsView: View {
             } message: {
                 Text("Tem certeza que deseja sair da sua conta?")
             }
+            .alert("Excluir Conta", isPresented: $showDeleteAccountAlert) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Continuar", role: .destructive) {
+                    handleDeleteAccount()
+                }
+            } message: {
+                Text("Isso irá desconectar sua conta e limpar todos os dados locais. Para excluir permanentemente sua conta do TabNews, você será direcionado para entrar em contato com o suporte.")
+            }
+            .sheet(isPresented: $showDeleteAccountContact) {
+                if let accountInfo = deletedAccountInfo {
+                    DeleteAccountContactView(username: accountInfo.username, email: accountInfo.email)
+                }
+            }
             .task {
                 if authService.isAuthenticated, let username = authService.currentUser?.username {
                     await loadPublicationsCount(username: username)
@@ -600,6 +616,26 @@ struct SettingsView: View {
                         .cornerRadius(8)
                     }
                     .buttonStyle(.borderless)
+                    
+                    // Botão de Excluir Conta
+                    Button {
+                        showDeleteAccountAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash")
+                                .font(.subheadline)
+                            Text("Excluir Conta")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Spacer()
+                        }
+                        .foregroundStyle(.red)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                    }
+                    .buttonStyle(.borderless)
                 }
             } else {
                 VStack(spacing: 10) {
@@ -731,6 +767,34 @@ struct SettingsView: View {
     }
     
     // MARK: - Data Management
+    
+    private func handleDeleteAccount() {
+        // Capturar informações do usuário ANTES de fazer logout
+        let username = authService.currentUser?.username ?? ""
+        let email = authService.currentUser?.email ?? ""
+        deletedAccountInfo = (username: username, email: email)
+        
+        authService.logout()
+        viewModel.clearAllLikedContent()
+        
+        for highlight in highlights {
+            modelContext.delete(highlight)
+        }
+        
+        for note in notes {
+            modelContext.delete(note)
+        }
+        
+        for folder in folders {
+            modelContext.delete(folder)
+        }
+        
+        try? modelContext.save()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            showDeleteAccountContact = true
+        }
+    }
     
     private func refreshUserData() async {
         guard authService.isAuthenticated else { return }
