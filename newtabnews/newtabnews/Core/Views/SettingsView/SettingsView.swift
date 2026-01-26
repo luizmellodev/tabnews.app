@@ -203,7 +203,7 @@ struct SettingsView: View {
                                 .foregroundColor(.blue)
                             
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Felipe Deschamps")
+                                Text("Filipe Deschamps")
                                     .font(.headline)
                                 Text("Criador do TabNews")
                                     .font(.caption)
