@@ -42,11 +42,12 @@ struct CommentRow: View {
                 HStack(alignment: .top, spacing: 0) {
                     // Linha vertical de indentação
                     if depth > 0 {
-                        ForEach(0..<min(depth, maxDepth), id: \.self) { _ in
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(width: 2)
-                                .padding(.leading, indentWidth - 2)
+                        HStack(spacing: indentWidth - 2) {
+                            ForEach(0..<min(depth, maxDepth), id: \.self) { _ in
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 2)
+                            }
                         }
                     }
                     

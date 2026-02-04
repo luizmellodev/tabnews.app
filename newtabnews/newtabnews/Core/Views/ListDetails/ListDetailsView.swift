@@ -34,7 +34,7 @@ struct ListDetailView: View {
 
     var body: some View {
         ZStack {
-            ScrollView {
+            ScrollView(.vertical, showsIndicators: true) {
                 VStack(alignment: .leading) {
                     // Header unificado e minimalista
                     PostHeader(
@@ -61,16 +61,18 @@ struct ListDetailView: View {
                     postContent
                 }
                 .padding(.horizontal, 20)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .sheet(isPresented: $showingTabNews) {
-                WebContentView(content: post)
-                    .presentationDetents([.large, .large])
-                    .presentationDragIndicator(.hidden)
-            }
+            .scrollBounceBehavior(.basedOnSize)
             
             if showReadOnTabNewsButton {
                 readOnTabNewsButton
             }
+        }
+        .sheet(isPresented: $showingTabNews) {
+            WebContentView(content: post)
+                .presentationDetents([.large, .large])
+                .presentationDragIndicator(.hidden)
         }
         .onDisappear {
             ttsManager.stop()
@@ -87,19 +89,19 @@ struct ListDetailView: View {
     
     private var postContent: some View {
         VStack(alignment: .leading, spacing: 0) {
-                    HybridMarkdownView(
-                        markdown: post.body ?? "",
-                        postId: post.id ?? "",
-                        highlights: postHighlights,
-                        isHighlightMode: isHighlightMode,
-                        onHighlight: { text, range in
-                            saveHighlight(text: text, range: range)
-                        },
-                        onRemoveHighlight: { highlight in
-                            removeHighlight(highlight)
-                        }
-                    )
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            HybridMarkdownView(
+                markdown: post.body ?? "",
+                postId: post.id ?? "",
+                highlights: postHighlights,
+                isHighlightMode: isHighlightMode,
+                onHighlight: { text, range in
+                    saveHighlight(text: text, range: range)
+                },
+                onRemoveHighlight: { highlight in
+                    removeHighlight(highlight)
+                }
+            )
+            .fixedSize(horizontal: false, vertical: true)
             
             PostCTAView(post: post)
             
@@ -109,10 +111,11 @@ struct ListDetailView: View {
                     .padding(.vertical, 16)
                 
                 CommentsView(user: username, slug: slug, postId: postId)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-                    .padding(.bottom, 80)
-                }
+        .padding(.bottom, 80)
+    }
     
     private var readOnTabNewsButton: some View {
             VStack {

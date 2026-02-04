@@ -22,11 +22,7 @@ struct SettingsView: View {
     @State private var showingClearCache = false
     @State private var showingClearLibrary = false
     @State private var showLoginSheet = false
-    @State private var showSignupSheet = false
     @State private var showLogoutAlert = false
-    @State private var showDeleteAccountAlert = false
-    @State private var showDeleteAccountContact = false
-    @State private var deletedAccountInfo: (username: String, email: String)?
     @StateObject private var authService = AuthService.shared
     @StateObject private var appUsageTracker = AppUsageTracker.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
@@ -385,17 +381,7 @@ struct SettingsView: View {
                 }
             }
             .sheet(isPresented: $showLoginSheet) {
-                LoginWebView(
-                    onSignupTapped: {
-                        showLoginSheet = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            showSignupSheet = true
-                        }
-                    }
-                )
-            }
-            .sheet(isPresented: $showSignupSheet) {
-                SignupWebView()
+                NativeLoginView()
             }
             .alert("Limpar Cache da API", isPresented: $showingClearCache) {
                 Button("Cancelar", role: .cancel) { }
@@ -420,19 +406,6 @@ struct SettingsView: View {
                 }
             } message: {
                 Text("Tem certeza que deseja sair da sua conta?")
-            }
-            .alert("Excluir Conta", isPresented: $showDeleteAccountAlert) {
-                Button("Cancelar", role: .cancel) { }
-                Button("Continuar", role: .destructive) {
-                    handleDeleteAccount()
-                }
-            } message: {
-                Text("Isso irá desconectar sua conta e limpar todos os dados locais. Para excluir permanentemente sua conta do TabNews, você será direcionado para entrar em contato com o suporte.")
-            }
-            .sheet(isPresented: $showDeleteAccountContact) {
-                if let accountInfo = deletedAccountInfo {
-                    DeleteAccountContactView(username: accountInfo.username, email: accountInfo.email)
-                }
             }
             .task {
                 if authService.isAuthenticated, let username = authService.currentUser?.username {
@@ -616,86 +589,41 @@ struct SettingsView: View {
                         .cornerRadius(8)
                     }
                     .buttonStyle(.borderless)
-                    
-                    // Botão de Excluir Conta
-                    Button {
-                        showDeleteAccountAlert = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash")
-                                .font(.subheadline)
-                            Text("Excluir Conta")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                            Spacer()
-                        }
-                        .foregroundStyle(.red)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 16)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                    }
-                    .buttonStyle(.borderless)
                 }
             } else {
                 VStack(spacing: 10) {
-                    HStack(spacing: 10) {
-                        Circle()
-                            .fill(Color.primary.opacity(0.1))
-                            .frame(width: 32, height: 32)
-                            .overlay(
-                                Image(systemName: "person.fill")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            )
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Não conectado")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
+                    Button {
+                        showLoginSheet = true
+                    } label: {
+                        HStack(spacing: 10) {
+                            Circle()
+                                .fill(Color.primary.opacity(0.1))
+                                .frame(width: 32, height: 32)
+                                .overlay(
+                                    Image(systemName: "person.fill")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                )
                             
-                            Text("Entre para comentar ou votar")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Entrar")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.primary)
+                                
+                                Text("O login é opcional e libera recursos da conta.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
                         }
-                        .allowsHitTesting(false)
-                        
-                        Spacer()
+                        .padding(12)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
                     }
-                    .padding(12)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    
-                    // Botões compactos lado a lado
-                    HStack(spacing: 8) {
-                        Button {
-                            showLoginSheet = true
-                        } label: {
-                            Text("Entrar")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 8)
-                                .background(Color(.systemGray5))
-                                .foregroundStyle(.primary)
-                                .cornerRadius(6)
-                        }
-                        .buttonStyle(.borderless)
-                        
-                        Button {
-                            showSignupSheet = true
-                        } label: {
-                            Text("Criar Conta")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 8)
-                                .background(Color.primary)
-                                .foregroundStyle(Color("Background"))
-                                .cornerRadius(6)
-                        }
-                        .buttonStyle(.borderless)
-                    }
+                    .buttonStyle(.plain)
+                    .foregroundColor(.primary)
                 }
             }
         }
@@ -767,34 +695,6 @@ struct SettingsView: View {
     }
     
     // MARK: - Data Management
-    
-    private func handleDeleteAccount() {
-        // Capturar informações do usuário ANTES de fazer logout
-        let username = authService.currentUser?.username ?? ""
-        let email = authService.currentUser?.email ?? ""
-        deletedAccountInfo = (username: username, email: email)
-        
-        authService.logout()
-        viewModel.clearAllLikedContent()
-        
-        for highlight in highlights {
-            modelContext.delete(highlight)
-        }
-        
-        for note in notes {
-            modelContext.delete(note)
-        }
-        
-        for folder in folders {
-            modelContext.delete(folder)
-        }
-        
-        try? modelContext.save()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            showDeleteAccountContact = true
-        }
-    }
     
     private func refreshUserData() async {
         guard authService.isAuthenticated else { return }

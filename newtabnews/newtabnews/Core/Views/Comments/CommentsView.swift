@@ -25,28 +25,26 @@ struct CommentsView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack {
-                switch viewModel.state {
-                case .loading:
-                    loadingView
+        VStack {
+            switch viewModel.state {
+            case .loading:
+                loadingView
 
-                case .requestSucceeded:
-                    if viewModel.comments.isEmpty {
-                        emptyStateView
-                    } else {
-                        commentsListView
-                    }
-
-                case .requestFailed:
-                    errorView
-
-                default:
-                    Color.clear
+            case .requestSucceeded:
+                if viewModel.comments.isEmpty {
+                    emptyStateView
+                } else {
+                    commentsListView
                 }
+
+            case .requestFailed:
+                errorView
+
+            default:
+                Color.clear
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .scrollDismissesKeyboard(.interactively)
         .task {
             await viewModel.fetchComments(user: user, slug: slug)
@@ -249,7 +247,7 @@ struct CommentsView: View {
             }
         }
         .sheet(isPresented: $showAuthSheet) {
-            LoginWebView()
+            NativeLoginView()
         }
     }
     

@@ -24,7 +24,7 @@ struct HighlightableTextView: UIViewRepresentable {
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         textView.textContainer.lineFragmentPadding = 0
-        textView.textContainer.lineBreakMode = .byWordWrapping
+        textView.textContainer.lineBreakMode = .byCharWrapping
         textView.delegate = context.coordinator
         
         // Permitir seleção de texto
@@ -34,6 +34,9 @@ struct HighlightableTextView: UIViewRepresentable {
         // Configurar para ajustar ao conteúdo
         textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         textView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        
+        // Prevenir scroll horizontal
+        textView.textContainer.widthTracksTextView = true
         
         return textView
     }
@@ -87,7 +90,7 @@ struct HighlightableTextView: UIViewRepresentable {
             let baseParagraphStyle = NSMutableParagraphStyle()
             baseParagraphStyle.lineSpacing = 6
             baseParagraphStyle.alignment = .justified
-            baseParagraphStyle.lineBreakMode = .byWordWrapping
+            baseParagraphStyle.lineBreakMode = .byCharWrapping
             
             // Headers (# ## ### etc)
             if let headerMatch = line.range(of: "^(#{1,6})\\s+(.+)$", options: .regularExpression) {
@@ -124,11 +127,12 @@ struct HighlightableTextView: UIViewRepresentable {
                     let itemText = (line as NSString).substring(with: itemRange)
                     
                     lineAttributedString = NSMutableAttributedString(string: "• \(itemText)")
-                    let listParagraph = NSMutableParagraphStyle()
+                let listParagraph = NSMutableParagraphStyle()
                     listParagraph.firstLineHeadIndent = 0
                     listParagraph.headIndent = 20
                     listParagraph.lineSpacing = 6
                     listParagraph.alignment = .left
+                listParagraph.lineBreakMode = .byCharWrapping
                     
                     lineAttributedString.addAttributes([
                         .font: UIFont.systemFont(ofSize: 17, weight: .light),
@@ -167,6 +171,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 let quoteParagraph = NSMutableParagraphStyle()
                 quoteParagraph.lineSpacing = 6
                 quoteParagraph.alignment = .left
+                quoteParagraph.lineBreakMode = .byCharWrapping
                 
                 lineAttributedString.addAttributes([
                     .font: UIFont.systemFont(ofSize: 17, weight: .light),

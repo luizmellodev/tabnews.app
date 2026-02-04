@@ -23,6 +23,7 @@ struct PostHeader: View {
     @State private var hasVoted: Bool = false
     @State private var localTabcoins: Int? = nil
     @State private var showConfetti: Bool = false
+    @State private var showLoginRequiredAlert: Bool = false
     @State private var showAuthSheet: Bool = false
     
     private let authService = AuthService.shared
@@ -211,8 +212,16 @@ struct PostHeader: View {
                 }
             }
         }
+        .alert("Login necessário", isPresented: $showLoginRequiredAlert) {
+            Button("Cancelar", role: .cancel) { }
+            Button("Entrar") {
+                showAuthSheet = true
+            }
+        } message: {
+            Text("Entre para acessar seu perfil, seus posts e seus votos.")
+        }
         .sheet(isPresented: $showAuthSheet) {
-            LoginWebView()
+            NativeLoginView()
         }
     }
     
@@ -227,7 +236,7 @@ struct PostHeader: View {
         guard !hasVoted else { return }
         
         guard authService.isAuthenticated else {
-            showAuthSheet = true
+            showLoginRequiredAlert = true
             return
         }
         

@@ -11,6 +11,15 @@ import WebKit
 
 // MARK: - Auth Error
 
+// Erro customizado para preservar mensagem de validação da API
+struct ValidationError: LocalizedError {
+    let message: String
+    
+    var errorDescription: String? {
+        return message
+    }
+}
+
 enum AuthError: LocalizedError {
     case invalidCredentials
     case userNotFound
@@ -180,6 +189,13 @@ class AuthService: ObservableObject {
                 self.isAuthenticated = true
             }
         } catch {
+            // Para erros de validação (400), preservar mensagem original da API
+            if let networkError = error as? NetworkError,
+               case .apiError(let apiError) = networkError,
+               apiError.statusCode == 400 {
+                // Criar erro customizado que preserva a mensagem original
+                throw ValidationError(message: apiError.message)
+            }
             throw AuthError.from(error)
         }
     }

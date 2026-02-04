@@ -17,8 +17,8 @@ struct CommentComposeSheet: View {
     @State private var commentText: String = ""
     @State private var isPosting: Bool = false
     @State private var errorMessage: String?
+    @State private var showLoginRequiredAlert: Bool = false
     @State private var showLoginSheet: Bool = false
-    @State private var showSignupSheet: Bool = false
     @State private var isPreviewMode: Bool = false
     
     @FocusState private var isTextFieldFocused: Bool
@@ -148,23 +148,21 @@ struct CommentComposeSheet: View {
                     isTextFieldFocused = true
                 }
             }
+            .alert("Login necessário", isPresented: $showLoginRequiredAlert) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Entrar") {
+                    showLoginSheet = true
+                }
+            } message: {
+                Text("Entre para acessar seu perfil, seus posts e seus votos.")
+            }
             .sheet(isPresented: $showLoginSheet) {
-                LoginWebView(
-                    onSignupTapped: {
-                        showLoginSheet = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            showSignupSheet = true
+                NativeLoginView()
+                    .onDisappear {
+                        if authService.isAuthenticated {
+                            isTextFieldFocused = true
                         }
                     }
-                )
-                .onDisappear {
-                    if authService.isAuthenticated {
-                        isTextFieldFocused = true
-                    }
-                }
-            }
-            .sheet(isPresented: $showSignupSheet) {
-                SignupWebView()
             }
             .overlay {
                 // Overlay de "não autenticado"
@@ -297,46 +295,30 @@ struct CommentComposeSheet: View {
                                 .foregroundStyle(.primary)
                         )
                     
-                    Text("Faça login para comentar")
+                    Text("Login necessário")
                         .font(.title3)
                         .fontWeight(.semibold)
                     
-                    Text("Entre ou crie uma conta para participar das discussões")
+                    Text("Entre para acessar seu perfil, seus posts e seus votos.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
                 }
                 
-                VStack(spacing: 12) {
-                    Button {
-                        showLoginSheet = true
-                    } label: {
-                        Text("Entrar")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(Color.primary)
-                            .foregroundStyle(Color("Background"))
-                            .cornerRadius(10)
-                    }
-                    .buttonStyle(.borderless)
-                    
-                    Button {
-                        showSignupSheet = true
-                    } label: {
-                        Text("Criar Conta")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(Color(.systemGray5))
-                            .foregroundStyle(.primary)
-                            .cornerRadius(10)
-                    }
-                    .buttonStyle(.borderless)
+                Button {
+                    showLoginSheet = true
+                } label: {
+                    Text("Entrar")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color.primary)
+                        .foregroundStyle(Color("Background"))
+                        .cornerRadius(10)
                 }
+                .buttonStyle(.borderless)
                 .padding(.horizontal, 40)
             }
         }

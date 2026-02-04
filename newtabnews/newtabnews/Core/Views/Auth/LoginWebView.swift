@@ -11,7 +11,6 @@ import WebKit
 struct LoginWebView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var authService = AuthService.shared
-    var onSignupTapped: (() -> Void)?
     
     @State private var isProcessingLogin = false
     @State private var showSuccessMessage = false
@@ -57,16 +56,6 @@ struct LoginWebView: View {
                             dismiss()
                         }
                         .foregroundStyle(.primary)
-                    }
-                    
-                    if let onSignupTapped = onSignupTapped {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Criar Conta") {
-                                dismiss()
-                                onSignupTapped()
-                            }
-                            .foregroundStyle(.primary)
-                        }
                     }
                 }
         }

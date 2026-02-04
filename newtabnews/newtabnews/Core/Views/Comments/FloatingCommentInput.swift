@@ -17,8 +17,8 @@ struct FloatingCommentInput: View {
     @State private var commentText: String = ""
     @State private var isPosting: Bool = false
     @State private var errorMessage: String?
+    @State private var showLoginRequiredAlert: Bool = false
     @State private var showLoginSheet: Bool = false
-    @State private var showSignupSheet: Bool = false
     @State private var isExpanded: Bool = false
     @State private var showMarkdownToolbar: Bool = false
     
@@ -156,23 +156,21 @@ struct FloatingCommentInput: View {
                 }
             }
         }
+        .alert("Login necessário", isPresented: $showLoginRequiredAlert) {
+            Button("Cancelar", role: .cancel) { }
+            Button("Entrar") {
+                showLoginSheet = true
+            }
+        } message: {
+            Text("Entre para acessar seu perfil, seus posts e seus votos.")
+        }
         .sheet(isPresented: $showLoginSheet) {
-            LoginWebView(
-                onSignupTapped: {
-                    showLoginSheet = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        showSignupSheet = true
+            NativeLoginView()
+                .onDisappear {
+                    if authService.isAuthenticated {
+                        isTextFieldFocused = true
                     }
                 }
-            )
-            .onDisappear {
-                if authService.isAuthenticated {
-                    isTextFieldFocused = true
-                }
-            }
-        }
-        .sheet(isPresented: $showSignupSheet) {
-            SignupWebView()
         }
     }
     
@@ -240,7 +238,7 @@ struct FloatingCommentInput: View {
         
         guard authService.isAuthenticated else {
             await MainActor.run {
-                showLoginSheet = true
+                showLoginRequiredAlert = true
             }
             return
         }

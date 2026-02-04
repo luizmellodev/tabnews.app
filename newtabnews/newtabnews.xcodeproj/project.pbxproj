@@ -34,6 +34,7 @@
 		790AB1172ECF69A800E443E6 /* TextToSpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB0C02ECEAE9500E443E6 /* TextToSpeechManager.swift */; };
 		790AB11C2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */; };
 		790AB11D2ECF811F00E443E6 /* WatchSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */; };
+		791039F22F32E674001AA78E /* NativeLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791039F12F32E674001AA78E /* NativeLoginView.swift */; };
 		7915846F2EFC869B00C69745 /* AudioControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7915846E2EFC869B00C69745 /* AudioControlsView.swift */; };
 		791584712EFC86A700C69745 /* HighlightModeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584702EFC86A700C69745 /* HighlightModeIndicator.swift */; };
 		791584732EFC86AE00C69745 /* PostActionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791584722EFC86AE00C69745 /* PostActionsBar.swift */; };
@@ -206,6 +207,7 @@
 		790AB0D42ECEBE3A00E443E6 /* AppUsageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUsageTracker.swift; sourceTree = "<group>"; };
 		790AB0DC2ECF66FF00E443E6 /* TabNews Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TabNews Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSyncManager.swift; sourceTree = "<group>"; };
+		791039F12F32E674001AA78E /* NativeLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeLoginView.swift; sourceTree = "<group>"; };
 		7915846E2EFC869B00C69745 /* AudioControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioControlsView.swift; sourceTree = "<group>"; };
 		791584702EFC86A700C69745 /* HighlightModeIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightModeIndicator.swift; sourceTree = "<group>"; };
 		791584722EFC86AE00C69745 /* PostActionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostActionsBar.swift; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 			isa = PBXGroup;
 			children = (
 				79F468812F21286F00EFF64F /* LoginWebView.swift */,
+				791039F12F32E674001AA78E /* NativeLoginView.swift */,
 				790886182F0EC17F0068804C /* SignupWebView.swift */,
 			);
 			path = Auth;
@@ -905,6 +908,7 @@
 				791E87DA2A4FD99B00C2F0B4 /* ContentView.swift in Sources */,
 				791B1F172ED4D10400B9143D /* HybridMarkdownView.swift in Sources */,
 				79C7062A2D95E534005C26A7 /* NetworkError.swift in Sources */,
+				791039F22F32E674001AA78E /* NativeLoginView.swift in Sources */,
 				790AB0D32ECEB9BE00E443E6 /* HighlightableTextView.swift in Sources */,
 				79C706402D9ADD26005C26A7 /* EmptyLikedListView.swift in Sources */,
 				796D06312F0ADCA40064A2BC /* WidgetPost.swift in Sources */,
@@ -1226,7 +1230,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1269,7 +1273,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
