@@ -40,6 +40,10 @@ struct NewsletterView: View {
                         }
                         .padding()
                     }
+                    .refreshable {
+                        await viewModel.fetchNewsletterContent()
+                        await viewModel.fetchNewsletterPost()
+                    }
                     .padding(.top, 60)
                     
                 case .requestFailed:

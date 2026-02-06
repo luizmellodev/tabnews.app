@@ -31,10 +31,10 @@ struct OnboardingView: View {
             secondaryImageName: "arrow.up.forward.app"
         ),
         OnboardingPage(
-            title: "Em Breve",
-            subtitle: "Mais funcionalidades chegando em breve. Fique ligado!",
-            imageName: "sparkles.square.fill.on.square",
-            secondaryImageName: "square.stack"
+            title: "Além do App",
+            subtitle: "Widgets para tela inicial, Apple Watch e muito mais. Seu TabNews em todos os lugares!",
+            imageName: "applewatch",
+            secondaryImageName: "square.grid.2x2"
         )
     ]
     

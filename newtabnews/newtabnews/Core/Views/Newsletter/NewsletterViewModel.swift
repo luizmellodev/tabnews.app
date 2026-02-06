@@ -23,7 +23,15 @@ class NewsletterViewModel: ObservableObject {
     func fetchNewsletterContent() async {
         self.state = .loading
         do {
-            self.newsletter = try await service.getNewsletter(page: "1", perPage: "15", strategy: "new")
+            let allNewsletters = try await service.getNewsletter(page: "1", perPage: "15", strategy: "new")
+            
+            // Filtrar newsletters válidas (com título e não vazias)
+            self.newsletter = allNewsletters.filter { newsletter in
+                guard let title = newsletter.title, !title.isEmpty else {
+                    return false
+                }
+                return true
+            }
             
             self.state = .requestSucceeded
             self.alreadyLoaded = true
