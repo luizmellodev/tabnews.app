@@ -31,6 +31,20 @@ struct FoldersView: View {
     @State private var selectedFolderIds: Set<UUID> = []
     @StateObject private var usageTracker = AppUsageTracker.shared
     @State private var showingGame = false
+    @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
+    
+    // Verifica se é fim de semana - sábado ou domingo (ou modo debug ativado)
+    private var shouldShowDigestBanner: Bool {
+        #if DEBUG
+        if debugShowDigestBanner {
+            return true
+        }
+        #endif
+        
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: Date())
+        return weekday == 7 || weekday == 1 // 7 = Sábado, 1 = Domingo
+    }
     
     var body: some View {
         NavigationStack {
@@ -39,7 +53,9 @@ struct FoldersView: View {
                 emptyState
             } else {
                     List {
-                        digestSection
+                        if shouldShowDigestBanner {
+                            digestSection
+                        }
                         likedPostsSection
                         highlightsSection
                         notesSection

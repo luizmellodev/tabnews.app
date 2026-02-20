@@ -1,0 +1,338 @@
+//
+//  GamificationManager.swift
+//  newtabnews
+//
+//  Created by Luiz Mello on 20/02/26.
+//
+
+import Foundation
+import SwiftUI
+import Combine
+
+class GamificationManager: ObservableObject {
+    static let shared = GamificationManager()
+    
+    @Published var unlockedBadges: [Badge] = []
+    @Published var weeklyChallenges: [WeeklyChallenge] = []
+    @Published var stats: GamificationStats = GamificationStats()
+    @Published var showBadgeUnlocked: Badge?
+    
+    private let badgesKey = "unlocked_badges"
+    private let challengesKey = "weekly_challenges"
+    private let statsKey = "gamification_stats"
+    private let lastWeekResetKey = "last_week_reset"
+    
+    private init() {
+        loadData()
+        checkWeeklyReset()
+    }
+    
+    // MARK: - Data Management
+    
+    private func loadData() {
+        if let badgesData = UserDefaults.standard.data(forKey: badgesKey),
+           let badges = try? JSONDecoder().decode([Badge].self, from: badgesData) {
+            unlockedBadges = badges
+        }
+        
+        if let challengesData = UserDefaults.standard.data(forKey: challengesKey),
+           let challenges = try? JSONDecoder().decode([WeeklyChallenge].self, from: challengesData) {
+            weeklyChallenges = challenges
+        }
+        
+        if let statsData = UserDefaults.standard.data(forKey: statsKey),
+           let loadedStats = try? JSONDecoder().decode(GamificationStats.self, from: statsData) {
+            stats = loadedStats
+        }
+    }
+    
+    private func saveData() {
+        if let badgesData = try? JSONEncoder().encode(unlockedBadges) {
+            UserDefaults.standard.set(badgesData, forKey: badgesKey)
+        }
+        
+        if let challengesData = try? JSONEncoder().encode(weeklyChallenges) {
+            UserDefaults.standard.set(challengesData, forKey: challengesKey)
+        }
+        
+        if let statsData = try? JSONEncoder().encode(stats) {
+            UserDefaults.standard.set(statsData, forKey: statsKey)
+        }
+    }
+    
+    // MARK: - Weekly Challenges
+    
+    private func checkWeeklyReset() {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        if let lastReset = UserDefaults.standard.object(forKey: lastWeekResetKey) as? Date {
+            let components = calendar.dateComponents([.weekOfYear], from: lastReset, to: now)
+            if let weeks = components.weekOfYear, weeks >= 1 {
+                resetWeeklyChallenges()
+            }
+        } else {
+            resetWeeklyChallenges()
+        }
+    }
+    
+    private func resetWeeklyChallenges() {
+        let calendar = Calendar.current
+        let startOfWeek = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())
+        guard let weekStart = calendar.date(from: startOfWeek) else { return }
+        guard let weekEnd = calendar.date(byAdding: .day, value: 7, to: weekStart) else { return }
+        
+        let allTypes = ChallengeType.allCases
+        let selectedTypes = allTypes.shuffled().prefix(3)
+        
+        weeklyChallenges = selectedTypes.map { type in
+            let goal: Int
+            switch type {
+            case .readPosts: goal = Int.random(in: 5...12)
+            case .commentOnPost: goal = Int.random(in: 1...3)
+            case .likeContent: goal = Int.random(in: 3...10)
+            case .createHighlights: goal = Int.random(in: 2...6)
+            case .saveToFolder: goal = Int.random(in: 2...5)
+            case .readCategory: goal = 3
+            case .createNotes: goal = Int.random(in: 1...4)
+            case .readWeekend: goal = Int.random(in: 2...5)
+            case .earlyReader: goal = Int.random(in: 1...3)
+            case .nightReader: goal = Int.random(in: 1...3)
+            case .shareKnowledge: goal = Int.random(in: 2...4)
+            case .discoverNew: goal = Int.random(in: 3...7)
+            case .deepDive: goal = Int.random(in: 2...4)
+            case .socialButterfly: goal = Int.random(in: 3...8)
+            case .curator: goal = Int.random(in: 3...6)
+            case .researcher: goal = Int.random(in: 2...4)
+            }
+            
+            return WeeklyChallenge(type: type, goal: goal, startDate: weekStart, endDate: weekEnd)
+        }
+        
+        UserDefaults.standard.set(Date(), forKey: lastWeekResetKey)
+        saveData()
+    }
+    
+    func updateChallengeProgress(type: ChallengeType, increment: Int = 1) {
+        if let index = weeklyChallenges.firstIndex(where: { $0.type == type }) {
+            weeklyChallenges[index].progress += increment
+            
+            if weeklyChallenges[index].isCompleted && weeklyChallenges[index].progress == weeklyChallenges[index].goal {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    let impact = UINotificationFeedbackGenerator()
+                    impact.notificationOccurred(.success)
+                }
+            }
+            
+            saveData()
+        }
+    }
+    
+    // MARK: - Badge Management
+    
+    func checkAndUnlockBadge(_ type: BadgeType) {
+        guard !hasBadge(type) else { return }
+        
+        var shouldUnlock = false
+        
+        switch type {
+        case .firstRead: shouldUnlock = stats.postsRead >= 1
+        case .reader5: shouldUnlock = stats.postsRead >= 5
+        case .reader10: shouldUnlock = stats.postsRead >= 10
+        case .reader25: shouldUnlock = stats.postsRead >= 25
+        case .reader50: shouldUnlock = stats.postsRead >= 50
+        case .reader100: shouldUnlock = stats.postsRead >= 100
+        case .reader250: shouldUnlock = stats.postsRead >= 250
+        case .reader500: shouldUnlock = stats.postsRead >= 500
+        case .firstComment: shouldUnlock = stats.commentsPosted >= 1
+        case .commenter5: shouldUnlock = stats.commentsPosted >= 5
+        case .commenter10: shouldUnlock = stats.commentsPosted >= 10
+        case .commenter25: shouldUnlock = stats.commentsPosted >= 25
+        case .commenter50: shouldUnlock = stats.commentsPosted >= 50
+        case .firstLike: shouldUnlock = stats.postsLiked >= 1
+        case .curator10: shouldUnlock = stats.postsLiked >= 10
+        case .curator25: shouldUnlock = stats.postsLiked >= 25
+        case .curator50: shouldUnlock = stats.postsLiked >= 50
+        case .curator100: shouldUnlock = stats.postsLiked >= 100
+        case .firstHighlight: shouldUnlock = stats.highlightsCreated >= 1
+        case .highlighter10: shouldUnlock = stats.highlightsCreated >= 10
+        case .highlighter25: shouldUnlock = stats.highlightsCreated >= 25
+        case .highlighter50: shouldUnlock = stats.highlightsCreated >= 50
+        case .firstNote: shouldUnlock = stats.notesCreated >= 1
+        case .writer5: shouldUnlock = stats.notesCreated >= 5
+        case .writer10: shouldUnlock = stats.notesCreated >= 10
+        case .writer25: shouldUnlock = stats.notesCreated >= 25
+        case .firstFolder: shouldUnlock = stats.foldersCreated >= 1
+        case .organizer5: shouldUnlock = stats.foldersCreated >= 5
+        case .organizer10: shouldUnlock = stats.foldersCreated >= 10
+        case .weeklyStreak3: shouldUnlock = stats.weeklyStreak >= 3
+        case .weeklyStreak5: shouldUnlock = stats.weeklyStreak >= 5
+        case .weeklyStreak10: shouldUnlock = stats.weeklyStreak >= 10
+        case .weeklyStreak20: shouldUnlock = stats.weeklyStreak >= 20
+        case .earlyBird: shouldUnlock = stats.earlyBirdReads >= 1
+        case .nightOwl: shouldUnlock = stats.nightOwlReads >= 1
+        case .weekendReader: shouldUnlock = stats.weekendReads >= 5
+        case .weekendWarrior: shouldUnlock = stats.weekendReads >= 10
+        case .speedReader: shouldUnlock = false // TODO: track daily reads
+        case .perfectWeek: shouldUnlock = false // TODO: track perfect weeks
+        case .socialButterfly: shouldUnlock = (stats.postsLiked + stats.commentsPosted) >= 20
+        case .knowledgeSeeker: shouldUnlock = false // TODO: track read+highlight+note
+        case .masterCurator: shouldUnlock = stats.foldersCreated >= 50
+        }
+        
+        if shouldUnlock {
+            unlockBadge(type)
+        }
+    }
+    
+    private func unlockBadge(_ type: BadgeType) {
+        let badge = Badge(type: type)
+        unlockedBadges.append(badge)
+        showBadgeUnlocked = badge
+        saveData()
+        
+        let impact = UINotificationFeedbackGenerator()
+        impact.notificationOccurred(.success)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.showBadgeUnlocked = nil
+        }
+    }
+    
+    func hasBadge(_ type: BadgeType) -> Bool {
+        unlockedBadges.contains { $0.type == type }
+    }
+    
+    // MARK: - Stats Tracking
+    
+    func trackPostRead() {
+        stats.postsRead += 1
+        checkTimeOfDayBadges()
+        checkWeekendBadge()
+        updateChallengeProgress(type: .readPosts)
+        
+        checkAndUnlockBadge(.firstRead)
+        checkAndUnlockBadge(.reader5)
+        checkAndUnlockBadge(.reader10)
+        checkAndUnlockBadge(.reader25)
+        checkAndUnlockBadge(.reader50)
+        checkAndUnlockBadge(.reader100)
+        checkAndUnlockBadge(.reader250)
+        checkAndUnlockBadge(.reader500)
+        
+        saveData()
+    }
+    
+    func trackCommentPosted() {
+        stats.commentsPosted += 1
+        updateChallengeProgress(type: .commentOnPost)
+        
+        checkAndUnlockBadge(.firstComment)
+        checkAndUnlockBadge(.commenter5)
+        checkAndUnlockBadge(.commenter10)
+        checkAndUnlockBadge(.commenter25)
+        checkAndUnlockBadge(.commenter50)
+        checkAndUnlockBadge(.socialButterfly)
+        
+        saveData()
+    }
+    
+    func trackPostLiked() {
+        stats.postsLiked += 1
+        updateChallengeProgress(type: .likeContent)
+        
+        checkAndUnlockBadge(.firstLike)
+        checkAndUnlockBadge(.curator10)
+        checkAndUnlockBadge(.curator25)
+        checkAndUnlockBadge(.curator50)
+        checkAndUnlockBadge(.curator100)
+        checkAndUnlockBadge(.socialButterfly)
+        
+        saveData()
+    }
+    
+    func trackHighlightCreated() {
+        stats.highlightsCreated += 1
+        updateChallengeProgress(type: .createHighlights)
+        
+        checkAndUnlockBadge(.firstHighlight)
+        checkAndUnlockBadge(.highlighter10)
+        checkAndUnlockBadge(.highlighter25)
+        checkAndUnlockBadge(.highlighter50)
+        
+        saveData()
+    }
+    
+    func trackNoteCreated() {
+        stats.notesCreated += 1
+        updateChallengeProgress(type: .createNotes)
+        
+        checkAndUnlockBadge(.firstNote)
+        checkAndUnlockBadge(.writer5)
+        checkAndUnlockBadge(.writer10)
+        checkAndUnlockBadge(.writer25)
+        
+        saveData()
+    }
+    
+    func trackFolderCreated() {
+        stats.foldersCreated += 1
+        updateChallengeProgress(type: .saveToFolder)
+        
+        checkAndUnlockBadge(.firstFolder)
+        checkAndUnlockBadge(.organizer5)
+        checkAndUnlockBadge(.organizer10)
+        checkAndUnlockBadge(.masterCurator)
+        
+        saveData()
+    }
+    
+    private func checkTimeOfDayBadges() {
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        if hour < 7 {
+            stats.earlyBirdReads += 1
+            checkAndUnlockBadge(.earlyBird)
+            updateChallengeProgress(type: .earlyReader)
+        } else if hour >= 23 {
+            stats.nightOwlReads += 1
+            checkAndUnlockBadge(.nightOwl)
+            updateChallengeProgress(type: .nightReader)
+        }
+    }
+    
+    private func checkWeekendBadge() {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: Date())
+        
+        if weekday == 1 || weekday == 7 {
+            stats.weekendReads += 1
+            checkAndUnlockBadge(.weekendReader)
+            checkAndUnlockBadge(.weekendWarrior)
+            updateChallengeProgress(type: .readWeekend)
+        }
+    }
+    
+    // MARK: - Progress Info
+    
+    var totalBadgesCount: Int {
+        BadgeType.allCases.count
+    }
+    
+    var badgeCompletionPercentage: Double {
+        Double(unlockedBadges.count) / Double(totalBadgesCount)
+    }
+}
+
+struct GamificationStats: Codable {
+    var postsRead: Int = 0
+    var commentsPosted: Int = 0
+    var postsLiked: Int = 0
+    var highlightsCreated: Int = 0
+    var notesCreated: Int = 0
+    var foldersCreated: Int = 0
+    var weeklyStreak: Int = 0
+    var earlyBirdReads: Int = 0
+    var nightOwlReads: Int = 0
+    var weekendReads: Int = 0
+}

@@ -10,8 +10,26 @@ import SwiftUI
 
 struct SocialView: View {
     var github, linkedin, youtube, instagram: String
+    var website: String? = nil
+    
     var body: some View {
         List {
+            if let website = website {
+                HStack {
+                    Button {
+                        openWebsite(url: website)
+                    } label: {
+                        HStack {
+                            Text("Site")
+                            Spacer()
+                            Image(systemName: "arrow.up.right.square")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+            
             HStack {
                 Button {
                     openInstagram(username: instagram)
@@ -108,5 +126,11 @@ struct SocialView: View {
                 UIApplication.shared.openURL(appURL)
             }
         } else { openWebURL(weburl: webURL) }
+    }
+    
+    func openWebsite(url: String) {
+        if let webURL = URL(string: url) {
+            openWebURL(weburl: webURL)
+        }
     }
 }

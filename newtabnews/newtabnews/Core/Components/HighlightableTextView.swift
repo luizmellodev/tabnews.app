@@ -24,7 +24,7 @@ struct HighlightableTextView: UIViewRepresentable {
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         textView.textContainer.lineFragmentPadding = 0
-        textView.textContainer.lineBreakMode = .byCharWrapping
+        textView.textContainer.lineBreakMode = .byWordWrapping
         textView.delegate = context.coordinator
         
         // Permitir seleção de texto
@@ -90,7 +90,7 @@ struct HighlightableTextView: UIViewRepresentable {
             let baseParagraphStyle = NSMutableParagraphStyle()
             baseParagraphStyle.lineSpacing = 6
             baseParagraphStyle.alignment = .justified
-            baseParagraphStyle.lineBreakMode = .byCharWrapping
+            baseParagraphStyle.lineBreakMode = .byWordWrapping
             
             // Headers (# ## ### etc)
             if let headerMatch = line.range(of: "^(#{1,6})\\s+(.+)$", options: .regularExpression) {
@@ -132,7 +132,7 @@ struct HighlightableTextView: UIViewRepresentable {
                     listParagraph.headIndent = 20
                     listParagraph.lineSpacing = 6
                     listParagraph.alignment = .left
-                listParagraph.lineBreakMode = .byCharWrapping
+                listParagraph.lineBreakMode = .byWordWrapping
                     
                     lineAttributedString.addAttributes([
                         .font: UIFont.systemFont(ofSize: 17, weight: .light),
@@ -171,7 +171,7 @@ struct HighlightableTextView: UIViewRepresentable {
                 let quoteParagraph = NSMutableParagraphStyle()
                 quoteParagraph.lineSpacing = 6
                 quoteParagraph.alignment = .left
-                quoteParagraph.lineBreakMode = .byCharWrapping
+                quoteParagraph.lineBreakMode = .byWordWrapping
                 
                 lineAttributedString.addAttributes([
                     .font: UIFont.systemFont(ofSize: 17, weight: .light),

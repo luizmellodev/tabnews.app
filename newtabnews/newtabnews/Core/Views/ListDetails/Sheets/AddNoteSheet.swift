@@ -64,6 +64,8 @@ struct AddNoteSheet: View {
         
         NotificationCenter.default.post(name: .notesUpdated, object: nil)
         
+        GamificationManager.shared.trackNoteCreated()
+        
         dismiss()
     }
 }

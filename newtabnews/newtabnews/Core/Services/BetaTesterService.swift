@@ -32,13 +32,10 @@ class BetaTesterService {
     
     /// Verifica e salva o status de beta tester
     private func checkAndSaveBetaTesterStatus() {
-        // Se já foi salvo antes, não precisa verificar novamente
-        // Isso garante que quem foi beta tester continue sendo mesmo após lançamento
         if userDefaults.object(forKey: betaTesterKey) != nil {
             return
         }
         
-        // Verifica se está rodando no TestFlight
         if isTestFlightEnvironment() {
             userDefaults.set(true, forKey: betaTesterKey)
             userDefaults.set(Date(), forKey: betaTesterDateKey)

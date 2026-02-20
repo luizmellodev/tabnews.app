@@ -34,6 +34,7 @@ struct ContentView: View {
     @State var isLoadingPost: Bool = false
     @State var showTipsOnboarding: Bool = false
     @State var showDigestSheet: Bool = false
+    @StateObject private var gamificationManager = GamificationManager.shared
         
     init(
         searchText: String = "",
@@ -64,6 +65,17 @@ struct ContentView: View {
                     .transition(.opacity)
                 }
             }
+            
+            // Badge Unlocked Banner - Global
+            VStack {
+                if let badge = gamificationManager.showBadgeUnlocked {
+                    BadgeUnlockedBanner(badge: badge)
+                        .padding(.top, 60)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                Spacer()
+            }
+            .animation(.spring(), value: gamificationManager.showBadgeUnlocked)
         }
         .preferredColorScheme(currentTheme.colorScheme)
         .sheet(isPresented: $showDigestSheet) {

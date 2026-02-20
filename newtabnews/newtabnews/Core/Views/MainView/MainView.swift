@@ -21,7 +21,10 @@ struct MainView: View {
     @State private var scrollOffset: CGFloat = 0
     @State private var isLoadingStrategy = false
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
+    @AppStorage("debugShowDailyDigestBanner") private var debugShowDailyDigestBanner = false
     @State private var showDigestSheet = false
+    @State private var showDailyDigestSheet = false
+    @StateObject private var dailyDigestManager = DailyDigestManager.shared
     
     // Verifica se é fim de semana - sábado ou domingo (ou modo debug ativado)
     private var shouldShowDigestBanner: Bool {
@@ -34,6 +37,17 @@ struct MainView: View {
         let calendar = Calendar.current
         let weekday = calendar.component(.weekday, from: Date())
         return weekday == 7 || weekday == 1 // 7 = Sábado, 1 = Domingo
+    }
+    
+    // Verifica se deve mostrar o Daily Digest banner (às 18h)
+    private var shouldShowDailyDigestBanner: Bool {
+        #if DEBUG
+        if debugShowDailyDigestBanner {
+            return true
+        }
+        #endif
+        
+        return dailyDigestManager.shouldShowBanner()
     }
     
     var body: some View {
@@ -75,6 +89,17 @@ struct MainView: View {
                     case .requestSucceeded:
                         ScrollView {
                             VStack(spacing: 16) {
+                                // Banner de Daily Digest (às 18h)
+                                if shouldShowDailyDigestBanner {
+                                    DailyDigestBanner {
+                                        dailyDigestManager.markAsViewed()
+                                        showDailyDigestSheet = true
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.top, 8)
+                                    .transition(.move(edge: .top).combined(with: .opacity))
+                                }
+                                
                                 // Banner de Digest (só aos sábados ou em debug)
                                 if shouldShowDigestBanner {
                                     DigestBannerView {
@@ -82,7 +107,7 @@ struct MainView: View {
                                         showDigestSheet = true
                                     }
                                     .padding(.horizontal)
-                                    .padding(.top, 8)
+                                    .padding(.top, shouldShowDailyDigestBanner ? 0 : 8)
                                     .transition(.move(edge: .top).combined(with: .opacity))
                                 }
                                 
@@ -102,6 +127,7 @@ struct MainView: View {
                         .transition(.opacity)
                         .id(viewModel.currentStrategy)
                         .animation(.spring(), value: shouldShowDigestBanner)
+                        .animation(.spring(), value: shouldShowDailyDigestBanner)
                         
                     case .requestFailed:
                         FailureView(currentTheme: $currentTheme)
@@ -145,6 +171,14 @@ struct MainView: View {
                 .presentationDragIndicator(.hidden)
                 .presentationDetents([.large])
                 .interactiveDismissDisabled(false)
+            }
+            .sheet(isPresented: $showDailyDigestSheet) {
+                DailyDigestView(
+                    isViewInApp: $isViewInApp,
+                    currentTheme: $currentTheme
+                )
+                .presentationDragIndicator(.hidden)
+                .presentationDetents([.large])
             }
         }
     }

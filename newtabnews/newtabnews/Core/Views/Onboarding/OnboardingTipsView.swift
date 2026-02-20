@@ -27,7 +27,7 @@ struct OnboardingTipsView: View {
         ),
         CoachMark(
             title: "Criar Pastas",
-            message: "Toque no botão + para criar pastas personalizadas e organizar seus posts",
+            message: "Toque no botão 'Criar pasta' para criar pastas e organizar seus posts!",
             xOffset: 0,
             yOffset: 145,
             arrow: .down

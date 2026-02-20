@@ -109,6 +109,8 @@ struct AddFolderSheet: View {
         
         NotificationCenter.default.post(name: .foldersUpdated, object: nil)
         
+        GamificationManager.shared.trackFolderCreated()
+        
         dismiss()
     }
 }

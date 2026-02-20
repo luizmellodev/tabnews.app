@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct SettingsView: View {
     
@@ -26,6 +27,7 @@ struct SettingsView: View {
     @StateObject private var authService = AuthService.shared
     @StateObject private var appUsageTracker = AppUsageTracker.shared
     @AppStorage("debugShowDigestBanner") private var debugShowDigestBanner = false
+    @AppStorage("debugShowDailyDigestBanner") private var appStorage_debugShowDailyDigestBanner = false
     @AppStorage("showReadOnTabNewsButton") private var showReadOnTabNewsButton = false
     @AppStorage("isBetaTester") private var isBetaTester = false
     @State private var isRefreshing = false
@@ -75,6 +77,67 @@ struct SettingsView: View {
                     } footer: {
                         Text("O botão flutuante permite abrir o post no navegador. Desativado por padrão para melhor experiência nativa.")
                     }
+                
+                Section {
+                    NavigationLink {
+                        GamificationView()
+                    } label: {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [.purple, .blue],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 32, height: 32)
+                                
+                                Image(systemName: "star.fill")
+                                    .font(.system(size: 16))
+                                    .foregroundStyle(.white)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Badges & Desafios")
+                                    .font(.headline)
+                                Text("Veja suas conquistas e desafios semanais")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Label("Gamificação", systemImage: "trophy.fill")
+                }
+                
+                Section {
+                    Button {
+                        requestAppReview()
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "star.bubble.fill")
+                                .font(.title3)
+                                .foregroundStyle(.yellow)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Avaliar o App")
+                                    .font(.body)
+                                    .foregroundStyle(.primary)
+                                Text("Ajude o app a crescer com sua avaliação")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Label("Apoie o App", systemImage: "hand.thumbsup.fill")
+                }
                 
                 Section {
                     HStack {
@@ -213,7 +276,8 @@ struct SettingsView: View {
                             github: "luizmellodev",
                             linkedin: "luizmellodev",
                             youtube: "euluizmello",
-                            instagram: "luizmello.dev"
+                            instagram: "luizmello.dev",
+                            website: "https://luizmello.dev"
                         )
                     } label: {
                         HStack(spacing: 12) {
@@ -279,10 +343,50 @@ struct SettingsView: View {
                     
                     Toggle(isOn: $debugShowDigestBanner) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("🔥 Mostrar Banner de Digest")
+                            Text("🔥 Mostrar Banner Weekly Digest")
                             Text("Simula fim de semana para testar o banner")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+                        }
+                    }
+                    
+                    Toggle(isOn: $appStorage_debugShowDailyDigestBanner) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("🧭 Mostrar Banner Daily Digest")
+                            Text("Força o Daily Digest aparecer sempre")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    
+                    Button {
+                        UserDefaults.standard.removeObject(forKey: "last_daily_digest_date")
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("🗑️ Resetar Daily Digest")
+                                Text("Remove flag de 'já visto hoje'")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "arrow.clockwise.circle")
+                        }
+                    }
+                    
+                    Button {
+                        UserDefaults.standard.set(0, forKey: "newsletterOpenCount")
+                        UserDefaults.standard.set(0, forKey: "lastReviewRequestDate")
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("⭐ Resetar Review Request")
+                                Text("Força o prompt de review aparecer na Newsletter")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "arrow.clockwise.circle")
                         }
                     }
                     
@@ -773,6 +877,12 @@ struct SettingsView: View {
         }
         
         try? modelContext.save()
+    }
+    
+    private func requestAppReview() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: windowScene)
+        }
     }
 }
 

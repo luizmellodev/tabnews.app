@@ -74,6 +74,9 @@ struct ListDetailView: View {
                 .presentationDetents([.large, .large])
                 .presentationDragIndicator(.hidden)
         }
+        .onAppear {
+            GamificationManager.shared.trackPostRead()
+        }
         .onDisappear {
             ttsManager.stop()
         }
@@ -162,6 +165,8 @@ struct ListDetailView: View {
         impact.notificationOccurred(.success)
         
         NotificationCenter.default.post(name: .highlightsUpdated, object: nil)
+        
+        GamificationManager.shared.trackHighlightCreated()
     }
     
     private func removeHighlight(_ highlight: Highlight) {

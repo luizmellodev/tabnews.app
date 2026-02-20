@@ -253,6 +253,8 @@ extension MainViewModel {
         if !alreadyExists {
             self.likedList.append(content)
             saveLikedContent()
+            
+            GamificationManager.shared.trackPostLiked()
         }
     }
     

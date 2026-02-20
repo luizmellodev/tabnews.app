@@ -109,6 +109,16 @@
 		79904A0B2A732E3F0050240C /* LikedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0A2A732E3F0050240C /* LikedList.swift */; };
 		79904A0E2A732FC90050240C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0D2A732FC90050240C /* SettingsView.swift */; };
 		79904A102A732FE30050240C /* DuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79904A0F2A732FE30050240C /* DuckView.swift */; };
+		799CC4672F489A6C0059BB51 /* DailyDigestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC4632F489A6C0059BB51 /* DailyDigestManager.swift */; };
+		799CC4682F489A6C0059BB51 /* GamificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC4642F489A6C0059BB51 /* GamificationManager.swift */; };
+		799CC46C2F489AC90059BB51 /* DailyDigest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC46A2F489AC90059BB51 /* DailyDigest.swift */; };
+		799CC46D2F489AC90059BB51 /* WeeklyChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC46B2F489AC90059BB51 /* WeeklyChallenge.swift */; };
+		799CC46E2F489AC90059BB51 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC4692F489AC90059BB51 /* Badge.swift */; };
+		799CC46F2F489AC90059BB51 /* DailyDigest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC46A2F489AC90059BB51 /* DailyDigest.swift */; };
+		799CC4702F489AC90059BB51 /* WeeklyChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC46B2F489AC90059BB51 /* WeeklyChallenge.swift */; };
+		799CC4712F489AC90059BB51 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC4692F489AC90059BB51 /* Badge.swift */; };
+		799CC4762F489AEE0059BB51 /* DailyDigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC4722F489AEE0059BB51 /* DailyDigestView.swift */; };
+		799CC4772F489AEE0059BB51 /* GamificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799CC4742F489AEE0059BB51 /* GamificationView.swift */; };
 		79BB0EE22F23E83B005D981E /* DeleteAccountContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BB0EE12F23E83B005D981E /* DeleteAccountContactView.swift */; };
 		79C706122D95E485005C26A7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578C34654A4634FDF1FABC9 /* NetworkManager.swift */; };
 		79C706262D95E51F005C26A7 /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C706252D95E51F005C26A7 /* NetworkManagerProtocol.swift */; };
@@ -275,6 +285,13 @@
 		79904A0A2A732E3F0050240C /* LikedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedList.swift; sourceTree = "<group>"; };
 		79904A0D2A732FC90050240C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		79904A0F2A732FE30050240C /* DuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckView.swift; sourceTree = "<group>"; };
+		799CC4632F489A6C0059BB51 /* DailyDigestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyDigestManager.swift; sourceTree = "<group>"; };
+		799CC4642F489A6C0059BB51 /* GamificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationManager.swift; sourceTree = "<group>"; };
+		799CC4692F489AC90059BB51 /* Badge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
+		799CC46A2F489AC90059BB51 /* DailyDigest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyDigest.swift; sourceTree = "<group>"; };
+		799CC46B2F489AC90059BB51 /* WeeklyChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChallenge.swift; sourceTree = "<group>"; };
+		799CC4722F489AEE0059BB51 /* DailyDigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyDigestView.swift; sourceTree = "<group>"; };
+		799CC4742F489AEE0059BB51 /* GamificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationView.swift; sourceTree = "<group>"; };
 		79BB0EE12F23E83B005D981E /* DeleteAccountContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountContactView.swift; sourceTree = "<group>"; };
 		79C706252D95E51F005C26A7 /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
 		79C706272D95E528005C26A7 /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
@@ -577,6 +594,8 @@
 		799049DD2A6B24310050240C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				799CC4732F489AEE0059BB51 /* DailyDigest */,
+				799CC4752F489AEE0059BB51 /* Gamification */,
 				790AB0C92ECEAEE000E443E6 /* Folder */,
 				79C706492D9AFCB3005C26A7 /* Onboarding */,
 				794863842B5B55E6009AA720 /* Game */,
@@ -667,6 +686,22 @@
 			path = SettingsView;
 			sourceTree = "<group>";
 		};
+		799CC4732F489AEE0059BB51 /* DailyDigest */ = {
+			isa = PBXGroup;
+			children = (
+				799CC4722F489AEE0059BB51 /* DailyDigestView.swift */,
+			);
+			path = DailyDigest;
+			sourceTree = "<group>";
+		};
+		799CC4752F489AEE0059BB51 /* Gamification */ = {
+			isa = PBXGroup;
+			children = (
+				799CC4742F489AEE0059BB51 /* GamificationView.swift */,
+			);
+			path = Gamification;
+			sourceTree = "<group>";
+		};
 		79C706112D95E446005C26A7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -674,6 +709,8 @@
 				79E727F82EFB9E27007BF27A /* MockContentService.swift */,
 				79259D2E2EFB81FE004BC057 /* FirebasePushNotificationService.swift */,
 				796D06442F0AE5B10064A2BC /* AuthService.swift */,
+				799CC4632F489A6C0059BB51 /* DailyDigestManager.swift */,
+				799CC4642F489A6C0059BB51 /* GamificationManager.swift */,
 				796D06452F0AE5B10064A2BC /* KeychainManager.swift */,
 				796D05D82F0AC5610064A2BC /* WidgetSyncManager.swift */,
 				790AB11B2ECF811F00E443E6 /* WatchSyncManager.swift */,
@@ -695,6 +732,9 @@
 				796D06302F0ADCA40064A2BC /* WidgetPost.swift */,
 				790AB0CE2ECEAF2B00E443E6 /* Note.swift */,
 				790AB0CC2ECEAF1300E443E6 /* Highlight.swift */,
+				799CC4692F489AC90059BB51 /* Badge.swift */,
+				799CC46A2F489AC90059BB51 /* DailyDigest.swift */,
+				799CC46B2F489AC90059BB51 /* WeeklyChallenge.swift */,
 				790AB0CA2ECEAF0500E443E6 /* Folder.swift */,
 				79C706392D95E766005C26A7 /* PostRequest.swift */,
 				7915848C2EFC903C00C69745 /* SavedPost.swift */,
@@ -879,6 +919,9 @@
 				790AB0EE2ECF674600E443E6 /* PostRequest.swift in Sources */,
 				79E728022EFB9FCC007BF27A /* NotificationHandler.swift in Sources */,
 				790AB0ED2ECF674200E443E6 /* Folder.swift in Sources */,
+				799CC46F2F489AC90059BB51 /* DailyDigest.swift in Sources */,
+				799CC4702F489AC90059BB51 /* WeeklyChallenge.swift in Sources */,
+				799CC4712F489AC90059BB51 /* Badge.swift in Sources */,
 				790AB10C2ECF68F000E443E6 /* RequestBuilder.swift in Sources */,
 				79E727FA2EFB9E27007BF27A /* MockContentService.swift in Sources */,
 				790AB1102ECF691D00E443E6 /* ContentServiceProtocol.swift in Sources */,
@@ -973,6 +1016,9 @@
 				795261722A7B0B6D001FD010 /* NewsletterView.swift in Sources */,
 				79C7063C2D9AD132005C26A7 /* APIError.swift in Sources */,
 				79259D302EFB81FE004BC057 /* FirebasePushNotificationService.swift in Sources */,
+				799CC46C2F489AC90059BB51 /* DailyDigest.swift in Sources */,
+				799CC46D2F489AC90059BB51 /* WeeklyChallenge.swift in Sources */,
+				799CC46E2F489AC90059BB51 /* Badge.swift in Sources */,
 				79E727F22EFB9CE3007BF27A /* LoadingOverlayView.swift in Sources */,
 				799049E62A6C93D30050240C /* MainView.swift in Sources */,
 				796D06492F0AE5F30064A2BC /* CommentComposeSheet.swift in Sources */,
@@ -986,6 +1032,8 @@
 				796D063E2F0AE4C50064A2BC /* CommentsView.swift in Sources */,
 				790887282F0F16AD0068804C /* UserPublicationsView.swift in Sources */,
 				796D063F2F0AE4C50064A2BC /* CommentsViewModel.swift in Sources */,
+				799CC4672F489A6C0059BB51 /* DailyDigestManager.swift in Sources */,
+				799CC4682F489A6C0059BB51 /* GamificationManager.swift in Sources */,
 				796D06402F0AE4C50064A2BC /* CommentRow.swift in Sources */,
 				7915846F2EFC869B00C69745 /* AudioControlsView.swift in Sources */,
 				799049FF2A73068E0050240C /* DefaultViewState.swift in Sources */,
@@ -998,6 +1046,8 @@
 				7982B7552F00B3CA00666726 /* DigestDetailsView.swift in Sources */,
 				7982B7562F00B3CA00666726 /* DigestView.swift in Sources */,
 				79C706262D95E51F005C26A7 /* NetworkManagerProtocol.swift in Sources */,
+				799CC4762F489AEE0059BB51 /* DailyDigestView.swift in Sources */,
+				799CC4772F489AEE0059BB51 /* GamificationView.swift in Sources */,
 				79E728012EFB9FCC007BF27A /* NotificationHandler.swift in Sources */,
 				794863862B5B55ED009AA720 /* GameController.swift in Sources */,
 			);
@@ -1230,7 +1280,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1273,7 +1323,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = newtabnews/newtabnews.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"newtabnews/Preview Content\"";
 				DEVELOPMENT_TEAM = YM283LC5H4;
 				ENABLE_HARDENED_RUNTIME = YES;

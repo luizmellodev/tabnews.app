@@ -98,6 +98,14 @@ struct FloatingCommentInput: View {
                             .padding(.horizontal, 8)
                             .padding(.vertical, 6)
                             .padding(.trailing, 36)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Fechar") {
+                                        isTextFieldFocused = false
+                                    }
+                                }
+                            }
                             .onChange(of: commentText) { _, newValue in
                                 let lineCount = newValue.components(separatedBy: "\n").count
                                 withAnimation(.easeInOut(duration: 0.2)) {
@@ -260,6 +268,8 @@ struct FloatingCommentInput: View {
                 
                 let impact = UINotificationFeedbackGenerator()
                 impact.notificationOccurred(.success)
+                
+                GamificationManager.shared.trackCommentPosted()
                 
                 print("✅ [FloatingCommentInput] Comentário postado com sucesso!")
             }
