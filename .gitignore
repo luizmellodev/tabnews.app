@@ -86,4 +86,7 @@ fastlane/test_output
 iOSInjectionProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/swift
-newtabnews/.DS_Store
+
+# macOS
+.DS_Store
+**/.DS_Store
