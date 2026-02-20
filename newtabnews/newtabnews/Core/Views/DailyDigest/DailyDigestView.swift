@@ -39,7 +39,7 @@ struct DailyDigestView: View {
                         }
                     } label: {
                         Image(systemName: "arrow.clockwise")
-                            .foregroundStyle(digestManager.isLoading ? .secondary : .blue)
+                            .foregroundStyle(digestManager.isLoading ? Color.secondary : Color.blue)
                     }
                     .disabled(digestManager.isLoading)
                 }

@@ -36,12 +36,20 @@ class BetaTesterService {
             return
         }
         
-        if isTestFlightEnvironment() {
+        let earlyAdopterCutoffDate = Calendar.current.date(
+            from: DateComponents(year: 2026, month: 7, day: 01)
+        ) ?? Date()
+        
+        if Date() < earlyAdopterCutoffDate {
             userDefaults.set(true, forKey: betaTesterKey)
             userDefaults.set(Date(), forKey: betaTesterDateKey)
-            print("✅ Beta Tester detectado e salvo!")
         } else {
-            userDefaults.set(false, forKey: betaTesterKey)
+            if isTestFlightEnvironment() {
+                userDefaults.set(true, forKey: betaTesterKey)
+                userDefaults.set(Date(), forKey: betaTesterDateKey)
+            } else {
+                userDefaults.set(false, forKey: betaTesterKey)
+            }
         }
     }
     
